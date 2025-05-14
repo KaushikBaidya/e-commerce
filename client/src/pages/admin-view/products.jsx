@@ -110,8 +110,8 @@ const AdminProducts = () => {
 			</div>
 			{/* // product list */}
 			<div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
-				{productList && productList?.data?.length > 0
-					? productList.data.map((item) => (
+				{productList && productList?.length > 0
+					? productList.map((item) => (
 							<AdminProductTile
 								setFormData={setFormData}
 								setCurrentEditedId={setCurrentEditedId}

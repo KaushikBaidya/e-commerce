@@ -85,11 +85,11 @@ const ShoppingHeader = () => {
 					<span className="font-bold">Ecommerce</span>
 				</Link>
 				<Sheet>
-					<SheetTrigger asChild>
-						<Button variant="outline" size="icon" className="lg:hidden">
+					<SheetTrigger>
+						<span className="lg:hidden">
 							<Menu className="h-6 w-6" />
 							<span className="sr-only">Toggle header menu</span>
-						</Button>
+						</span>
 					</SheetTrigger>
 					<SheetContent side="left" className="w-full max-w-xs">
 						<MenuItems />
