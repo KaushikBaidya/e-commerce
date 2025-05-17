@@ -1,4 +1,5 @@
 import ProductFilter from "@/components/shopping-view/filter";
+import ProductDetails from "@/components/shopping-view/product-details";
 import ShopProductTile from "@/components/shopping-view/shop-product-tile";
 
 import {
@@ -9,7 +10,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
+import {
+	fetchAllFilteredProducts,
+	fetchProductDetails,
+} from "@/store/shop/products-slice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,9 +35,13 @@ const createSearchParamsHelper = (filterParams) => {
 const ShoppingListing = () => {
 	const [filters, setFilters] = useState({});
 	const [sort, setSort] = useState(null);
+	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
 	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
-	const { productList } = useSelector((state) => state.shopProducts);
+	const { productList, productDetails } = useSelector(
+		(state) => state.shopProducts
+	);
 
 	const handleSort = (value) => {
 		setSort(value);
@@ -58,6 +66,10 @@ const ShoppingListing = () => {
 		sessionStorage.setItem("filters", JSON.stringify(copyFilters));
 	};
 
+	const handleGetProductDetails = (getCurrentProductId) => {
+		dispatch(fetchProductDetails(getCurrentProductId));
+	};
+
 	useEffect(() => {
 		setSort("price-lowtohigh");
 		setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
@@ -77,7 +89,11 @@ const ShoppingListing = () => {
 			);
 	}, [dispatch, sort, filters]);
 
-	console.log(searchParams, "search params");
+	useEffect(() => {
+		if (productDetails !== null) {
+			setOpenDetailsDialog(true);
+		}
+	}, [productDetails]);
 
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -114,11 +130,22 @@ const ShoppingListing = () => {
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
 					{productList && productList?.length > 0
 						? productList.map((item) => (
-								<ShopProductTile key={item._id} product={item} />
+								<ShopProductTile
+									handleGetProductDetails={handleGetProductDetails}
+									key={item._id}
+									product={item}
+								/>
 						  ))
 						: null}
 				</div>
 			</div>
+			{productDetails !== null ? (
+				<ProductDetails
+					open={openDetailsDialog}
+					setOpen={setOpenDetailsDialog}
+					productDetails={productDetails}
+				/>
+			) : null}
 		</div>
 	);
 };
