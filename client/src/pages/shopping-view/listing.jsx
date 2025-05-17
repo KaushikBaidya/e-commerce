@@ -9,21 +9,34 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { fetchAllProducts } from "@/store/admin/products-slice";
 import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
-import { ArrowUpDown, ArrowUpDownIcon } from "lucide-react";
+import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+
+const createSearchParamsHelper = (filterParams) => {
+	const queryParams = [];
+
+	for (const [key, value] of Object.entries(filterParams)) {
+		if (Array.isArray(value) && value.length > 0) {
+			const paramValue = value.join(",");
+			queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+		}
+	}
+
+	return queryParams.join("&");
+};
 
 const ShoppingListing = () => {
 	const [filters, setFilters] = useState({});
 	const [sort, setSort] = useState(null);
+	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
 	const { productList } = useSelector((state) => state.shopProducts);
 
 	const handleSort = (value) => {
 		setSort(value);
-		console.log("Sort Value", value);
 	};
 
 	const handleFilter = (getSectionId, getCurrentOption) => {
@@ -51,8 +64,20 @@ const ShoppingListing = () => {
 	}, []);
 
 	useEffect(() => {
-		dispatch(fetchAllFilteredProducts());
-	}, [dispatch]);
+		if (filters && Object.keys(filters).length > 0) {
+			const createQueryString = createSearchParamsHelper(filters);
+			setSearchParams(new URLSearchParams(createQueryString));
+		}
+	}, [filters]);
+
+	useEffect(() => {
+		if (filters !== null && sort !== null)
+			dispatch(
+				fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+			);
+	}, [dispatch, sort, filters]);
+
+	console.log(searchParams, "search params");
 
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
