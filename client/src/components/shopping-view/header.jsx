@@ -35,6 +35,8 @@ const MenuItems = () => {
 const HeaderRightContent = () => {
 	const [openCartSheet, setOpenCartSheet] = useState(false);
 	const { user } = useSelector((state) => state.auth);
+	console.log(user);
+
 	const { cartItems } = useSelector((state) => state.shopCart);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -67,31 +69,37 @@ const HeaderRightContent = () => {
 					}
 				/>
 			</Sheet>
-			<DropdownMenu>
-				<DropdownMenuTrigger>
-					<Avatar className="bg-black">
-						<AvatarFallback className="bg-black text-white font-extrabold">
-							{user?.userName[0].toUpperCase()}
-						</AvatarFallback>
-					</Avatar>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-56">
-					<DropdownMenuLabel>
-						Logged in as{" "}
-						<span className="font-bold uppercase">{user?.userName}</span>
-					</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem onClick={() => navigate("/shop/account")}>
-						<UserCog className="mr-2 h-4 w-4" />
-						Account
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem onClick={handleLogout}>
-						<LogOut className="mr-2 h-4 w-4" />
-						Logout
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+			{user === null ? (
+				<Link to="/auth/login">
+					<Button variant="outline">Login</Button>
+				</Link>
+			) : (
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<Avatar className="bg-black">
+							<AvatarFallback className="bg-black text-white font-extrabold">
+								{user?.userName[0].toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent className="w-56">
+						<DropdownMenuLabel>
+							Logged in as{" "}
+							<span className="font-bold uppercase">{user?.userName}</span>
+						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem onClick={() => navigate("/shop/account")}>
+							<UserCog className="mr-2 h-4 w-4" />
+							Account
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem onClick={handleLogout}>
+							<LogOut className="mr-2 h-4 w-4" />
+							Logout
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			)}
 		</div>
 	);
 };

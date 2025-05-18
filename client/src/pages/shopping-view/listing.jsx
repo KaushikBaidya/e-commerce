@@ -75,6 +75,8 @@ const ShoppingListing = () => {
 	};
 
 	const handleAddtoCart = (getCurrentProductId) => {
+		if (user === null)
+			return toast.error("Please login to add this product to cart");
 		dispatch(
 			addToCart({
 				userId: user?.id,

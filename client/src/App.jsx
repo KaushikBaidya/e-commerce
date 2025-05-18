@@ -62,7 +62,7 @@ function App() {
 					<Route path="orders" element={<AdminOrders />} />
 					<Route path="features" element={<AdminFeatures />} />
 				</Route>
-				<Route
+				{/* <Route
 					path="/shop"
 					element={
 						<CheckAuth isAuthenticated={isAuthenticated} user={user}>
@@ -74,7 +74,31 @@ function App() {
 					<Route path="listing" element={<ShoppingListing />} />
 					<Route path="checkout" element={<ShoppingCheckout />} />
 					<Route path="account" element={<ShoppingAccount />} />
+				</Route> */}
+				<Route path="/" element={<ShoppingLayout />}>
+					{/* Public routes */}
+					<Route path="shop/home" element={<ShoppingHome />} />
+					<Route path="shop/listing" element={<ShoppingListing />} />
+
+					{/* Protected routes */}
+					<Route
+						path="shop/checkout"
+						element={
+							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+								<ShoppingCheckout />
+							</CheckAuth>
+						}
+					/>
+					<Route
+						path="shop/account"
+						element={
+							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+								<ShoppingAccount />
+							</CheckAuth>
+						}
+					/>
 				</Route>
+
 				<Route path="*" element={<NotFound />} />
 				<Route path="/unauthorized" element={<Unauthorized />} />
 			</Routes>
