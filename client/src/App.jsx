@@ -77,7 +77,7 @@ function App() {
 				</Route> */}
 				<Route path="/" element={<ShoppingLayout />}>
 					{/* Public routes */}
-					<Route path="shop/home" element={<ShoppingHome />} />
+					<Route path="/" element={<ShoppingHome />} />
 					<Route path="shop/listing" element={<ShoppingListing />} />
 
 					{/* Protected routes */}
