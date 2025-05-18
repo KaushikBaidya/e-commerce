@@ -49,15 +49,12 @@ const AdminProducts = () => {
 		}
 	}, [uloadedImageUrl]);
 
-	// console.log(formData, "form data");
-
 	const onSubmit = (e) => {
 		e.preventDefault();
 
 		currentEditedId !== null
 			? dispatch(editProduct({ id: currentEditedId, formData })).then(
 					(data) => {
-						// console.log(data, "edied product");
 						if (data?.payload?.success) {
 							dispatch(fetchAllProducts());
 							setFormData(initialFormData);

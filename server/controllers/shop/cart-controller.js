@@ -5,7 +5,9 @@ const addToCart = async (req, res) => {
 	try {
 		const { userId, productId, quantity } = req.body;
 
-		if (!userId || !productId || !quantity <= 0) {
+		console.log(userId, productId, quantity);
+
+		if (!userId || !productId || quantity <= 0) {
 			return res.status(400).json({
 				success: false,
 				message: "All fields are required",
@@ -53,7 +55,7 @@ const fetchCartItems = async (req, res) => {
 		}
 		const cart = await Cart.findOne({ userId }).populate({
 			path: "items.productId",
-			model: "image title price salePrice",
+			select: "image title price salePrice",
 		});
 		if (!cart) {
 			return res

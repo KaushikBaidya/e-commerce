@@ -1,5 +1,5 @@
 import { HomeIcon, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth-slice";
 import CartWrapper from "./cart-wrapper";
+import { fetchCartItems } from "@/store/shop/cart-slice";
 
 // import { Avatar, AvatarFallback } from "../ui/avatar";
 
@@ -34,6 +35,7 @@ const MenuItems = () => {
 const HeaderRightContent = () => {
 	const [openCartSheet, setOpenCartSheet] = useState(false);
 	const { user } = useSelector((state) => state.auth);
+	const { cartItems } = useSelector((state) => state.shopCart);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -41,6 +43,10 @@ const HeaderRightContent = () => {
 		dispatch(logoutUser());
 		navigate("/auth/login");
 	};
+
+	useEffect(() => {
+		dispatch(fetchCartItems(user?.id));
+	}, [dispatch]);
 
 	return (
 		<div className="flex flex-col lg:flex-row lg:items-center gap-4 p-6">
@@ -53,7 +59,13 @@ const HeaderRightContent = () => {
 					<ShoppingCart className="h-6 w-6" />
 					<span className="sr-only">cart</span>
 				</Button>
-				<CartWrapper />
+				<CartWrapper
+					cartItems={
+						cartItems && cartItems.items && cartItems.items.length > 0
+							? cartItems.items
+							: []
+					}
+				/>
 			</Sheet>
 			<DropdownMenu>
 				<DropdownMenuTrigger>
