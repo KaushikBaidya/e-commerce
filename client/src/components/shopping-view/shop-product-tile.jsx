@@ -8,6 +8,7 @@ const ShopProductTile = ({
 	product,
 	handleGetProductDetails,
 	handleAddtoCart,
+	btnHide,
 }) => {
 	return (
 		<Card className="w-full max-w-sm mx-auto">
@@ -66,7 +67,7 @@ const ShopProductTile = ({
 				) : (
 					<Button
 						onClick={() => handleAddtoCart(product?._id)}
-						className="w-full"
+						className={`w-full ${btnHide && "hidden"} `}
 					>
 						Add to cart
 					</Button>

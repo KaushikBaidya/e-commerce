@@ -17,16 +17,36 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth-slice";
 import CartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
+import { Label } from "../ui/label";
 
 // import { Avatar, AvatarFallback } from "../ui/avatar";
 
 const MenuItems = () => {
+	const navigate = useNavigate();
+	const handleNavigate = (getCurrentItem) => {
+		sessionStorage.removeItem("filters");
+		const currentFilter =
+			getCurrentItem.id !== "home"
+				? // getCurrentItem.id !== "products" &&
+				  // getCurrentItem.id !== "search"
+				  {
+						category: [getCurrentItem.id],
+				  }
+				: null;
+
+		sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+		navigate(getCurrentItem.path);
+	};
 	return (
-		<nav className="flex flex-col lg:flex-row mb-3 lg:mb-0 lg:items-center gap-4 p-6">
+		<nav className="flex flex-col lg:flex-row mb-3 lg:mb-0 lg:items-center gap-5 p-6">
 			{shoppingViewHeaderMenuItems.map((item) => (
-				<Link key={item.id} to={item.path} className="text-sm font-medium">
+				<Label
+					onClick={() => handleNavigate(item)}
+					key={item.id}
+					className="text-base cursor-pointer"
+				>
 					<span>{item.label}</span>
-				</Link>
+				</Label>
 			))}
 		</nav>
 	);
@@ -34,10 +54,10 @@ const MenuItems = () => {
 
 const HeaderRightContent = () => {
 	const [openCartSheet, setOpenCartSheet] = useState(false);
-	const { user } = useSelector((state) => state.auth);
-	console.log(user);
 
+	const { user } = useSelector((state) => state.auth);
 	const { cartItems } = useSelector((state) => state.shopCart);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -105,7 +125,6 @@ const HeaderRightContent = () => {
 };
 
 const ShoppingHeader = () => {
-	const { isAuthenticated } = useSelector((state) => state.auth);
 	return (
 		<header className="sticky top-0 z-40 w-full bg-background border-b">
 			<div className="flex h-16 items-center justify-between px-4 md:px-6">
