@@ -11,12 +11,12 @@ import {
 import { Button } from "../ui/button";
 import { View } from "lucide-react";
 
-const ShoppingOrdersList = () => {
+const AdminOrdersList = () => {
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle className="text-xl font-semibold pt-4 px-2">
-					Order History
+					All Orders
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
@@ -51,4 +51,4 @@ const ShoppingOrdersList = () => {
 	);
 };
 
-export default ShoppingOrdersList;
+export default AdminOrdersList;

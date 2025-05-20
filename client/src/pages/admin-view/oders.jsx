@@ -1,7 +1,12 @@
 import React from "react";
+import AdminOrdersList from "@/components/admin-view/orders";
 
 const AdminOrders = () => {
-	return <div>Orders</div>;
+	return (
+		<div>
+			<AdminOrdersList />
+		</div>
+	);
 };
 
 export default AdminOrders;

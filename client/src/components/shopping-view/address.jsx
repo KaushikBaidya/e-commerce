@@ -91,7 +91,6 @@ const Address = () => {
 		dispatch(
 			deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
 		).then((data) => {
-			// console.log(data);
 			if (data?.payload?.success) {
 				dispatch(fetchAllAddresses(user?.id));
 				toast.success(data?.payload?.message, {
