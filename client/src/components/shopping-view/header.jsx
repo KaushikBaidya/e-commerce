@@ -19,17 +19,15 @@ import CartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
-// import { Avatar, AvatarFallback } from "../ui/avatar";
-
 const MenuItems = () => {
 	const navigate = useNavigate();
+
 	const handleNavigate = (getCurrentItem) => {
 		sessionStorage.removeItem("filters");
 		const currentFilter =
 			getCurrentItem.id !== "home"
-				? // getCurrentItem.id !== "products" &&
-				  // getCurrentItem.id !== "search"
-				  {
+				? getCurrentItem.id !== "products" &&
+				  getCurrentItem.id !== "search" && {
 						category: [getCurrentItem.id],
 				  }
 				: null;
@@ -37,6 +35,7 @@ const MenuItems = () => {
 		sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 		navigate(getCurrentItem.path);
 	};
+
 	return (
 		<nav className="flex flex-col lg:flex-row mb-3 lg:mb-0 lg:items-center gap-5 p-6">
 			{shoppingViewHeaderMenuItems.map((item) => (
@@ -82,6 +81,7 @@ const HeaderRightContent = () => {
 					<span className="sr-only">cart</span>
 				</Button>
 				<CartWrapper
+					setOpenCartSheet={setOpenCartSheet}
 					cartItems={
 						cartItems && cartItems.items && cartItems.items.length > 0
 							? cartItems.items

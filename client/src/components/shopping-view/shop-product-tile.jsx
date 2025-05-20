@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
+import { DiamondPlus } from "lucide-react";
 
 const ShopProductTile = ({
 	product,
@@ -69,6 +70,7 @@ const ShopProductTile = ({
 						onClick={() => handleAddtoCart(product?._id)}
 						className={`w-full ${btnHide && "hidden"} `}
 					>
+						<DiamondPlus />
 						Add to cart
 					</Button>
 				)}

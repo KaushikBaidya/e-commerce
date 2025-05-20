@@ -2,9 +2,17 @@ import React from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { Button } from "../ui/button";
 import CartItems from "./cart-items";
-import { ShoppingBasket } from "lucide-react";
+import { CircleCheckBig, ShoppingBasket } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const CartWrapper = ({ cartItems }) => {
+const CartWrapper = ({ cartItems, setOpenCartSheet }) => {
+	const navigate = useNavigate();
+
+	const handleNavigate = () => {
+		setOpenCartSheet(false);
+		navigate("/shop/checkout");
+	};
+
 	const totalCartAmount =
 		cartItems && cartItems.length > 0
 			? cartItems.reduce(
@@ -41,7 +49,13 @@ const CartWrapper = ({ cartItems }) => {
 				</div>
 			</div>
 			<div className="px-4 mt-4">
-				<Button className="w-full">Checkout</Button>
+				<Button
+					disabled={cartItems.length === 0}
+					onClick={() => handleNavigate()}
+					className="w-full"
+				>
+					<CircleCheckBig /> Checkout
+				</Button>
 			</div>
 		</SheetContent>
 	);

@@ -1,7 +1,7 @@
 const ShoppingCheckout = () => {
 	return (
 		<div>
-			<h1>Shopping Account</h1>
+			<h1>Shopping Checkout</h1>
 		</div>
 	);
 };
