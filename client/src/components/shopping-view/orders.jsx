@@ -65,16 +65,26 @@ const ShoppingOrdersList = () => {
 						{orderList && orderList.length > 0 ? (
 							orderList.map((order) => (
 								<TableRow>
-									<TableCell># {order?._id} </TableCell>
-									<TableCell>{order?.orderUpdateDate.split("T")[0]} </TableCell>
+									<TableCell>@_{order?._id} </TableCell>
+									<TableCell>{order?.orderDate.split("T")[0]} </TableCell>
 									<TableCell>
 										<Badge
 											className={`py-1 px-3 ${
 												order?.orderStatus === "confirmed"
 													? "bg-blue-400"
+													: order?.orderStatus === "pending"
+													? "bg-yellow-400"
+													: order?.orderStatus === "in-progress"
+													? "bg-orange-500"
+													: order?.orderStatus === "shipped"
+													? "bg-purple-500"
+													: order?.orderStatus === "cancelled"
+													? "bg-red-500"
+													: order?.orderStatus === "delivered"
+													? "bg-green-500"
 													: order?.orderStatus === "rejected"
 													? "bg-red-600"
-													: "bg-black"
+													: "bg-gray-600"
 											}`}
 										>
 											{order?.orderStatus}
@@ -96,7 +106,7 @@ const ShoppingOrdersList = () => {
 													<View className="mr-2" /> View Details
 												</Button>
 											</DialogTrigger>
-											<DialogContent>
+											<DialogContent className="max-w-[90vw] sm:max-w[80vw] lg:max-w-[50vw]">
 												<ShoppingOrderDetails orderDetails={orderDetails} />
 											</DialogContent>
 										</Dialog>

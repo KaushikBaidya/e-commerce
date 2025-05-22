@@ -9,11 +9,11 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 	console.log(orderDetails);
 
 	return (
-		<div className="max-w-[800px]">
+		<div className="w-full capitalize">
 			<div className="grid gap-6">
 				<div className="grid gap-2">
 					<div className="flex items-center justify-between mt-6">
-						<p className="font-medium">Order Id</p>
+						<p className="font-medium">Order ID</p>
 						<Label># {orderDetails?._id}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
@@ -24,9 +24,34 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 						<p className="font-medium">Order Price</p>
 						<Label>$ {orderDetails?.totalAmount}</Label>
 					</div>
+
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Status</p>
-						<Label>{orderDetails?.orderStatus}</Label>
+						<Label
+							className={`py-1 px-3 ${
+								orderDetails?.orderStatus === "confirmed"
+									? "bg-blue-400"
+									: orderDetails?.orderStatus === "pending"
+									? "bg-yellow-400"
+									: orderDetails?.orderStatus === "in-progress"
+									? "bg-orange-500"
+									: orderDetails?.orderStatus === "shipped"
+									? "bg-purple-500"
+									: orderDetails?.orderStatus === "cancelled"
+									? "bg-red-500"
+									: orderDetails?.orderStatus === "delivered"
+									? "bg-green-500"
+									: orderDetails?.orderStatus === "rejected"
+									? "bg-red-600"
+									: "bg-gray-600"
+							}`}
+						>
+							{orderDetails?.orderStatus}
+						</Label>
+					</div>
+					<div className="flex items-center justify-between mt-2">
+						<p className="font-medium">Payment Status</p>
+						<Label>{orderDetails?.paymentStatus}</Label>
 					</div>
 				</div>
 				<Separator />

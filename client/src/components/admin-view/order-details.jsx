@@ -2,35 +2,87 @@ import React, { useState } from "react";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	getAllOrdersForAdmin,
+	updateOrderStatus,
+} from "@/store/admin/order-slice";
+import { fetchOrderDetailsForAdmin } from "@/store/admin/order-slice";
 
 const initialFormData = {
 	status: "",
 };
 
-const AdminOrderDetails = () => {
+const AdminOrderDetails = ({ orderDetails }) => {
 	const [formData, setFormData] = useState(initialFormData);
+	const { user } = useSelector((state) => state.auth);
+
+	const dispatch = useDispatch();
+
 	const handleUpdateStatus = (event) => {
 		event.preventDefault();
+
+		const { status } = formData;
+
+		dispatch(
+			updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
+		).then((data) => {
+			if (data?.payload?.success) {
+				dispatch(fetchOrderDetailsForAdmin(orderDetails?._id));
+				dispatch(getAllOrdersForAdmin());
+				setFormData(initialFormData);
+				toast.success(data?.payload?.message, {
+					action: {
+						label: "X",
+					},
+				});
+			}
+		});
 	};
 	return (
-		<div className="max-w-[800px]">
+		<div className="w-full capitalize">
 			<div className="grid gap-6">
 				<div className="grid gap-2">
 					<div className="flex items-center justify-between mt-6">
-						<p className="font-medium">Order Id</p>
-						<Label>#1234</Label>
+						<p className="font-medium">Order ID</p>
+						<Label># {orderDetails?._id}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Date</p>
-						<Label>12/05/2025</Label>
+						<Label>{orderDetails?.orderDate.split("T")[0]}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Price</p>
-						<Label>$ 1000</Label>
+						<Label>$ {orderDetails?.totalAmount}</Label>
 					</div>
+
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Status</p>
-						<Label>In Progress</Label>
+						<Label
+							className={`py-1 px-3 ${
+								orderDetails?.orderStatus === "confirmed"
+									? "bg-blue-400"
+									: orderDetails?.orderStatus === "pending"
+									? "bg-yellow-400"
+									: orderDetails?.orderStatus === "in-progress"
+									? "bg-orange-500"
+									: orderDetails?.orderStatus === "shipped"
+									? "bg-purple-500"
+									: orderDetails?.orderStatus === "cancelled"
+									? "bg-red-500"
+									: orderDetails?.orderStatus === "delivered"
+									? "bg-green-500"
+									: orderDetails?.orderStatus === "rejected"
+									? "bg-red-600"
+									: "bg-gray-600"
+							}`}
+						>
+							{orderDetails?.orderStatus}
+						</Label>
+					</div>
+					<div className="flex items-center justify-between mt-2">
+						<p className="font-medium">Payment Status</p>
+						<Label>{orderDetails?.paymentStatus}</Label>
 					</div>
 				</div>
 				<Separator />
@@ -49,12 +101,12 @@ const AdminOrderDetails = () => {
 					<div className="grid gap-2">
 						<div className="font-semibold">Shipping Address</div>
 						<div className="grid grid-cols-2 gap-1 text-muted-foreground">
-							<span>John Doe</span>
-							<span>123 Main St</span>
-							<span>Anytown, USA</span>
-							<span>12345</span>
-							<span>(123) 456-7890</span>
-							<span>In front of the store</span>
+							<span>{user.userName}</span>
+							<span>{orderDetails?.addressInfo?.address}</span>
+							<span>{orderDetails?.addressInfo?.city}</span>
+							<span>{orderDetails?.addressInfo?.pincode}</span>
+							<span>{orderDetails?.addressInfo?.phone}</span>
+							<span>{orderDetails?.addressInfo?.notes}</span>
 						</div>
 					</div>
 				</div>
@@ -77,7 +129,7 @@ const AdminOrderDetails = () => {
 						]}
 						formData={formData}
 						setFormData={setFormData}
-						buttonText="Update"
+						buttonText="Update Status"
 						onSubmit={handleUpdateStatus}
 					/>
 				</div>
