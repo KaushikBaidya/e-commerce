@@ -8,8 +8,33 @@ import { toast } from "sonner";
 const CartItems = ({ cartItem }) => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
+	const { cartItems } = useSelector((state) => state.shopCart);
+	const { productList } = useSelector((state) => state.shopProducts);
 
 	const handleUpdateQty = (getCartItem, type) => {
+		if (type == "increase") {
+			let getCartItems = cartItems.items || [];
+
+			if (getCartItems.length) {
+				const indexOfCurrentCartItem = getCartItems.findIndex(
+					(item) => item.productId === getCartItem?.productId
+				);
+
+				const getCurrentProductIndex = productList.findIndex(
+					(product) => product._id === getCartItem?.productId
+				);
+				const getTotalStock = productList[getCurrentProductIndex].totalStock;
+
+				if (indexOfCurrentCartItem > -1) {
+					const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
+					if (getQuantity + 1 > getTotalStock) {
+						toast("Product stock limit reached");
+
+						return;
+					}
+				}
+			}
+		}
 		dispatch(
 			updateCartQuantity({
 				userId: user?.id,
@@ -70,7 +95,7 @@ const CartItems = ({ cartItem }) => {
 			</div>
 			<div className="flex flex-col items-end">
 				<p className="font-semibold">
-					$
+					৳
 					{(
 						(cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
 						cartItem?.quantity

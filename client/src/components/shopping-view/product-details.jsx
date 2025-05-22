@@ -10,11 +10,27 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "sonner";
 import { setProductDetails } from "@/store/shop/products-slice";
 
-const ProductDetails = ({ open, setOpen, productDetails }) => {
+const ProductDetails = ({ open, setOpen, productDetails, btnHide }) => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
+	const { cartItems } = useSelector((state) => state.shopCart);
 
-	const handleAddToCart = (getCurrentProductId) => {
+	const handleAddToCart = (getCurrentProductId, getTotalStock) => {
+		if (user === null)
+			return toast.error("Please login to add this product to cart");
+
+		let getCartItems = cartItems.items || [];
+
+		if (getCartItems.length) {
+			const indexOfCurrentItem = getCartItems.findIndex(
+				(item) => item.productId === getCurrentProductId
+			);
+			if (indexOfCurrentItem > -1) {
+				const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+				if (getQuantity + 1 > getTotalStock)
+					return toast.error("Product stock limit reached");
+			}
+		}
 		dispatch(
 			addToCart({
 				userId: user?.id,
@@ -61,11 +77,11 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 								productDetails?.salePrice > 0 ? "line-through" : ""
 							} text-2xl font-semibold text-primary`}
 						>
-							${productDetails.price}
+							৳ {productDetails.price}
 						</p>
 						{productDetails?.salePrice > 0 ? (
 							<p className="text-2xl font-semibold text-muted-foreground">
-								${productDetails?.salePrice}
+								৳ {productDetails?.salePrice}
 							</p>
 						) : null}
 					</div>
@@ -82,13 +98,24 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 					</div>
 
 					<div className="my-5">
-						<Button
-							onClick={() => handleAddToCart(productDetails?._id)}
-							className="w-full"
-						>
-							<DiamondPlus />
-							Add to Cart
-						</Button>
+						{productDetails?.totalStock === 0 ? (
+							<Button className="w-full opacity-60 cursor-not-allowed">
+								Out Of Stock
+							</Button>
+						) : (
+							<Button
+								onClick={() =>
+									handleAddToCart(
+										productDetails?._id,
+										productDetails?.totalStock
+									)
+								}
+								className={`w-full ${btnHide && "hidden"} `}
+							>
+								<DiamondPlus />
+								Add to cart
+							</Button>
+						)}
 					</div>
 					<Separator />
 					<div className="max-h-[300px] overflow-auto">

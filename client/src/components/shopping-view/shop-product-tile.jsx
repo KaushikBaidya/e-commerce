@@ -8,7 +8,7 @@ import { DiamondPlus } from "lucide-react";
 const ShopProductTile = ({
 	product,
 	handleGetProductDetails,
-	handleAddtoCart,
+	handleAddToCart,
 	btnHide,
 }) => {
 	return (
@@ -21,17 +21,15 @@ const ShopProductTile = ({
 						className="w-full h-[300px] object-cover rounded-t-lg"
 					/>
 					{product?.totalStock === 0 ? (
-						<Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+						<Badge className="absolute top-2 left-2 bg-red-700">
 							Out Of Stock
 						</Badge>
 					) : product?.totalStock < 10 ? (
-						<Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+						<Badge className="absolute top-2 left-2 bg-red-500">
 							{`Only ${product?.totalStock} items left`}
 						</Badge>
 					) : product?.salePrice > 0 ? (
-						<Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-							Sale
-						</Badge>
+						<Badge className="absolute top-2 left-2 bg-orange-500">Sale</Badge>
 					) : null}
 				</div>
 				<CardContent className="p-4">
@@ -50,11 +48,11 @@ const ShopProductTile = ({
 								product?.salePrice > 0 ? "line-through" : ""
 							} text-lg font-semibold text-primary`}
 						>
-							${product?.price}
+							৳ {product?.price}
 						</span>
 						{product?.salePrice > 0 ? (
 							<span className="text-lg font-semibold text-primary">
-								${product?.salePrice}
+								৳ {product?.salePrice}
 							</span>
 						) : null}
 					</div>
@@ -67,7 +65,7 @@ const ShopProductTile = ({
 					</Button>
 				) : (
 					<Button
-						onClick={() => handleAddtoCart(product?._id)}
+						onClick={() => handleAddToCart(product?._id, product?.totalStock)}
 						className={`w-full ${btnHide && "hidden"} `}
 					>
 						<DiamondPlus />

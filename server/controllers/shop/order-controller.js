@@ -1,6 +1,7 @@
 const stripe = require("../../helper/stripe");
 const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
+const Product = require("../../models/Product");
 
 const createOrder = async (req, res) => {
 	try {
@@ -99,6 +100,27 @@ const finalizeOrderFromSession = async (req, res) => {
 			paymentId: session.payment_intent,
 			payerId: session.customer_details?.email || "N/A",
 		});
+
+		for (let item of newOrder.cartItems) {
+			const product = await Product.findById(item.productId);
+
+			if (!product) {
+				return res.status(404).json({
+					success: false,
+					message: `Product not found with ID ${item.productId}`,
+				});
+			}
+
+			if (product.totalStock < item.quantity) {
+				return res.status(400).json({
+					success: false,
+					message: `Not enough stock for product: ${product.title}`,
+				});
+			}
+
+			product.totalStock -= item.quantity;
+			await product.save();
+		}
 
 		await newOrder.save();
 		await Cart.findByIdAndDelete(metadata.cartId);

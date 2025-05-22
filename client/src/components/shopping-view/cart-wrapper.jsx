@@ -45,7 +45,7 @@ const CartWrapper = ({ cartItems, setOpenCartSheet }) => {
 			<div className="mt-8 space-y-4 px-5">
 				<div className="flex justify-between">
 					<span className="font-bold">Total Amount</span>
-					<span className="font-bold">${totalCartAmount}</span>
+					<span className="font-bold">৳ {totalCartAmount}</span>
 				</div>
 			</div>
 			<div className="px-4 mt-4">

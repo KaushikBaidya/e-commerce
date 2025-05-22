@@ -22,7 +22,7 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Price</p>
-						<Label>$ {orderDetails?.totalAmount}</Label>
+						<Label>৳ {orderDetails?.totalAmount}</Label>
 					</div>
 
 					<div className="flex items-center justify-between mt-2">
@@ -76,7 +76,7 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 									>
 										<span className="capitalize">{item.title}</span>
 										<span>{item.quantity}</span>
-										<span>${item.price}</span>
+										<span>৳ {item.price}</span>
 									</li>
 								))
 							) : (

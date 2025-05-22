@@ -42,10 +42,13 @@ const ShoppingListing = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
 
+	const { cartItems } = useSelector((state) => state.shopCart);
 	const { user } = useSelector((state) => state.auth);
 	const { productList, productDetails } = useSelector(
 		(state) => state.shopProducts
 	);
+
+	const categorySearchParam = searchParams.get("category");
 
 	const handleSort = (value) => {
 		setSort(value);
@@ -74,9 +77,23 @@ const ShoppingListing = () => {
 		dispatch(fetchProductDetails(getCurrentProductId));
 	};
 
-	const handleAddtoCart = (getCurrentProductId) => {
+	const handleAddToCart = (getCurrentProductId, getTotalStock) => {
 		if (user === null)
 			return toast.error("Please login to add this product to cart");
+
+		let getCartItems = cartItems.items || [];
+
+		if (getCartItems.length) {
+			const indexOfCurrentItem = getCartItems.findIndex(
+				(item) => item.productId === getCurrentProductId
+			);
+			if (indexOfCurrentItem > -1) {
+				const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+				if (getQuantity + 1 > getTotalStock)
+					return toast.error("Product stock limit reached");
+			}
+		}
+
 		dispatch(
 			addToCart({
 				userId: user?.id,
@@ -94,7 +111,7 @@ const ShoppingListing = () => {
 	useEffect(() => {
 		setSort("price-lowtohigh");
 		setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-	}, []);
+	}, [categorySearchParam]);
 
 	useEffect(() => {
 		if (filters && Object.keys(filters).length > 0) {
@@ -155,7 +172,7 @@ const ShoppingListing = () => {
 									handleGetProductDetails={handleGetProductDetails}
 									key={item._id}
 									product={item}
-									handleAddtoCart={handleAddtoCart}
+									handleAddToCart={handleAddToCart}
 								/>
 						  ))
 						: null}

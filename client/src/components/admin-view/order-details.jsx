@@ -53,7 +53,7 @@ const AdminOrderDetails = ({ orderDetails }) => {
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Price</p>
-						<Label>$ {orderDetails?.totalAmount}</Label>
+						<Label>৳ {orderDetails?.totalAmount}</Label>
 					</div>
 
 					<div className="flex items-center justify-between mt-2">
