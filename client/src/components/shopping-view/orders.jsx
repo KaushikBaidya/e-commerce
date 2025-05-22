@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
 	Table,
@@ -12,9 +12,35 @@ import { Button } from "../ui/button";
 import { View } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import ShoppingOrderDetails from "./order-details";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	getAllOrdersByUserId,
+	getOrderDetails,
+	resetOrderDetails,
+} from "@/store/shop/order-slice";
+import { Badge } from "../ui/badge";
 
 const ShoppingOrdersList = () => {
 	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
+	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth);
+	const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
+
+	function handleFetchOrderDetails(getId) {
+		dispatch(getOrderDetails(getId));
+	}
+
+	useEffect(() => {
+		dispatch(getAllOrdersByUserId(user?.id));
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (orderDetails !== null) setOpenDetailsDialog(true);
+	}, [orderDetails]);
+
+	// console.log(orderDetails);
+
 	return (
 		<Card>
 			<CardHeader>
@@ -36,27 +62,50 @@ const ShoppingOrdersList = () => {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						<TableRow>
-							<TableCell> @_45d5d58ffsfers </TableCell>
-							<TableCell> 01/25/2023 </TableCell>
-							<TableCell> Delivered </TableCell>
-							<TableCell> $ 1,000 </TableCell>
-							<TableCell className="flex justify-end">
-								<Dialog
-									open={openDetailsDialog}
-									onOpenChange={setOpenDetailsDialog}
-								>
-									<DialogTrigger asChild>
-										<Button>
-											<View className="mr-2" /> View Details
-										</Button>
-									</DialogTrigger>
-									<DialogContent>
-										<ShoppingOrderDetails />
-									</DialogContent>
-								</Dialog>
-							</TableCell>
-						</TableRow>
+						{orderList && orderList.length > 0 ? (
+							orderList.map((order) => (
+								<TableRow>
+									<TableCell># {order?._id} </TableCell>
+									<TableCell>{order?.orderUpdateDate.split("T")[0]} </TableCell>
+									<TableCell>
+										<Badge
+											className={`py-1 px-3 ${
+												order?.orderStatus === "confirmed"
+													? "bg-blue-400"
+													: order?.orderStatus === "rejected"
+													? "bg-red-600"
+													: "bg-black"
+											}`}
+										>
+											{order?.orderStatus}
+										</Badge>
+									</TableCell>
+									<TableCell> ৳ {order?.totalAmount} </TableCell>
+									<TableCell className="flex justify-end">
+										<Dialog
+											open={openDetailsDialog}
+											onOpenChange={() => {
+												setOpenDetailsDialog(false);
+												dispatch(resetOrderDetails());
+											}}
+										>
+											<DialogTrigger asChild>
+												<Button
+													onClick={() => handleFetchOrderDetails(order?._id)}
+												>
+													<View className="mr-2" /> View Details
+												</Button>
+											</DialogTrigger>
+											<DialogContent>
+												<ShoppingOrderDetails orderDetails={orderDetails} />
+											</DialogContent>
+										</Dialog>
+									</TableCell>
+								</TableRow>
+							))
+						) : (
+							<h1>No orders found</h1>
+						)}
 					</TableBody>
 				</Table>
 			</CardContent>

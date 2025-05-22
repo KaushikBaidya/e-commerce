@@ -1,51 +1,77 @@
 import React from "react";
 import { Separator } from "../ui/separator";
 import { Label } from "../ui/label";
+import { useSelector } from "react-redux";
 
-const ShoppingOrderDetails = () => {
+const ShoppingOrderDetails = ({ orderDetails }) => {
+	const { user } = useSelector((state) => state.auth);
+
+	console.log(orderDetails);
+
 	return (
 		<div className="max-w-[800px]">
 			<div className="grid gap-6">
 				<div className="grid gap-2">
 					<div className="flex items-center justify-between mt-6">
 						<p className="font-medium">Order Id</p>
-						<Label>#1234</Label>
+						<Label># {orderDetails?._id}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Date</p>
-						<Label>12/05/2025</Label>
+						<Label>{orderDetails?.orderDate.split("T")[0]}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Price</p>
-						<Label>$ 1000</Label>
+						<Label>$ {orderDetails?.totalAmount}</Label>
 					</div>
 					<div className="flex items-center justify-between mt-2">
 						<p className="font-medium">Order Status</p>
-						<Label>In Progress</Label>
+						<Label>{orderDetails?.orderStatus}</Label>
 					</div>
 				</div>
 				<Separator />
 				<div className="grid gap-4">
 					<div className="grid gap-2">
-						<div className="font-semibold">Order details</div>
+						<div className="font-medium text-lg text-center">Order Details</div>
+						<Separator />
 						<ul className="grid gap-3">
-							<li className="flex items-center justify-between">
-								<span>Product</span> <span>Quantity</span>
-								<span>Price</span>
+							{/* Header Row */}
+							<li className="grid grid-cols-3 gap-3 font-semibold border-b pb-2">
+								<span className="text-center">Product</span>
+								<span className="text-center">Quantity</span>
+								<span className="text-center">Price</span>
 							</li>
+
+							{/* Item Rows */}
+							{orderDetails?.cartItems && orderDetails.cartItems.length > 0 ? (
+								orderDetails.cartItems.map((item, index) => (
+									<li
+										key={index}
+										className="grid grid-cols-3 gap-3 justify-items-center border-b py-1"
+									>
+										<span className="capitalize">{item.title}</span>
+										<span>{item.quantity}</span>
+										<span>${item.price}</span>
+									</li>
+								))
+							) : (
+								<li className="text-center col-span-3 text-gray-500">
+									No items found.
+								</li>
+							)}
 						</ul>
 					</div>
 				</div>
 				<div className="grid gap-4">
 					<div className="grid gap-2">
 						<div className="font-semibold">Shipping Address</div>
-						<div className="grid grid-cols-2 gap-1 text-muted-foreground">
-							<span>John Doe</span>
-							<span>123 Main St</span>
-							<span>Anytown, USA</span>
-							<span>12345</span>
-							<span>(123) 456-7890</span>
-							<span>In front of the store</span>
+						<div className="grid grid-cols-3 gap-1 text-muted-foreground capitalize">
+							<span>{user.userName}</span>
+							<span>{orderDetails?.addressInfo?.address}</span>
+							<span>{orderDetails?.addressInfo?.city}</span>
+							<span>{orderDetails?.addressInfo?.pincode}</span>
+							<span>{orderDetails?.addressInfo?.phone}</span>
+							<span>{orderDetails?.addressInfo?.notes}</span>
 						</div>
 					</div>
 				</div>

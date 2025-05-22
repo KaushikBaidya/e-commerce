@@ -65,7 +65,16 @@ const finalizeOrderFromSession = async (req, res) => {
 
 		const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-		console.log("Session metadata:", session.metadata); // <-- ADD THIS
+		const existingOrder = await Order.findOne({
+			paymentId: session.payment_intent,
+		});
+
+		if (existingOrder) {
+			return res.status(200).json({
+				success: true,
+				message: "Order already finalized",
+			});
+		}
 
 		const metadata = session.metadata;
 
@@ -81,7 +90,7 @@ const finalizeOrderFromSession = async (req, res) => {
 			cartId: metadata.cartId,
 			cartItems: JSON.parse(metadata.cartItems),
 			addressInfo: JSON.parse(metadata.addressInfo),
-			orderStatus: metadata.orderStatus || "confirmed",
+			orderStatus: "confirmed",
 			paymentMethod: metadata.paymentMethod || "stripe",
 			paymentStatus: "paid",
 			totalAmount: metadata.totalAmount,
@@ -106,55 +115,6 @@ const finalizeOrderFromSession = async (req, res) => {
 		});
 	}
 };
-
-// const finalizeOrderFromSession = async (req, res) => {
-// 	try {
-// 		const { sessionId } = req.body;
-
-// 		const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-// 		const {
-// 			userId,
-// 			cartId,
-// 			orderStatus,
-// 			paymentMethod,
-// 			paymentStatus,
-// 			totalAmount,
-// 			orderDate,
-// 			orderUpdateDate,
-// 			addressInfo,
-// 			cartItems,
-// 		} = session.metadata;
-
-// 		const newOrder = new Order({
-// 			userId,
-// 			cartId,
-// 			cartItems: JSON.parse(cartItems),
-// 			addressInfo: JSON.parse(addressInfo),
-// 			orderStatus: orderStatus || "confirmed",
-// 			paymentMethod: paymentMethod || "stripe",
-// 			paymentStatus: "paid",
-// 			totalAmount,
-// 			orderDate,
-// 			orderUpdateDate,
-// 			paymentId: session.payment_intent,
-// 			payerId: session.customer_details?.email || "N/A",
-// 		});
-
-// 		await newOrder.save();
-// 		await Cart.findByIdAndDelete(cartId);
-
-// 		res.status(200).json({
-// 			success: true,
-// 			message: "Order saved successfully",
-// 		});
-// 	} catch (err) {
-// 		console.error("Error finalizing order from session:", err.message);
-// 		res
-// 			.status(500)
-// 			.json({ success: false, message: "Failed to finalize order" });
-// 	}
-// };
 
 const getAllOrdersByUser = async (req, res) => {
 	try {
