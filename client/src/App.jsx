@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import StripeSuccess from "./pages/shopping-view/StripeSuccess";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -94,6 +95,14 @@ function App() {
 						element={
 							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
 								<ShoppingAccount />
+							</CheckAuth>
+						}
+					/>
+					<Route
+						path="shop/stripe-success"
+						element={
+							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+								<StripeSuccess />
 							</CheckAuth>
 						}
 					/>

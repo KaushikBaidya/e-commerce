@@ -22,7 +22,7 @@ const initialState = {
 	pincode: "",
 	notes: "",
 };
-const Address = () => {
+const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 	const [formData, setFormData] = useState(initialState);
 	const [currentEditId, setCurrentEditId] = useState(null);
 	const { user } = useSelector((state) => state.auth);
@@ -118,6 +118,8 @@ const Address = () => {
 					addressList.map((address, index) => (
 						<AddressCard
 							key={index}
+							selectedId={selectedId}
+							setCurrentSelectedAddress={setCurrentSelectedAddress}
 							addressInfo={address}
 							handleDeleteAddress={handleDeleteAddress}
 							handleEditAddress={handleEditAddress}

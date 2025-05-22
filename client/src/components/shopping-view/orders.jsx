@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
 	Table,
@@ -10,8 +10,11 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { View } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import ShoppingOrderDetails from "./order-details";
 
 const ShoppingOrdersList = () => {
+	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 	return (
 		<Card>
 			<CardHeader>
@@ -38,10 +41,20 @@ const ShoppingOrdersList = () => {
 							<TableCell> 01/25/2023 </TableCell>
 							<TableCell> Delivered </TableCell>
 							<TableCell> $ 1,000 </TableCell>
-							<TableCell>
-								<Button>
-									<View /> View Details
-								</Button>
+							<TableCell className="flex justify-end">
+								<Dialog
+									open={openDetailsDialog}
+									onOpenChange={setOpenDetailsDialog}
+								>
+									<DialogTrigger asChild>
+										<Button>
+											<View className="mr-2" /> View Details
+										</Button>
+									</DialogTrigger>
+									<DialogContent>
+										<ShoppingOrderDetails />
+									</DialogContent>
+								</Dialog>
 							</TableCell>
 						</TableRow>
 					</TableBody>
