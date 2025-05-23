@@ -3,13 +3,12 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
-import { DiamondPlus } from "lucide-react";
+import { ShoppingCartIcon } from "lucide-react";
 
 const ShopProductTile = ({
 	product,
 	handleGetProductDetails,
 	handleAddToCart,
-	btnHide,
 }) => {
 	return (
 		<Card className="w-full max-w-sm mx-auto">
@@ -66,9 +65,9 @@ const ShopProductTile = ({
 				) : (
 					<Button
 						onClick={() => handleAddToCart(product?._id, product?.totalStock)}
-						className={`w-full ${btnHide && "hidden"} `}
+						className="w-full"
 					>
-						<DiamondPlus />
+						<ShoppingCartIcon />
 						Add to cart
 					</Button>
 				)}

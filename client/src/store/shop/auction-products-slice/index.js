@@ -32,7 +32,7 @@ const ShoppingAuctionProductsSlice = createSlice({
 	name: "shoppingAuctionProducts",
 	initialState,
 	reducers: {
-		setProductDetails: (state) => {
+		setAuctionProductDetails: (state) => {
 			state.auctionProductDetails = null;
 		},
 	},
@@ -63,6 +63,7 @@ const ShoppingAuctionProductsSlice = createSlice({
 	},
 });
 
-export const { setProductDetails } = ShoppingAuctionProductsSlice.actions;
+export const { setAuctionProductDetails } =
+	ShoppingAuctionProductsSlice.actions;
 
 export default ShoppingAuctionProductsSlice.reducer;

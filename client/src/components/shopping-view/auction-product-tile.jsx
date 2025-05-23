@@ -4,8 +4,11 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Clock, CalendarDays, User, Edit, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
+	// const { user } = useSelector((state) => state.auth);
+	const navigate = useNavigate();
 	return (
 		<Card className="w-full max-w-sm mx-auto shadow-md">
 			<div onClick={() => handleGetProductDetails(auctionProduct?._id)}>
@@ -73,23 +76,14 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
 					</div>
 				</CardContent>
 			</div>
-			<CardFooter className="flex justify-between px-4 pb-4">
+			<CardFooter>
 				<Button
-					onClick={() => {
-						setOpenCrtProdDialog(true);
-						setCurrentEditedId(auctionProduct?._id);
-						setFormData(auctionProduct);
-					}}
+					onClick={() =>
+						navigate(`/shop/auction-product-details/${auctionProduct?._id}`)
+					}
+					className="w-full"
 				>
-					<Edit className="w-4 h-4 mr-2" />
-					Edit
-				</Button>
-				<Button
-					variant="destructive"
-					onClick={() => handleDelete(auctionProduct?._id)}
-				>
-					<Trash2 className="w-4 h-4 mr-2" />
-					Delete
+					View Details
 				</Button>
 			</CardFooter>
 		</Card>

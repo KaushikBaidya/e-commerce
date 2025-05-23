@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { DiamondPlus, Send, StarIcon } from "lucide-react";
+import { ShoppingCartIcon, Send, StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -112,7 +112,7 @@ const ProductDetails = ({ open, setOpen, productDetails, btnHide }) => {
 								}
 								className={`w-full ${btnHide && "hidden"} `}
 							>
-								<DiamondPlus />
+								<ShoppingCartIcon />
 								Add to cart
 							</Button>
 						)}

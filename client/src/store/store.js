@@ -12,6 +12,8 @@ import ShopAddressSlice from "./shop/address-slice";
 import shopOrderSlice from "./shop/order-slice";
 import shopSearchSlice from "./shop/search-slice";
 
+import AuctionSlice from "./shop/auction-slice";
+
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
@@ -26,6 +28,8 @@ const store = configureStore({
 		shopAddress: ShopAddressSlice,
 		shopOrder: shopOrderSlice,
 		shopSearch: shopSearchSlice,
+
+		shopAuction: AuctionSlice,
 	},
 });
 

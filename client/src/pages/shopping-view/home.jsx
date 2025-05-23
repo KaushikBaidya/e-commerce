@@ -28,6 +28,7 @@ import {
 import ShopProductTile from "@/components/shopping-view/shop-product-tile";
 import { useNavigate } from "react-router-dom";
 import ProductDetails from "@/components/shopping-view/product-details";
+import { setAuctionProductDetails } from "@/store/shop/auction-products-slice";
 
 const categoriesWithIcon = [
 	{ id: "men", label: "Men", icon: ShirtIcon },
@@ -85,6 +86,7 @@ const ShoppingHome = () => {
 		if (productDetails !== null) {
 			setOpenDetailsDialog(true);
 		}
+		dispatch(setAuctionProductDetails());
 	}, [productDetails]);
 
 	useEffect(() => {

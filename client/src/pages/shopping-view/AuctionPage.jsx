@@ -11,13 +11,15 @@ import {
 	fetchAuctionProductDetails,
 	fetchAllAuctionProducts,
 } from "@/store/shop/auction-products-slice";
+import { toast } from "sonner";
+import { placeAuctionBid } from "@/store/shop/auction-slice";
 
 const AuctionPage = () => {
 	const [currrentSlide, setCurrentSlide] = useState(0);
 
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
-	const { auctionProductList, auctionProductDetails } = useSelector(
+	const { user } = useSelector((state) => state.auth);
+	const { auctionProductList } = useSelector(
 		(state) => state.shopAuctionProducts
 	);
 
@@ -26,6 +28,51 @@ const AuctionPage = () => {
 	function handleGetProductDetails(getCurrentProductId) {
 		dispatch(fetchAuctionProductDetails(getCurrentProductId));
 	}
+
+	const handlePlaceBid = (getCurrentProductId) => {
+		if (!user || user?.role !== "user") {
+			return toast.error("Please login to place bid");
+		}
+
+		const auctionItems = Array.isArray(auctionProductList)
+			? auctionProductList
+			: [];
+		if (!auctionItems.length) return toast.error("auction items empty");
+		console.log("auctionItems", auctionItems);
+
+		const auctionItem = auctionItems.find(
+			(item) => item._id === getCurrentProductId
+		);
+		if (!auctionItem) return toast.error("No auction item found");
+
+		const now = new Date();
+		if (new Date(auctionItem.startTime) > now) {
+			return toast.error("Auction hasn't started yet");
+		}
+		if (new Date(auctionItem.endTime) < now) {
+			return toast.error("Auction has already ended");
+		}
+
+		const baseBid = auctionItem.currentBid || auctionItem.startingBid;
+		const nextBid = baseBid + auctionItem.bidIncrement;
+
+		dispatch(
+			placeAuctionBid({
+				userId: user.id,
+				auctionId: getCurrentProductId,
+				bidAmount: nextBid,
+			})
+		)
+			.then((data) => {
+				if (data?.payload?.success) {
+					dispatch(fetchAllAuctionProducts());
+					toast.success("Bid placed successfully");
+				} else {
+					toast.error("Failed to place bid");
+				}
+			})
+			.catch(() => toast.error("Something went wrong"));
+	};
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -91,6 +138,7 @@ const AuctionPage = () => {
 									key={index}
 									auctionProduct={product}
 									handleGetProductDetails={handleGetProductDetails}
+									handlePlaceBid={handlePlaceBid}
 								/>
 							))}
 					</div>

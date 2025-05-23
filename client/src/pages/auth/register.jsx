@@ -62,6 +62,9 @@ const AuthRegister = () => {
 				setFormData={setFormData}
 				onSubmit={onSubmit}
 			/>
+			<Link className="font-medium text-primary mt-8 hover:underline" to="/">
+				Go home
+			</Link>
 		</div>
 	);
 };

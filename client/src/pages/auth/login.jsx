@@ -70,6 +70,9 @@ const AuthLogin = () => {
 					<p>email : newname@email.com</p>
 					<p>password : 123456789</p>
 				</div>
+				<Link className="font-medium text-primary mt-8 hover:underline" to="/">
+					Go home
+				</Link>
 			</div>
 		</div>
 	);
