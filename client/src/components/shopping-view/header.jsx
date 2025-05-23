@@ -139,7 +139,7 @@ const HeaderRightContent = () => {
 
 const ShoppingHeader = () => {
 	return (
-		<header className="sticky top-0 z-40 w-full bg-background border-b">
+		<header className="fixed top-0 z-40 w-full bg-background border-b">
 			<div className="flex h-16 items-center justify-between px-4 md:px-6">
 				<Link to="/" className="flex items-center gap-2">
 					<img src={logo} alt="logo" className="h-8 w-8" />
