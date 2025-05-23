@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import StripeSuccess from "./pages/shopping-view/StripeSuccess";
+import SearchProducts from "./pages/shopping-view/search";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -80,6 +81,7 @@ function App() {
 					{/* Public routes */}
 					<Route path="/" element={<ShoppingHome />} />
 					<Route path="shop/listing" element={<ShoppingListing />} />
+					<Route path="shop/search" element={<SearchProducts />} />
 
 					{/* Protected routes */}
 					<Route
