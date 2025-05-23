@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import ShoppingHeader from "./header";
-import Footer from "./Footer";
+import Footer from "./footer";
 
 const ShoppingLayout = () => {
 	return (

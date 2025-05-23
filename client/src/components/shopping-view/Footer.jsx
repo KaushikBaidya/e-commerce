@@ -90,9 +90,8 @@ const Footer = () => {
 				</div>
 
 				{/* Bottom Disclaimer */}
-				<div className="mt-12 border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-					&copy; {new Date().getFullYear()} ArtAuction House. All rights
-					reserved.
+				<div className="mt-12 border-t border-gray-700 pt-6 text-center text-sm text-gray-500 uppercase">
+					&copy; {new Date().getFullYear()} Galería. All rights reserved.
 				</div>
 			</div>
 		</footer>

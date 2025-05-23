@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import BannerOne from "../../assets/banner-1.webp";
 import BannerTwo from "../../assets/banner-2.webp";
@@ -18,7 +19,7 @@ import {
 	WatchIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllFilteredProducts,
