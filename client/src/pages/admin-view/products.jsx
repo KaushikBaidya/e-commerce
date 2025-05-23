@@ -113,9 +113,9 @@ const AdminProducts = () => {
 			</div>
 
 			{/* // product list */}
-			<div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
-				{productList && productList?.length > 0 ? (
-					productList.map((item) => (
+			{productList && productList?.length > 0 ? (
+				<div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+					{productList.map((item) => (
 						<AdminProductTile
 							key={item._id}
 							product={item}
@@ -124,11 +124,13 @@ const AdminProducts = () => {
 							setCurrentEditedId={setCurrentEditedId}
 							handleDelete={handleDelete}
 						/>
-					))
-				) : (
+					))}
+				</div>
+			) : (
+				<div className="w-full h-full flex items-center justify-center">
 					<NoItemFound />
-				)}
-			</div>
+				</div>
+			)}
 
 			{/* // create product dialog */}
 			<Sheet
