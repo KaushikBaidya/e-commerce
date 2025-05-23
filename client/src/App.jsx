@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import StripeSuccess from "./pages/shopping-view/StripeSuccess";
 import SearchProducts from "./pages/shopping-view/search";
 import AuctionProductsView from "./pages/admin-view/auction-products";
+import AuctionPage from "./pages/shopping-view/AuctionPage";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -66,6 +67,7 @@ function App() {
 					<Route path="orders" element={<AdminOrders />} />
 					<Route path="features" element={<AdminFeatures />} />
 				</Route>
+
 				{/* <Route
 					path="/shop"
 					element={
@@ -79,10 +81,12 @@ function App() {
 					<Route path="checkout" element={<ShoppingCheckout />} />
 					<Route path="account" element={<ShoppingAccount />} />
 				</Route> */}
+
 				<Route path="/" element={<ShoppingLayout />}>
 					{/* Public routes */}
 					<Route path="/" element={<ShoppingHome />} />
 					<Route path="shop/listing" element={<ShoppingListing />} />
+					<Route path="shop/auction" element={<AuctionPage />} />
 					<Route path="shop/search" element={<SearchProducts />} />
 
 					{/* Protected routes */}

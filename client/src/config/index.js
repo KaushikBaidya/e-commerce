@@ -142,6 +142,7 @@ export const addAuctionProductElements = [
 		type: "datetime-local",
 		placeholder: "Select auction start time",
 	},
+
 	{
 		label: "End Time",
 		name: "endTime",

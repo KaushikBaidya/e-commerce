@@ -1,5 +1,5 @@
-import { HomeIcon, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import {
 	Link,
 	useLocation,
@@ -23,6 +23,8 @@ import { logoutUser } from "@/store/auth-slice";
 import CartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
+
+import logo from "@/assets/logo.png";
 
 const MenuItems = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -140,8 +142,8 @@ const ShoppingHeader = () => {
 		<header className="sticky top-0 z-40 w-full bg-background border-b">
 			<div className="flex h-16 items-center justify-between px-4 md:px-6">
 				<Link to="/" className="flex items-center gap-2">
-					<HomeIcon className="h-6 w-6" />
-					<span className="font-bold">Ecommerce</span>
+					<img src={logo} alt="logo" className="h-8 w-8" />
+					<span className="font-bold uppercase text-xl">Galería</span>
 				</Link>
 				<Sheet>
 					<SheetTrigger>

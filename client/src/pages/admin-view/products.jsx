@@ -1,4 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addProductFormElements } from "@/config";
+
 import { Button } from "@/components/ui/button";
 import {
 	Sheet,
@@ -6,18 +11,18 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/sheet";
+
 import CommonForm from "@/components/common/form";
-import { addProductFormElements } from "@/config";
+import AdminProductTile from "@/components/admin-view/product-tile";
 import ImageUpload from "@/components/admin-view/image-upload";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
 	addNewProduct,
 	deleteProduct,
 	editProduct,
 	fetchAllProducts,
 } from "@/store/admin/products-slice";
-import { toast } from "sonner";
-import AdminProductTile from "@/components/admin-view/product-tile";
+import NoItemFound from "@/components/common/no-item-found";
 
 const initialFormData = {
 	image: null,
@@ -39,15 +44,6 @@ const AdminProducts = () => {
 
 	const { productList } = useSelector((state) => state.adminProducts);
 	const dispatch = useDispatch();
-
-	useEffect(() => {
-		if (uloadedImageUrl) {
-			setFormData((prev) => ({
-				...prev,
-				image: uloadedImageUrl,
-			}));
-		}
-	}, [uloadedImageUrl]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -95,32 +91,45 @@ const AdminProducts = () => {
 	};
 
 	useEffect(() => {
+		if (uloadedImageUrl) {
+			setFormData((prev) => ({
+				...prev,
+				image: uloadedImageUrl,
+			}));
+		}
+	}, [uloadedImageUrl]);
+
+	useEffect(() => {
 		dispatch(fetchAllProducts());
 	}, [dispatch]);
 
 	return (
 		<Fragment>
-			<div className="w-full mb-5 flex justify-between">
+			<div className="w-full mb-5 flex justify-between border rounded p-4">
 				<h1 className="text-3xl text-gray-800 font-bold">Products</h1>
 				<Button onClick={() => setOpenCrtProdDialog(true)}>
 					Add new product
 				</Button>
 			</div>
+
 			{/* // product list */}
 			<div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
-				{productList && productList?.length > 0
-					? productList.map((item) => (
-							<AdminProductTile
-								setFormData={setFormData}
-								setCurrentEditedId={setCurrentEditedId}
-								setOpenCrtProdDialog={setOpenCrtProdDialog}
-								key={item._id}
-								product={item}
-								handleDelete={handleDelete}
-							/>
-					  ))
-					: null}
+				{productList && productList?.length > 0 ? (
+					productList.map((item) => (
+						<AdminProductTile
+							key={item._id}
+							product={item}
+							setFormData={setFormData}
+							setOpenCrtProdDialog={setOpenCrtProdDialog}
+							setCurrentEditedId={setCurrentEditedId}
+							handleDelete={handleDelete}
+						/>
+					))
+				) : (
+					<NoItemFound />
+				)}
 			</div>
+
 			{/* // create product dialog */}
 			<Sheet
 				open={openCrtProdDialog}

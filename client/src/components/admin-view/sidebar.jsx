@@ -9,6 +9,7 @@ import {
 import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import logo from "../../assets/logo.png";
 
 const adminSidebarLinks = [
 	{
@@ -76,7 +77,7 @@ const AdminSidebar = ({ open, setOpen }) => {
 					<div className="h-full flex flex-col bg-white text-foreground">
 						<SheetHeader className="border-b">
 							<SheetTitle className="flex items-center gap-2 text-2xl font-semibold">
-								<LandPlot size={30} />
+								<img src={logo} alt="logo" className="h-8 w-8" />
 								<span>Admin Pannel</span>
 							</SheetTitle>
 						</SheetHeader>
@@ -89,7 +90,7 @@ const AdminSidebar = ({ open, setOpen }) => {
 					onClick={() => navigate("/admin/dashboard")}
 					className="flex items-center gap-2 cursor-pointer"
 				>
-					<LandPlot size={30} />
+					<img src={logo} alt="logo" className="h-8 w-8" />
 					<h2 className="text-2xl font-semibold">Admin Pannel</h2>
 				</div>
 				<MenuItems />

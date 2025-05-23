@@ -1,3 +1,4 @@
+import { Edit, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 
@@ -41,9 +42,16 @@ const AdminProductTile = ({
 							setFormData(product);
 						}}
 					>
+						<Edit />
 						Edit
 					</Button>
-					<Button onClick={() => handleDelete(product?._id)}>Delete</Button>
+					<Button
+						variant="destructive"
+						onClick={() => handleDelete(product?._id)}
+					>
+						<Trash2 />
+						Delete
+					</Button>
 				</CardFooter>
 			</div>
 		</Card>

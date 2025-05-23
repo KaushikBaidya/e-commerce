@@ -32,21 +32,21 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 	}
 );
 
-// export const editAuctionProduct = createAsyncThunk(
-// 	"/products/editProduct",
-// 	async ({ id, formData }) => {
-// 		const result = await axios.put(
-// 			`http://localhost:5000/api/admin/products/auction-product/edit/${id}`,
-// 			formData,
-// 			{
-// 				headers: {
-// 					"Content-Type": "application/json",
-// 				},
-// 			}
-// 		);
-// 		return result?.data;
-// 	}
-// );
+export const editAuctionProduct = createAsyncThunk(
+	"/products/editAuctionProduct",
+	async ({ id, formData }) => {
+		const result = await axios.put(
+			`http://localhost:5000/api/admin/products/auction-product/edit/${id}`,
+			formData,
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
+		return result?.data;
+	}
+);
 
 export const deleteAuctionProduct = createAsyncThunk(
 	"/auction-products/deleteAuctionProduct",
@@ -69,11 +69,11 @@ const AdminAuctionProductsSlice = createSlice({
 			})
 			.addCase(fetchAllAuctionProducts.fulfilled, (state, action) => {
 				state.isLoading = false;
-				state.productList = action.payload.data;
+				state.auctionProductList = action.payload.data;
 			})
 			.addCase(fetchAllAuctionProducts.rejected, (state) => {
 				state.isLoading = false;
-				state.productList = [];
+				state.auctionProductList = [];
 			});
 	},
 });

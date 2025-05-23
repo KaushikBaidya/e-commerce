@@ -114,6 +114,7 @@ const editProduct = async (req, res) => {
 		res.status(500).json({ success: false, message: "Server error" });
 	}
 };
+
 //delete product
 const deleteProduct = async (req, res) => {
 	try {

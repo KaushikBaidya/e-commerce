@@ -62,6 +62,56 @@ const fetchAllAuctionProducts = async (req, res) => {
 	}
 };
 
+//update auctionable product
+const editAuctionProduct = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const {
+			image,
+			title,
+			description,
+			artist,
+			startingBid,
+			bidIncrement,
+			startTime,
+			endTime,
+			isActive,
+		} = req.body;
+
+		const findAuctionProduct = await AuctionProduct.findById(id);
+		if (!findAuctionProduct) {
+			return res.status(404).json({
+				success: false,
+				message: "Auction Product not found",
+			});
+		}
+
+		findAuctionProduct.title = title || findAuctionProduct.title;
+		findAuctionProduct.description =
+			description || findAuctionProduct.description;
+		findAuctionProduct.artist = artist || findAuctionProduct.artist;
+		findAuctionProduct.startingBid =
+			startingBid === "" ? 0 : startingBid || findAuctionProduct.startingBid;
+		findAuctionProduct.bidIncrement =
+			bidIncrement === "" ? 0 : bidIncrement || findAuctionProduct.bidIncrement;
+		findAuctionProduct.startTime = startTime || findAuctionProduct.startTime;
+		findAuctionProduct.endTime = endTime || findAuctionProduct.endTime;
+		findAuctionProduct.isActive = isActive || findAuctionProduct.isActive;
+		findAuctionProduct.image = image || findAuctionProduct.image;
+
+		await findAuctionProduct.save();
+
+		res.status(200).json({
+			success: true,
+			data: findAuctionProduct,
+			message: "Auctionable product updated successfully",
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ success: false, message: "Server error" });
+	}
+};
+
 //delete auctionable product
 const deleteAuctionProduct = async (req, res) => {
 	try {
@@ -85,6 +135,7 @@ const deleteAuctionProduct = async (req, res) => {
 
 module.exports = {
 	addAuctionProduct,
+	editAuctionProduct,
 	fetchAllAuctionProducts,
 	deleteAuctionProduct,
 };

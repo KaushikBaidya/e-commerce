@@ -90,7 +90,7 @@ const ImageUpload = ({
 						htmlFor="image-upload"
 						className={`${
 							isEditMode ? "cursor-not-allowed" : ""
-						} flex flex-col items-center justify-center h-32 cursor-pointer`}
+						} flex flex-col items-center justify-center h-24 cursor-pointer`}
 					>
 						<UploadCloud className="w-8 h-8 mb-2" />
 						<span>Drag and drop or click to upload</span>
