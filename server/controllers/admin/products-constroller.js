@@ -70,6 +70,7 @@ const fetchAllProducts = async (req, res) => {
 		res.status(500).json({ success: false, message: "Server error" });
 	}
 };
+
 //update product
 const editProduct = async (req, res) => {
 	try {

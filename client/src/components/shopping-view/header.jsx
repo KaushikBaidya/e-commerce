@@ -34,6 +34,7 @@ const MenuItems = () => {
 		const currentFilter =
 			getCurrentItem.id !== "home"
 				? getCurrentItem.id !== "products" &&
+				  getCurrentItem.id !== "auction" &&
 				  getCurrentItem.id !== "search" && {
 						category: [getCurrentItem.id],
 				  }

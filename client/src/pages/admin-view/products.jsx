@@ -100,7 +100,8 @@ const AdminProducts = () => {
 
 	return (
 		<Fragment>
-			<div className="w-full mb-5 flex justify-end ">
+			<div className="w-full mb-5 flex justify-between">
+				<h1 className="text-3xl text-gray-800 font-bold">Products</h1>
 				<Button onClick={() => setOpenCrtProdDialog(true)}>
 					Add new product
 				</Button>

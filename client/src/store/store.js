@@ -1,22 +1,28 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth-slice";
+
 import AdminProductsSlice from "./admin/products-slice";
+import AdminAuctionProductsSlice from "./admin/auction-products-slice";
+import AdminOrderSlice from "./admin/order-slice";
+
 import ShoppingProductsSlice from "./shop/products-slice";
 import ShoppingCartSlice from "./shop/cart-slice";
 import ShopAddressSlice from "./shop/address-slice";
 import shopOrderSlice from "./shop/order-slice";
-import AdminOrderSlice from "./admin/order-slice";
 import shopSearchSlice from "./shop/search-slice";
 
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
+
 		adminProducts: AdminProductsSlice,
+		adminAuctionProduct: AdminAuctionProductsSlice,
+		adminOrder: AdminOrderSlice,
+
 		shopProducts: ShoppingProductsSlice,
 		shopCart: ShoppingCartSlice,
 		shopAddress: ShopAddressSlice,
 		shopOrder: shopOrderSlice,
-		adminOrder: AdminOrderSlice,
 		shopSearch: shopSearchSlice,
 	},
 });

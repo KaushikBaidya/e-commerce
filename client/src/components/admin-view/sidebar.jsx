@@ -1,4 +1,5 @@
 import {
+	Gem,
 	LandPlot,
 	LayoutDashboard,
 	LayoutList,
@@ -17,6 +18,19 @@ const adminSidebarLinks = [
 		icons: <LayoutDashboard />,
 	},
 	{
+		id: "auction-products",
+		name: "Auction Products",
+		path: "/admin/auction-products",
+		icons: <Gem color="#f7d514" />,
+	},
+	{
+		id: "products",
+		name: "Products",
+		path: "/admin/products",
+		icons: <ShoppingBasket />,
+	},
+
+	{
 		id: "orders",
 		name: "Orders",
 		path: "/admin/orders",
@@ -27,12 +41,6 @@ const adminSidebarLinks = [
 		name: "Features",
 		path: "/admin/features",
 		icons: <ShoppingBag />,
-	},
-	{
-		id: "products",
-		name: "Products",
-		path: "/admin/products",
-		icons: <ShoppingBasket />,
 	},
 ];
 

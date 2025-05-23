@@ -100,11 +100,72 @@ export const addProductFormElements = [
 	},
 ];
 
+export const addAuctionProductElements = [
+	{
+		label: "Title",
+		name: "title",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter artwork title",
+	},
+	{
+		label: "Description",
+		name: "description",
+		componentType: "textarea",
+		placeholder: "Enter artwork description",
+	},
+	{
+		label: "Artist Name",
+		name: "artist",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter artist name",
+	},
+	{
+		label: "Starting Bid",
+		name: "startingBid",
+		componentType: "input",
+		type: "number",
+		placeholder: "Enter starting bid amount",
+	},
+	{
+		label: "Bid Increment",
+		name: "bidIncrement",
+		componentType: "input",
+		type: "number",
+		placeholder: "Enter minimum bid increment",
+	},
+	{
+		label: "Start Time",
+		name: "startTime",
+		componentType: "input",
+		type: "datetime-local",
+		placeholder: "Select auction start time",
+	},
+	{
+		label: "End Time",
+		name: "endTime",
+		componentType: "input",
+		type: "datetime-local",
+		placeholder: "Select auction end time",
+	},
+	{
+		label: "Is Active",
+		name: "isActive",
+		componentType: "checkbox",
+	},
+];
+
 export const shoppingViewHeaderMenuItems = [
 	{
 		id: "home",
 		label: "Home",
 		path: "/",
+	},
+	{
+		id: "auction",
+		label: "Auction",
+		path: "/shop/auction",
 	},
 	{
 		id: "products",
@@ -121,21 +182,21 @@ export const shoppingViewHeaderMenuItems = [
 		label: "Women",
 		path: "/shop/listing",
 	},
-	{
-		id: "kids",
-		label: "Kids",
-		path: "/shop/listing",
-	},
-	{
-		id: "footwear",
-		label: "Footwear",
-		path: "/shop/listing",
-	},
-	{
-		id: "accessories",
-		label: "Accessories",
-		path: "/shop/listing",
-	},
+	// {
+	// 	id: "kids",
+	// 	label: "Kids",
+	// 	path: "/shop/listing",
+	// },
+	// {
+	// 	id: "footwear",
+	// 	label: "Footwear",
+	// 	path: "/shop/listing",
+	// },
+	// {
+	// 	id: "accessories",
+	// 	label: "Accessories",
+	// 	path: "/shop/listing",
+	// },
 	{
 		id: "search",
 		label: "Search",

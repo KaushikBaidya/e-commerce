@@ -21,6 +21,7 @@ import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import StripeSuccess from "./pages/shopping-view/StripeSuccess";
 import SearchProducts from "./pages/shopping-view/search";
+import AuctionProductsView from "./pages/admin-view/auction-products";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -61,6 +62,7 @@ function App() {
 				>
 					<Route path="dashboard" element={<AdminDashboard />} />
 					<Route path="products" element={<AdminProducts />} />
+					<Route path="auction-products" element={<AuctionProductsView />} />
 					<Route path="orders" element={<AdminOrders />} />
 					<Route path="features" element={<AdminFeatures />} />
 				</Route>

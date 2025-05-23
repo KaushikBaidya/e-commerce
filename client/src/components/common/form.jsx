@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -9,6 +10,7 @@ import {
 	SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { Checkbox } from "../ui/checkbox";
 
 const CommonForm = ({
 	formControls,
@@ -80,6 +82,26 @@ const CommonForm = ({
 							})
 						}
 					/>
+				);
+				break;
+
+			case "checkbox":
+				element = (
+					<div className="flex items-center space-x-2">
+						<Checkbox
+							id={getControlItem.name}
+							checked={!!formData[getControlItem.name]} // Coerce to boolean
+							onCheckedChange={(checked) =>
+								setFormData({
+									...formData,
+									[getControlItem.name]: checked,
+								})
+							}
+						/>
+						<Label htmlFor={getControlItem.name}>
+							{getControlItem.checkboxLabel || getControlItem.label}
+						</Label>
+					</div>
 				);
 				break;
 

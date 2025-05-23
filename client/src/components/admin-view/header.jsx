@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { AlignJustify, LogOut } from "lucide-react";
+import { AlignJustify, Bell, LogOut } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/auth-slice";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,10 @@ const AdminHeader = ({ setOpen }) => {
 				<AlignJustify />
 				<span className="sr-only">Admin Panel</span>
 			</Button>
-			<div className="flex flex-1 justify-end">
+			<div className="flex flex-1 justify-end gap-2">
+				<Button variant={"ghost"}>
+					<Bell size={30} />
+				</Button>
 				<Button
 					onClick={handleLogout}
 					className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow"
