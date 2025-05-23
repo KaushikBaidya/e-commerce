@@ -121,16 +121,18 @@ const AuctionProductsView = () => {
 
 			{/* Auction Product List */}
 			{auctionProductList && auctionProductList.length > 0 ? (
-				auctionProductList.map((product) => (
-					<AdminAuctionProductTile
-						key={product._id}
-						auctionProduct={product}
-						setFormData={setFormData}
-						setOpenCrtProdDialog={setOpenCrtProdDialog}
-						setCurrentEditedId={setCurrentEditedId}
-						handleDelete={handleDelete}
-					/>
-				))
+				<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+					{auctionProductList.map((product) => (
+						<AdminAuctionProductTile
+							key={product._id}
+							auctionProduct={product}
+							setFormData={setFormData}
+							setOpenCrtProdDialog={setOpenCrtProdDialog}
+							setCurrentEditedId={setCurrentEditedId}
+							handleDelete={handleDelete}
+						/>
+					))}
+				</div>
 			) : (
 				<NoItemFound />
 			)}

@@ -114,7 +114,7 @@ const AdminProducts = () => {
 
 			{/* // product list */}
 			{productList && productList?.length > 0 ? (
-				<div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+				<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
 					{productList.map((item) => (
 						<AdminProductTile
 							key={item._id}
