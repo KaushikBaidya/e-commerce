@@ -1,5 +1,6 @@
 const Order = require("../../models/Order");
 const AuctionOrder = require("../../models/AuctionOrder");
+const User = require("../../models/User");
 
 const getAllOrdersOfAllUsers = async (req, res) => {
 	try {
@@ -38,6 +39,30 @@ const getAllAuctionOrdersOfAllUsers = async (req, res) => {
 		res.status(200).json({
 			success: true,
 			data: orders,
+		});
+	} catch (e) {
+		console.log(e);
+		res.status(500).json({
+			success: false,
+			message: "Some error occured!",
+		});
+	}
+};
+
+const getAllUsers = async (req, res) => {
+	try {
+		const users = await User.find({});
+
+		if (!users.length) {
+			return res.status(404).json({
+				success: false,
+				message: "No users found!",
+			});
+		}
+
+		res.status(200).json({
+			success: true,
+			data: users,
 		});
 	} catch (e) {
 		console.log(e);
@@ -104,6 +129,7 @@ const updateOrderStatus = async (req, res) => {
 };
 
 module.exports = {
+	getAllUsers,
 	getAllOrdersOfAllUsers,
 	getAllAuctionOrdersOfAllUsers,
 	getOrderDetailsForAdmin,

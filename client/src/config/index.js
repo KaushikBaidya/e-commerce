@@ -165,7 +165,7 @@ export const shoppingViewHeaderMenuItems = [
 	},
 	{
 		id: "auction",
-		label: "Auction",
+		label: "Collection",
 		path: "/shop/auction",
 	},
 	// {
@@ -198,11 +198,11 @@ export const shoppingViewHeaderMenuItems = [
 	// 	label: "Accessories",
 	// 	path: "/shop/listing",
 	// },
-	{
-		id: "search",
-		label: "Search",
-		path: "/shop/search",
-	},
+	// {
+	// 	id: "search",
+	// 	label: "Search",
+	// 	path: "/shop/search",
+	// },
 ];
 
 export const categoryOptionsMap = {
