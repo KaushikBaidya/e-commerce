@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { CircleCheckBig } from "lucide-react";
 import { fetchAllAuctionProducts } from "@/store/shop/auction-products-slice";
+import { getAllOrdersByUserId } from "@/store/shop/auction-checkout-slice";
 
 const MyBids = () => {
 	const dispatch = useDispatch();
@@ -26,27 +27,40 @@ const MyBids = () => {
 	const { auctionProductList } = useSelector(
 		(state) => state.shopAuctionProducts
 	);
+	const { orderList } = useSelector((state) => state.auctionCheckout);
 
-	console.log(auctionProductList, "auctionProductList");
+	console.log("auction-order-List", orderList);
 
-	const canCheckout = (id) => {
-		const product = auctionProductList.find((p) => p._id === id);
+	const canCheckout = (auctionItemId) => {
+		const product = auctionProductList.find((p) => p._id === auctionItemId);
 		if (!product) return false;
+
 		const auctionEnded = new Date(product.endTime) < new Date();
 		const isWinner = product.highestBidder === user?.id;
+
 		return auctionEnded && isWinner;
 	};
 
+	const hasPaidForAuction = (auctionProductId) => {
+		if (!orderList || !user) return false;
+
+		return orderList.some(
+			(order) =>
+				order.productId === auctionProductId &&
+				order.userId === user.id &&
+				order.paymentStatus === "paid"
+		);
+	};
+
 	const handleNavigate = (id) => {
-		navigate(`/auction/checkout`);
+		navigate(`/auction/checkout/${id}`);
 	};
 
 	useEffect(() => {
 		dispatch(fetchAuctionItems(user?.id));
+		dispatch(getAllOrdersByUserId(user?.id));
 		dispatch(fetchAllAuctionProducts());
 	}, [dispatch]);
-
-	console.log(auctionItems, "auctionItems");
 
 	return (
 		<Card>
@@ -94,11 +108,38 @@ const MyBids = () => {
 											</span>
 										</TableCell>
 										<TableCell className="flex justify-end">
-											{canCheckout(item.id) && (
-												<Button onClick={() => handleNavigate(item.id)}>
-													<CircleCheckBig className="mr-1" /> Checkout
-												</Button>
-											)}
+											{(() => {
+												const product = auctionProductList.find(
+													(p) => p._id === item.id
+												);
+												const auctionEnded =
+													product && new Date(product.endTime) < new Date();
+												const isWinner =
+													product && product.highestBidder === user?.id;
+												const hasPaid = hasPaidForAuction(item.id);
+
+												if (isWinner && auctionEnded && !hasPaid) {
+													return (
+														<Button onClick={() => handleNavigate(item.id)}>
+															<CircleCheckBig className="mr-1" /> Checkout
+														</Button>
+													);
+												} else if (isWinner && auctionEnded && hasPaid) {
+													return (
+														<span className="text-green-600 font-semibold my-4">
+															Paid
+														</span>
+													);
+												} else if (!isWinner && auctionEnded) {
+													return (
+														<span className="text-red-500 font-medium my-4">
+															Sold Out
+														</span>
+													);
+												} else {
+													return null;
+												}
+											})()}
 										</TableCell>
 									</TableRow>
 								);

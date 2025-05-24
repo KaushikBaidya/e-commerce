@@ -24,6 +24,8 @@ import SearchProducts from "./pages/shopping-view/search";
 import AuctionProductsView from "./pages/admin-view/auction-products";
 import AuctionPage from "./pages/shopping-view/AuctionPage";
 import AuctionDetails from "./pages/shopping-view/auctionDetails";
+import AuctionCheckout from "./pages/shopping-view/auction-checkout";
+import AuctionStripeSuccess from "./pages/shopping-view/AuctionStripeSuccess";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -100,6 +102,22 @@ function App() {
 						element={
 							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
 								<ShoppingCheckout />
+							</CheckAuth>
+						}
+					/>
+					<Route
+						path="auction/checkout/:id"
+						element={
+							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+								<AuctionCheckout />
+							</CheckAuth>
+						}
+					/>
+					<Route
+						path="auction/stripe-success"
+						element={
+							<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+								<AuctionStripeSuccess />
 							</CheckAuth>
 						}
 					/>

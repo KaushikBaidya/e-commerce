@@ -13,6 +13,7 @@ import shopOrderSlice from "./shop/order-slice";
 import shopSearchSlice from "./shop/search-slice";
 
 import AuctionSlice from "./shop/auction-slice";
+import AuctionCheckoutSlice from "./shop/auction-checkout-slice";
 
 const store = configureStore({
 	reducer: {
@@ -30,6 +31,7 @@ const store = configureStore({
 		shopSearch: shopSearchSlice,
 
 		shopAuction: AuctionSlice,
+		auctionCheckout: AuctionCheckoutSlice,
 	},
 });
 

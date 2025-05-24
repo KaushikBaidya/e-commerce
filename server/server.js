@@ -17,6 +17,8 @@ const shopAddressRouter = require("./routes/shop/address-route");
 const shopOrderRouter = require("./routes/shop/order-route");
 const shopSearchRouter = require("./routes/shop/search-routes");
 
+const auctionCheckoutRouter = require("./routes/shop/auction-checkout-route");
+
 // connect database
 mongoose
 	.connect(
@@ -57,5 +59,7 @@ app.use("/api/shop/cart", shopCartRouter);
 app.use("/api/shop/address", shopAddressRouter);
 app.use("/api/shop/order", shopOrderRouter);
 app.use("/api/shop/search", shopSearchRouter);
+
+app.use("/api/auction/checkout", auctionCheckoutRouter);
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

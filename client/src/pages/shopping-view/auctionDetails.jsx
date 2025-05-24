@@ -31,13 +31,6 @@ const AuctionDetails = () => {
 		window.location.reload();
 	};
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		dispatch(setAuctionProductDetails());
-	// 		dispatch(setProductDetails());
-	// 	};
-	// }, [dispatch]);
-
 	const handlePlaceBid = (productId) => {
 		if (!user || user.role !== "user") {
 			return toast.error("Please login to place bid");
@@ -142,22 +135,6 @@ const AuctionDetails = () => {
 								৳ {auctionProductDetails.bidIncrement}
 							</span>
 						</div>
-						{/* <div className="flex flex-col">
-							<span className="flex items-center gap-1 text-gray-500">
-								<CalendarDays className="w-4 h-4" /> Starts
-							</span>
-							<span>
-								{format(new Date(auctionProductDetails.startTime), "PPPp")}
-							</span>
-						</div>
-						<div className="flex flex-col">
-							<span className="flex items-center gap-1 text-gray-500">
-								<Clock className="w-4 h-4" /> Ends
-							</span>
-							<span>
-								{format(new Date(auctionProductDetails.endTime), "PPPp")}
-							</span>
-						</div> */}
 					</div>
 
 					<div>
