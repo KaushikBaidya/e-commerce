@@ -8,34 +8,21 @@ import {
 	TableHeader,
 	TableRow,
 } from "../ui/table";
-import { Button } from "../ui/button";
-import { View } from "lucide-react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { Badge } from "../ui/badge";
+
 import { fetchAuctionItems } from "@/store/shop/auction-slice";
 
 const MyBids = () => {
-	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
-	// const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
-	const { auctionItems } = useSelector((state) => state.AuctionSlice);
-
-	function handleFetchOrderDetails(getId) {
-		dispatch(fetchAuctionItems(getId));
-	}
+	const { auctionItems } = useSelector((state) => state.shopAuction);
 
 	useEffect(() => {
-		dispatch(getAllOrdersByUserId(user?.id));
+		dispatch(fetchAuctionItems(user?.id));
 	}, [dispatch]);
 
-	useEffect(() => {
-		if (orderDetails !== null) setOpenDetailsDialog(true);
-	}, [orderDetails]);
-
-	// console.log(orderDetails);
+	console.log(auctionItems);
 
 	return (
 		<Card>
@@ -48,69 +35,49 @@ const MyBids = () => {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Order Id</TableHead>
-							<TableHead>Order Date</TableHead>
-							<TableHead>Order Status</TableHead>
-							<TableHead>Order Price</TableHead>
+							<TableHead>Artwork</TableHead>
+							<TableHead>Your Bid</TableHead>
+							<TableHead>Current Bid</TableHead>
+							<TableHead>Status</TableHead>
 							<TableHead>
 								<span className="sr-only">Details</span>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{orderList && orderList.length > 0 ? (
-							orderList.map((order) => (
-								<TableRow>
-									<TableCell>@_{order?._id} </TableCell>
-									<TableCell>{order?.orderDate.split("T")[0]} </TableCell>
-									<TableCell>
-										<Badge
-											className={`py-1 px-3 ${
-												order?.orderStatus === "confirmed"
-													? "bg-blue-400"
-													: order?.orderStatus === "pending"
-													? "bg-yellow-400"
-													: order?.orderStatus === "in-progress"
-													? "bg-orange-500"
-													: order?.orderStatus === "shipped"
-													? "bg-purple-500"
-													: order?.orderStatus === "cancelled"
-													? "bg-red-500"
-													: order?.orderStatus === "delivered"
-													? "bg-green-500"
-													: order?.orderStatus === "rejected"
-													? "bg-red-600"
-													: "bg-gray-600"
-											}`}
-										>
-											{order?.orderStatus}
-										</Badge>
-									</TableCell>
-									<TableCell> ৳ {order?.totalAmount} </TableCell>
-									<TableCell className="flex justify-end">
-										<Dialog
-											open={openDetailsDialog}
-											onOpenChange={() => {
-												setOpenDetailsDialog(false);
-												dispatch(resetOrderDetails());
-											}}
-										>
-											<DialogTrigger asChild>
-												<Button
-													onClick={() => handleFetchOrderDetails(order?._id)}
-												>
-													<View className="mr-2" /> View Details
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="max-w-[90vw] sm:max-w[80vw] lg:max-w-[50vw]">
-												<ShoppingOrderDetails orderDetails={orderDetails} />
-											</DialogContent>
-										</Dialog>
-									</TableCell>
-								</TableRow>
-							))
+						{auctionItems.length ? (
+							auctionItems.map((item) => {
+								const isLeading = item.userBid >= item.currentBid;
+								return (
+									<TableRow key={item.id}>
+										<TableCell className="flex items-center gap-3">
+											<img
+												src={item.image}
+												alt={item.title}
+												className="h-10 w-10 object-cover rounded-md border"
+											/>
+											<span>{item.title}</span>
+										</TableCell>
+										<TableCell>৳ {item.userBid.toLocaleString()}</TableCell>
+										<TableCell>৳ {item.currentBid.toLocaleString()}</TableCell>
+										<TableCell>
+											<span
+												className={`font-medium ${
+													isLeading ? "text-green-600" : "text-red-500"
+												}`}
+											>
+												{isLeading ? "Leading" : "Outbid"}
+											</span>
+										</TableCell>
+									</TableRow>
+								);
+							})
 						) : (
-							<h1>No orders found</h1>
+							<TableRow>
+								<TableCell colSpan={4} className="text-center text-gray-500">
+									You haven't placed any bids yet.
+								</TableCell>
+							</TableRow>
 						)}
 					</TableBody>
 				</Table>

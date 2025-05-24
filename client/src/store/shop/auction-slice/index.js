@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export const placeAuctionBid = createAsyncThunk(
-	"cart/addToCart",
+	"cart/placeAuctionBid",
 	async ({ userId, auctionId, bidAmount }) => {
 		const response = await axios.put(
 			"http://localhost:5000/api/shop/auction/place-bid",
@@ -18,8 +18,10 @@ export const placeAuctionBid = createAsyncThunk(
 );
 
 export const fetchAuctionItems = createAsyncThunk(
-	"cart/fetchCartItems",
+	"cart/fetchAuctionItems",
 	async (userId) => {
+		console.log(userId);
+
 		const response = await axios.get(
 			`http://localhost:5000/api/shop/auction/get/${userId}`
 		);
