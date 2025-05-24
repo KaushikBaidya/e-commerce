@@ -16,6 +16,16 @@ export const getAllOrdersForAdmin = createAsyncThunk(
 	}
 );
 
+export const getAllAuctionOrdersForAdmin = createAsyncThunk(
+	"order/getAllAuctionOrdersForAdmin",
+	async () => {
+		const response = await axios.get(
+			"http://localhost:5000/api/admin/orders/auction-order/get"
+		);
+		return response.data;
+	}
+);
+
 export const fetchOrderDetailsForAdmin = createAsyncThunk(
 	"order/fetchOrderDetailsForAdmin",
 	async (id) => {
@@ -55,6 +65,17 @@ const adminOrderSlice = createSlice({
 				state.orderList = action.payload.data;
 			})
 			.addCase(getAllOrdersForAdmin.rejected, (state) => {
+				state.isLoading = false;
+				state.orderList = [];
+			})
+			.addCase(getAllAuctionOrdersForAdmin.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAllAuctionOrdersForAdmin.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.orderList = action.payload.data;
+			})
+			.addCase(getAllAuctionOrdersForAdmin.rejected, (state) => {
 				state.isLoading = false;
 				state.orderList = [];
 			})

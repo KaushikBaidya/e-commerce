@@ -4,11 +4,13 @@ const {
 	getAllOrdersOfAllUsers,
 	getOrderDetailsForAdmin,
 	updateOrderStatus,
+	getAllAuctionOrdersOfAllUsers,
 } = require("../../controllers/admin/order-controller");
 
 const router = express.Router();
 
 router.get("/get", getAllOrdersOfAllUsers);
+router.get("/auction-order/get", getAllAuctionOrdersOfAllUsers);
 router.get("/details/:id", getOrderDetailsForAdmin);
 router.put("/update/:id", updateOrderStatus);
 

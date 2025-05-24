@@ -26,6 +26,7 @@ import AuctionPage from "./pages/shopping-view/AuctionPage";
 import AuctionDetails from "./pages/shopping-view/auctionDetails";
 import AuctionCheckout from "./pages/shopping-view/auction-checkout";
 import AuctionStripeSuccess from "./pages/shopping-view/AuctionStripeSuccess";
+import AdminAuctionOrders from "./pages/admin-view/AdminAuctionOrders";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -68,6 +69,7 @@ function App() {
 					<Route path="products" element={<AdminProducts />} />
 					<Route path="auction-products" element={<AuctionProductsView />} />
 					<Route path="orders" element={<AdminOrders />} />
+					<Route path="auction-orders" element={<AdminAuctionOrders />} />
 					<Route path="features" element={<AdminFeatures />} />
 				</Route>
 

@@ -1,10 +1,12 @@
 import {
+	GalleryHorizontal,
 	Gem,
 	LandPlot,
 	LayoutDashboard,
 	LayoutList,
 	ShoppingBag,
 	ShoppingBasket,
+	User,
 } from "lucide-react";
 import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,24 +27,36 @@ const adminSidebarLinks = [
 		icons: <Gem color="#f7d514" />,
 	},
 	{
-		id: "products",
-		name: "Products",
-		path: "/admin/products",
-		icons: <ShoppingBasket />,
+		id: "auction-products",
+		name: "Auction Orders",
+		path: "/admin/auction-orders",
+		icons: <GalleryHorizontal />,
 	},
+	{
+		id: "users",
+		name: "Users",
+		path: "/admin/users",
+		icons: <User />,
+	},
+	// {
+	// 	id: "products",
+	// 	name: "Products",
+	// 	path: "/admin/products",
+	// 	icons: <ShoppingBasket />,
+	// },
 
-	{
-		id: "orders",
-		name: "Orders",
-		path: "/admin/orders",
-		icons: <LayoutList />,
-	},
-	{
-		id: "features",
-		name: "Features",
-		path: "/admin/features",
-		icons: <ShoppingBag />,
-	},
+	// {
+	// 	id: "orders",
+	// 	name: "Orders",
+	// 	path: "/admin/orders",
+	// 	icons: <LayoutList />,
+	// },
+	// {
+	// 	id: "features",
+	// 	name: "Features",
+	// 	path: "/admin/features",
+	// 	icons: <ShoppingBag />,
+	// },
 ];
 
 const MenuItems = ({ setOpen }) => {
