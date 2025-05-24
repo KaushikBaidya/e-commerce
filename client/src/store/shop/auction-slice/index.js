@@ -20,8 +20,6 @@ export const placeAuctionBid = createAsyncThunk(
 export const fetchAuctionItems = createAsyncThunk(
 	"cart/fetchAuctionItems",
 	async (userId) => {
-		console.log(userId);
-
 		const response = await axios.get(
 			`http://localhost:5000/api/shop/auction/get/${userId}`
 		);

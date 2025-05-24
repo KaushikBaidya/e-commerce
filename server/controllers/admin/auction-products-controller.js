@@ -96,7 +96,9 @@ const editAuctionProduct = async (req, res) => {
 			bidIncrement === "" ? 0 : bidIncrement || findAuctionProduct.bidIncrement;
 		findAuctionProduct.startTime = startTime || findAuctionProduct.startTime;
 		findAuctionProduct.endTime = endTime || findAuctionProduct.endTime;
-		findAuctionProduct.isActive = isActive || findAuctionProduct.isActive;
+		if (typeof isActive === "boolean") {
+			findAuctionProduct.isActive = isActive;
+		}
 		findAuctionProduct.image = image || findAuctionProduct.image;
 
 		await findAuctionProduct.save();

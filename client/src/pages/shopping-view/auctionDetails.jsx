@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
-import { CalendarDays, Clock, User } from "lucide-react";
+import { CalendarDays, Clock, Gavel, RefreshCw, User } from "lucide-react";
 import { toast } from "sonner";
 import {
 	fetchAuctionProductDetails,
@@ -26,6 +26,10 @@ const AuctionDetails = () => {
 			dispatch(fetchAuctionProductDetails(id));
 		}
 	}, [dispatch, id]);
+
+	const handleRefresh = () => {
+		window.location.reload();
+	};
 
 	// useEffect(() => {
 	// 	return () => {
@@ -89,12 +93,16 @@ const AuctionDetails = () => {
 							{auctionProductDetails.isActive ? "Active" : "Inactive"}
 						</Badge>
 					</div>
-					<div className="p-4">
+					<div className="flex flex-col gap-3 p-4">
+						<Button variant={"outline"} onClick={() => handleRefresh()}>
+							<RefreshCw />
+							Refresh
+						</Button>
 						<Button
 							onClick={() => handlePlaceBid(auctionProductDetails._id)}
-							className="w-full"
 							disabled={!user}
 						>
+							<Gavel />
 							{user ? `Place Bid` : `Register to Bid`}
 						</Button>
 					</div>

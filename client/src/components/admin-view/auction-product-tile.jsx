@@ -11,6 +11,15 @@ const AdminAuctionProductTile = ({
 	setCurrentEditedId,
 	handleDelete,
 }) => {
+	const formatDateTimeLocal = (isoString) => {
+		if (!isoString) return "";
+		const date = new Date(isoString);
+		const pad = (n) => (n < 10 ? "0" + n : n);
+		return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+			date.getDate()
+		)}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+	};
+
 	return (
 		<Card className="w-full max-w-sm mx-auto shadow-md">
 			<div>
@@ -83,7 +92,11 @@ const AdminAuctionProductTile = ({
 						onClick={() => {
 							setOpenCrtProdDialog(true);
 							setCurrentEditedId(auctionProduct?._id);
-							setFormData(auctionProduct);
+							setFormData({
+								...auctionProduct,
+								startTime: formatDateTimeLocal(auctionProduct.startTime),
+								endTime: formatDateTimeLocal(auctionProduct.endTime),
+							});
 						}}
 					>
 						<Edit className="w-4 h-4 mr-2" />

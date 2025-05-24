@@ -52,18 +52,23 @@ const AuctionProductsView = () => {
 	const onSubmit = (e) => {
 		e.preventDefault();
 
+		const payloadData = {
+			...formData,
+			image: formData.image || uloadedImageUrl,
+		};
+
 		currentEditedId !== null
-			? dispatch(editAuctionProduct({ id: currentEditedId, formData })).then(
-					(data) => {
-						if (data?.payload?.success) {
-							dispatch(fetchAllAuctionProducts());
-							setFormData(initialFormData);
-							setOpenCrtProdDialog(false);
-							setCurrentEditedId(null);
-							toast.success(data?.payload?.message);
-						}
+			? dispatch(
+					editAuctionProduct({ id: currentEditedId, formData: payloadData })
+			  ).then((data) => {
+					if (data?.payload?.success) {
+						dispatch(fetchAllAuctionProducts());
+						setFormData(initialFormData);
+						setOpenCrtProdDialog(false);
+						setCurrentEditedId(null);
+						toast.success(data?.payload?.message);
 					}
-			  )
+			  })
 			: dispatch(
 					addNewAuctionProduct({ ...formData, image: uloadedImageUrl })
 			  ).then((data) => {

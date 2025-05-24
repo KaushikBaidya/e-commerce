@@ -12,6 +12,7 @@ const {
 	addAuctionProduct,
 	fetchAllAuctionProducts,
 	deleteAuctionProduct,
+	editAuctionProduct,
 } = require("../../controllers/admin/auction-products-controller");
 
 const { upload } = require("../../helper/cloudinary");
@@ -25,7 +26,7 @@ router.delete("/delete/:id", deleteProduct);
 router.get("/get", fetchAllProducts);
 
 router.post("/auction-product/add", addAuctionProduct);
-router.put("/auction-product/edit/:id", addAuctionProduct);
+router.put("/auction-product/edit/:id", editAuctionProduct);
 router.get("/auction-product/get", fetchAllAuctionProducts);
 router.delete("/auction-product/delete/:id", deleteAuctionProduct);
 

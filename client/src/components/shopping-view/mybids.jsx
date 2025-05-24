@@ -12,17 +12,41 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { fetchAuctionItems } from "@/store/shop/auction-slice";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
+import { CircleCheckBig } from "lucide-react";
+import { fetchAllAuctionProducts } from "@/store/shop/auction-products-slice";
 
 const MyBids = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { user } = useSelector((state) => state.auth);
+
 	const { auctionItems } = useSelector((state) => state.shopAuction);
+	const { auctionProductList } = useSelector(
+		(state) => state.shopAuctionProducts
+	);
+
+	console.log(auctionProductList, "auctionProductList");
+
+	const canCheckout = (id) => {
+		const product = auctionProductList.find((p) => p._id === id);
+		if (!product) return false;
+		const auctionEnded = new Date(product.endTime) < new Date();
+		const isWinner = product.highestBidder === user?.id;
+		return auctionEnded && isWinner;
+	};
+
+	const handleNavigate = (id) => {
+		navigate(`/auction/checkout`);
+	};
 
 	useEffect(() => {
 		dispatch(fetchAuctionItems(user?.id));
+		dispatch(fetchAllAuctionProducts());
 	}, [dispatch]);
 
-	console.log(auctionItems);
+	console.log(auctionItems, "auctionItems");
 
 	return (
 		<Card>
@@ -40,7 +64,7 @@ const MyBids = () => {
 							<TableHead>Current Bid</TableHead>
 							<TableHead>Status</TableHead>
 							<TableHead>
-								<span className="sr-only">Details</span>
+								<span className="sr-only">Action</span>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -68,6 +92,13 @@ const MyBids = () => {
 											>
 												{isLeading ? "Leading" : "Outbid"}
 											</span>
+										</TableCell>
+										<TableCell className="flex justify-end">
+											{canCheckout(item.id) && (
+												<Button onClick={() => handleNavigate(item.id)}>
+													<CircleCheckBig className="mr-1" /> Checkout
+												</Button>
+											)}
 										</TableCell>
 									</TableRow>
 								);

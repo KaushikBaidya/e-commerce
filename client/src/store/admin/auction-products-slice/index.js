@@ -35,6 +35,8 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 export const editAuctionProduct = createAsyncThunk(
 	"/products/editAuctionProduct",
 	async ({ id, formData }) => {
+		console.log(id, formData);
+
 		const result = await axios.put(
 			`http://localhost:5000/api/admin/products/auction-product/edit/${id}`,
 			formData,
