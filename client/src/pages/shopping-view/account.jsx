@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import accImg from "../../assets/account.jpg";
 import Address from "@/components/shopping-view/address";
 import ShoppingOrdersList from "@/components/shopping-view/orders";
+import MyBids from "@/components/shopping-view/mybids";
 
 const ShoppingAccount = () => {
 	return (
@@ -13,12 +14,16 @@ const ShoppingAccount = () => {
 				<div className="flex flex-col border bg-background p-6 shadow-sm">
 					<Tabs defaultValue="orders">
 						<TabsList>
-							<TabsTrigger value="orders">Orders</TabsTrigger>
+							<TabsTrigger value="orders">My Bids</TabsTrigger>
+							{/* <TabsTrigger value="orders">Orders</TabsTrigger> */}
 							<TabsTrigger value="address">Address</TabsTrigger>
 						</TabsList>
 						<TabsContent value="orders">
-							<ShoppingOrdersList />
+							<MyBids />
 						</TabsContent>
+						{/* <TabsContent value="orders">
+							<ShoppingOrdersList />
+						</TabsContent> */}
 						<TabsContent value="address">
 							<Address />
 						</TabsContent>

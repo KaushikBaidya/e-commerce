@@ -10,7 +10,7 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "sonner";
 import { setProductDetails } from "@/store/shop/products-slice";
 
-const ProductDetails = ({ open, setOpen, productDetails, btnHide }) => {
+const ProductDetails = ({ open, setOpen, productDetails }) => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
 	const { cartItems } = useSelector((state) => state.shopCart);
@@ -110,7 +110,7 @@ const ProductDetails = ({ open, setOpen, productDetails, btnHide }) => {
 										productDetails?.totalStock
 									)
 								}
-								className={`w-full ${btnHide && "hidden"} `}
+								className={`w-full `}
 							>
 								<ShoppingCartIcon />
 								Add to cart

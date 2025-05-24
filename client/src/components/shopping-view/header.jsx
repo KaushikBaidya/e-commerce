@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import {
-	Link,
-	useLocation,
-	useNavigate,
-	useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +24,6 @@ import logo from "@/assets/logo.png";
 const MenuItems = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const loaction = useLocation();
 
 	const handleNavigate = (getCurrentItem) => {
 		sessionStorage.removeItem("filters");
@@ -84,7 +78,7 @@ const HeaderRightContent = () => {
 
 	return (
 		<div className="flex flex-col lg:flex-row lg:items-center gap-4 p-6">
-			<Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+			{/* <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
 				<Button
 					onClick={() => setOpenCartSheet(true)}
 					variant="outline"
@@ -101,7 +95,7 @@ const HeaderRightContent = () => {
 							: []
 					}
 				/>
-			</Sheet>
+			</Sheet> */}
 			{user === null ? (
 				<Link to="/auth/login">
 					<Button variant="outline">Login</Button>
@@ -140,23 +134,25 @@ const HeaderRightContent = () => {
 const ShoppingHeader = () => {
 	return (
 		<header className="fixed top-0 z-40 w-full bg-background border-b">
-			<div className="flex h-16 items-center justify-between px-4 md:px-6">
-				<Link to="/" className="flex items-center gap-2">
-					<img src={logo} alt="logo" className="h-8 w-8" />
-					<span className="font-bold uppercase text-xl">Galería</span>
-				</Link>
-				<Sheet>
-					<SheetTrigger>
-						<span className="lg:hidden">
-							<Menu className="h-6 w-6" />
-							<span className="sr-only">Toggle header menu</span>
-						</span>
-					</SheetTrigger>
-					<SheetContent side="left" className="w-full max-w-xs">
-						<MenuItems />
-						<HeaderRightContent />
-					</SheetContent>
-				</Sheet>
+			<div className="w-full flex h-16 items-center justify-between px-4 md:px-6">
+				<div className="flex items-center">
+					<Link to="/" className="flex items-center gap-2">
+						<img src={logo} alt="logo" className="h-8 w-8" />
+						<span className="font-bold uppercase text-xl">Galería</span>
+					</Link>
+					<Sheet>
+						<SheetTrigger>
+							<span className="lg:hidden">
+								<Menu className="h-6 w-6" />
+								<span className="sr-only">Toggle header menu</span>
+							</span>
+						</SheetTrigger>
+						<SheetContent side="left" className="w-full max-w-xs">
+							<MenuItems />
+							<HeaderRightContent />
+						</SheetContent>
+					</Sheet>
+				</div>
 				<div className="hidden lg:block">
 					<MenuItems />
 				</div>
