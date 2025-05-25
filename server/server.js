@@ -21,11 +21,21 @@ const auctionCheckoutRouter = require("./routes/shop/auction-checkout-route");
 
 // connect database
 mongoose
-	.connect(
-		"mongodb+srv://kdiganto29:myproject4916@cluster0.8anksjd.mongodb.net/"
-	)
+	.connect(process.env.MONGO_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
 	.then(() => console.log("DB connected"))
-	.catch((err) => console.log(err));
+	.catch((err) => {
+		console.error("DB connection error:", err.message);
+		process.exit(1); // Stop the server if DB fails to connect
+	});
+
+// Catch any unhandled promise rejections globally
+process.on("unhandledRejection", (err) => {
+	console.error("Unhandled Rejection:", err.message);
+	process.exit(1);
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
