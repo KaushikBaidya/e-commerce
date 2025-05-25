@@ -1,16 +1,19 @@
-// helper/cloudinary.js
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
+require("dotenv").config(); // Load env variables
 
+// Configure Cloudinary with environment variables
 cloudinary.config({
-	cloud_name: "dn3aizefp",
-	api_key: 693322322539291,
-	api_secret: "lHejMaSRaEXefMOIZ0Of5GzMJjA",
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Multer memory storage for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+// Utility function to upload image buffer to Cloudinary
 const imageUploadUtil = (fileBuffer) => {
 	return new Promise((resolve, reject) => {
 		const stream = cloudinary.uploader.upload_stream(
@@ -25,26 +28,3 @@ const imageUploadUtil = (fileBuffer) => {
 };
 
 module.exports = { upload, imageUploadUtil };
-
-// const cloudinary = require("cloudinary").v2;
-// const multer = require("multer");
-
-// cloudinary.config({
-// cloud_name: "dn3aizefp",
-// api_key: 693322322539291,
-// api_secret: "lHejMaSRaEXefMOIZ0Of5GzMJjA",
-// });
-
-// const storage = new multer.memoryStorage();
-
-// async function imageUploadUtil(file) {
-// 	const result = await cloudinary.uploader.upload(file, {
-// 		resource_type: "auto",
-// 	});
-
-// 	return result;
-// }
-
-// const upload = multer({ storage });
-
-// module.exports = { upload, imageUploadUtil };
