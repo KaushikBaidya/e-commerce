@@ -15,15 +15,15 @@ const ShoppingAccount = () => {
 					<Tabs defaultValue="orders">
 						<TabsList>
 							<TabsTrigger value="orders">My Bids</TabsTrigger>
-							{/* <TabsTrigger value="orders">Orders</TabsTrigger> */}
+							<TabsTrigger value="orders">Orders</TabsTrigger>
 							<TabsTrigger value="address">Address</TabsTrigger>
 						</TabsList>
 						<TabsContent value="orders">
 							<MyBids />
 						</TabsContent>
-						{/* <TabsContent value="orders">
+						<TabsContent value="orders">
 							<ShoppingOrdersList />
-						</TabsContent> */}
+						</TabsContent>
 						<TabsContent value="address">
 							<Address />
 						</TabsContent>

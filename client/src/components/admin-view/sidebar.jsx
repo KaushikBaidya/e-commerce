@@ -1,7 +1,6 @@
 import {
-	GalleryHorizontal,
+	BaggageClaim,
 	Gem,
-	LandPlot,
 	LayoutDashboard,
 	LayoutList,
 	ShoppingBag,
@@ -21,53 +20,52 @@ const adminSidebarLinks = [
 		icons: <LayoutDashboard />,
 	},
 	{
-		id: "auction-products",
-		name: "Auction Products",
-		path: "/admin/auction-products",
-		icons: <Gem color="#f7d514" />,
-	},
-	{
-		id: "auction-products",
-		name: "Auction Orders",
-		path: "/admin/auction-orders",
-		icons: <GalleryHorizontal />,
-	},
-	{
 		id: "users",
 		name: "Users",
 		path: "/admin/users",
 		icons: <User />,
 	},
-	// {
-	// 	id: "products",
-	// 	name: "Products",
-	// 	path: "/admin/products",
-	// 	icons: <ShoppingBasket />,
-	// },
-
-	// {
-	// 	id: "orders",
-	// 	name: "Orders",
-	// 	path: "/admin/orders",
-	// 	icons: <LayoutList />,
-	// },
-	// {
-	// 	id: "features",
-	// 	name: "Features",
-	// 	path: "/admin/features",
-	// 	icons: <ShoppingBag />,
-	// },
+	{
+		id: "auction-products",
+		name: "Auction Products",
+		path: "/admin/auction-products",
+		icons: <Gem color="#e7cb29" />,
+	},
+	{
+		id: "products",
+		name: "Products",
+		path: "/admin/products",
+		icons: <ShoppingBasket />,
+	},
+	{
+		id: "auction-products",
+		name: "Auction Orders",
+		path: "/admin/auction-orders",
+		icons: <BaggageClaim color="#e7cb29" />,
+	},
+	{
+		id: "orders",
+		name: "Orders",
+		path: "/admin/orders",
+		icons: <LayoutList />,
+	},
+	{
+		id: "features",
+		name: "Features",
+		path: "/admin/features",
+		icons: <ShoppingBag />,
+	},
 ];
 
 const MenuItems = ({ setOpen }) => {
 	const navigate = useNavigate();
 
 	return (
-		<nav className="mt-8 flex flex-col gap-4">
+		<nav className="mt-8 flex flex-col gap-2">
 			{adminSidebarLinks.map((item) => (
 				<div
 					key={item.id}
-					className="flex items-center gap-2 rounded-md px-4 py-2 cursor-pointer hover:bg-gray-100 text-gray-500 hover:text-gray-800"
+					className="flex items-center gap-2 rounded-md px-4 py-2 cursor-pointer hover:bg-[#fffbe2] text-gray-500 hover:text-gray-800"
 					onClick={() => {
 						navigate(item.path);
 						setOpen ? setOpen(false) : null;
@@ -99,7 +97,7 @@ const AdminSidebar = ({ open, setOpen }) => {
 					</div>
 				</SheetContent>
 			</Sheet>
-			<aside className="hidden w-64 flex-col border-r bg-background p-4 lg:flex">
+			<aside className="hidden w-64 max-h-[95vh] overflow-y-auto flex-col border-r bg-background p-4 lg:flex">
 				<div
 					onClick={() => navigate("/admin/dashboard")}
 					className="flex items-center gap-2 cursor-pointer"

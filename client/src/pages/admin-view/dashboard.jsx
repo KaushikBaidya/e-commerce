@@ -56,11 +56,11 @@ const usersData = [
 
 const AdminDashboard = () => {
 	return (
-		<div className="space-y-6 px-4 py-6">
+		<div className="space-y-6 px-4 py-4">
 			<Card>
-				<CardHeader>
-					<CardTitle className="text-3xl font-bold">Admin Dashboard</CardTitle>
-				</CardHeader>
+				<CardTitle className="text-3xl font-bold mt-4 ml-4">
+					Admin Dashboard
+				</CardTitle>
 			</Card>
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
