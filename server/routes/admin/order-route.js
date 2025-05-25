@@ -10,7 +10,6 @@ const {
 
 const router = express.Router();
 
-router.get("/users/get", getAllUsers);
 router.get("/get", getAllOrdersOfAllUsers);
 router.get("/auction-order/get", getAllAuctionOrdersOfAllUsers);
 router.get("/details/:id", getOrderDetailsForAdmin);

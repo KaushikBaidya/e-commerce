@@ -4,6 +4,7 @@ import authReducer from "./auth-slice";
 import AdminProductsSlice from "./admin/products-slice";
 import AdminAuctionProductsSlice from "./admin/auction-products-slice";
 import AdminOrderSlice from "./admin/order-slice";
+import AdminUserSlice from "./admin/user-slice";
 
 import ShoppingProductsSlice from "./shop/products-slice";
 import ShoppingAuctionProductsSlice from "./shop/auction-products-slice";
@@ -22,6 +23,7 @@ const store = configureStore({
 		adminProducts: AdminProductsSlice,
 		adminAuctionProduct: AdminAuctionProductsSlice,
 		adminOrder: AdminOrderSlice,
+		adminUser: AdminUserSlice,
 
 		shopProducts: ShoppingProductsSlice,
 		shopAuctionProducts: ShoppingAuctionProductsSlice,

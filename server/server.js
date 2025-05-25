@@ -9,6 +9,7 @@ const cors = require("cors");
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-route");
 const adminOrderRouter = require("./routes/admin/order-route");
+const adminUserRoute = require("./routes/admin/user-route");
 
 const shopProductsRouter = require("./routes/shop/products-route");
 const shopAuctionRouter = require("./routes/shop/auction-route");
@@ -62,6 +63,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
+app.use("/api/admin/users", adminUserRoute);
 
 app.use("/api/shop/products", shopProductsRouter);
 app.use("/api/shop/auction", shopAuctionRouter);

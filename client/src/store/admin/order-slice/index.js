@@ -3,16 +3,8 @@ import axios from "axios";
 
 const initialState = {
 	orderList: [],
-	userList: [],
 	orderDetails: null,
 };
-
-export const getAllUsers = createAsyncThunk("order/getAllUsers", async () => {
-	const response = await axios.get(
-		"http://localhost:5000/api/admin/orders/users/get"
-	);
-	return response.data;
-});
 
 export const getAllOrdersForAdmin = createAsyncThunk(
 	"order/getAllOrdersForAdmin",
@@ -65,17 +57,6 @@ const adminOrderSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getAllUsers.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(getAllUsers.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.userList = action.payload.data;
-			})
-			.addCase(getAllUsers.rejected, (state) => {
-				state.isLoading = false;
-				state.userList = [];
-			})
 			.addCase(getAllOrdersForAdmin.pending, (state) => {
 				state.isLoading = true;
 			})

@@ -8,18 +8,17 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getAllUsers } from "@/store/admin/order-slice";
+import { getAllUsers } from "@/store/admin/user-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const AdminUsers = () => {
-	const { userList } = useSelector((state) => state.adminOrder);
+	const { userList } = useSelector((state) => state.adminUser);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(getAllUsers());
 	}, [dispatch]);
 
-	// Filter only users with role "user"
 	const filteredUsers = userList?.filter((user) => user.role === "user") || [];
 
 	return (
