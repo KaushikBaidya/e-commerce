@@ -78,7 +78,7 @@ const HeaderRightContent = () => {
 
 	return (
 		<div className="flex flex-col lg:flex-row lg:items-center gap-4 p-6">
-			{/* <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+			<Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
 				<Button
 					onClick={() => setOpenCartSheet(true)}
 					variant="outline"
@@ -95,7 +95,7 @@ const HeaderRightContent = () => {
 							: []
 					}
 				/>
-			</Sheet> */}
+			</Sheet>
 			{user === null ? (
 				<Link to="/auth/login">
 					<Button variant="outline">Login</Button>

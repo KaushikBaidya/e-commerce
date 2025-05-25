@@ -19,7 +19,7 @@ const Hero = () => {
 				</div>
 
 				{/* Hero Content */}
-				<div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 text-center">
+				<div className="mx-auto max-w-2xl py-28 sm:py-32 lg:py-32 text-center">
 					<div className="hidden sm:mb-8 sm:flex sm:justify-center">
 						<div className="relative rounded-full px-4 py-1 text-sm text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
 							Our spring fine art auction is now live.{" "}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import PaintingImage from "../../assets/paintings.jpg";
-import SculptureImage from "../../assets/sculpture.jpg";
-import PhotoImage from "../../assets/photo.jpg";
+import PaintingImage from "../../../assets/paintings.jpg";
+import SculptureImage from "../../../assets/sculpture.jpg";
+import PhotoImage from "../../../assets/photo.jpg";
 import {
 	CameraIcon,
 	CurlyBracesIcon,
