@@ -95,7 +95,7 @@ const AuctionPage = () => {
 
 	return (
 		<div className="flex flex-col min-h-screen">
-			<div className="relative w-full h-[600px] overflow-hidden">
+			<div className="hidden lg:flex relative w-full h-[600px] overflow-hidden">
 				{slides.map((slide, index) => (
 					<img
 						key={index}
