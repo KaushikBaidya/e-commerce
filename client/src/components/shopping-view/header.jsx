@@ -27,20 +27,28 @@ const MenuItems = () => {
 
 	const handleNavigate = (getCurrentItem) => {
 		sessionStorage.removeItem("filters");
+
 		const currentFilter =
-			getCurrentItem.id !== "home"
-				? getCurrentItem.id !== "products" &&
-				  getCurrentItem.id !== "auction" &&
-				  getCurrentItem.id !== "search" && {
-						category: [getCurrentItem.id],
-				  }
+			getCurrentItem.id !== "home" &&
+			getCurrentItem.id !== "products" &&
+			getCurrentItem.id !== "auction" &&
+			getCurrentItem.id !== "search"
+				? { category: [getCurrentItem.id] }
 				: null;
 
 		sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
-		location.pathname.includes("filters") && currentFilter !== null
-			? setSearchParams(new URLSearchParams(`?category=${getCurrentItem.id}`))
-			: navigate(getCurrentItem.path);
+		// Always construct the URL with query params if it's a filter
+		if (
+			getCurrentItem.id !== "home" &&
+			getCurrentItem.id !== "products" &&
+			getCurrentItem.id !== "auction" &&
+			getCurrentItem.id !== "search"
+		) {
+			navigate(`/shop/listing?category=${getCurrentItem.id}`);
+		} else {
+			navigate(getCurrentItem.path);
+		}
 	};
 
 	return (
