@@ -10,7 +10,7 @@ export const addNewAuctionProduct = createAsyncThunk(
 	"/auction-products/addNewAuctionProduct",
 	async (formdata) => {
 		const result = await axios.post(
-			"http://localhost:5000/api/admin/products/auction-product/add",
+			`${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/add`,
 			formdata,
 			{
 				headers: {
@@ -26,7 +26,7 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 	"/auction-products/fetchAllAuctionProducts",
 	async () => {
 		const result = await axios.get(
-			"http://localhost:5000/api/admin/products/auction-product/get"
+			`${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/get`
 		);
 		return result?.data;
 	}
@@ -38,7 +38,9 @@ export const editAuctionProduct = createAsyncThunk(
 		console.log(id, formData);
 
 		const result = await axios.put(
-			`http://localhost:5000/api/admin/products/auction-product/edit/${id}`,
+			`${
+				import.meta.env.VITE_API_BASE_URL
+			}/admin/products/auction-product/edit/${id}`,
 			formData,
 			{
 				headers: {
@@ -54,7 +56,9 @@ export const deleteAuctionProduct = createAsyncThunk(
 	"/auction-products/deleteAuctionProduct",
 	async (id) => {
 		const result = await axios.delete(
-			`http://localhost:5000/api/admin/products/auction-product/delete/${id}`
+			`${
+				import.meta.env.VITE_API_BASE_URL
+			}/admin/products/auction-product/delete/${id}`
 		);
 		return result?.data;
 	}

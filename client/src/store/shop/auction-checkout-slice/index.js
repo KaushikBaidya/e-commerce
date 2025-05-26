@@ -15,7 +15,7 @@ export const createNewOrder = createAsyncThunk(
 		console.log(orderData);
 
 		const response = await axios.post(
-			"http://localhost:5000/api/auction/checkout/create",
+			`${import.meta.env.VITE_API_BASE_URL}/auction/checkout/create`,
 			orderData
 		);
 		return response.data;
@@ -26,7 +26,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
 	"/order/getAllOrdersByUserId",
 	async (userId) => {
 		const response = await axios.get(
-			`http://localhost:5000/api/auction/checkout/list/${userId}`
+			`${import.meta.env.VITE_API_BASE_URL}/auction/checkout/list/${userId}`
 		);
 		return response.data;
 	}

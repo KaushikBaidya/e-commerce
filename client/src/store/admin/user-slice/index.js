@@ -8,7 +8,9 @@ const initialState = {
 };
 
 export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
-	const response = await axios.get("http://localhost:5000/api/admin/users/get");
+	const response = await axios.get(
+		`${import.meta.env.VITE_API_BASE_URL}/admin/users/get`
+	);
 
 	return response.data;
 });

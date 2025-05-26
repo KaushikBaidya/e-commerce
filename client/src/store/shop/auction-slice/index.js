@@ -10,7 +10,7 @@ export const placeAuctionBid = createAsyncThunk(
 	"cart/placeAuctionBid",
 	async ({ userId, auctionId, bidAmount }) => {
 		const response = await axios.put(
-			"http://localhost:5000/api/shop/auction/place-bid",
+			`${import.meta.env.VITE_API_BASE_URL}/shop/auction/place-bid`,
 			{ userId, auctionId, bidAmount }
 		);
 		return response.data;
@@ -21,7 +21,7 @@ export const fetchAuctionItems = createAsyncThunk(
 	"cart/fetchAuctionItems",
 	async (userId) => {
 		const response = await axios.get(
-			`http://localhost:5000/api/shop/auction/get/${userId}`
+			`${import.meta.env.VITE_API_BASE_URL}/shop/auction/get/${userId}`
 		);
 		return response.data;
 	}
