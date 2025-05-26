@@ -11,7 +11,7 @@ import { createNewOrder } from "@/store/shop/order-slice";
 const ShoppingCheckout = () => {
 	const { cartItems } = useSelector((state) => state.shopCart);
 	const { user } = useSelector((state) => state.auth);
-	const { checkoutUrl } = useSelector((state) => state.shopOrder); // Stripe URL
+	const { checkoutUrl } = useSelector((state) => state.shopOrder);
 	const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
 	const [isPaymentStart, setIsPaymentStart] = useState(false);
 	const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const ShoppingCheckout = () => {
 				notes: currentSelectedAddress?.notes,
 			},
 			orderStatus: "pending",
-			paymentMethod: "stripe", // updated for Stripe
+			paymentMethod: "stripe",
 			paymentStatus: "pending",
 			totalAmount: totalCartAmount,
 			orderDate: new Date(),
