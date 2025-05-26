@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import { addReview, getReviews } from "@/store/shop/review-slice";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { setProductDetails } from "@/store/shop/products-slice";
+
+import { ShoppingCartIcon, Send, StarIcon, CircleAlert } from "lucide-react";
+
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { ShoppingCartIcon, Send, StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-import { toast } from "sonner";
-import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
 import StarRating from "../common/star-rating";
-import { addReview, getReviews } from "@/store/shop/review-slice";
 
 const ProductDetails = ({ open, setOpen, productDetails }) => {
 	const [reviewMsg, setReviewMsg] = useState("");
@@ -20,6 +23,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
 	const { cartItems } = useSelector((state) => state.shopCart);
+	const { reviews } = useSelector((state) => state.shopReview);
 
 	const handleAddToCart = (getCurrentProductId, getTotalStock) => {
 		if (user === null)
@@ -82,6 +86,10 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 		setRating(0);
 		setReviewMsg("");
 	};
+
+	useEffect(() => {
+		if (productDetails !== null) dispatch(getReviews(productDetails?._id));
+	}, [productDetails]);
 
 	return (
 		<Dialog open={open} onOpenChange={handleDialogClose}>
@@ -152,75 +160,46 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 					</div>
 					<Separator />
 					<div className="max-h-[300px] overflow-auto">
+						{/* Reviews */}
 						<h2 className="text-xl font-bold mb-4">Reviews</h2>
-						<div className="grid gap-6">
-							<div className="flex gap-4">
-								<Avatar className={"w-12 h-12 border-2"}>
-									<AvatarFallback>FU</AvatarFallback>
-								</Avatar>
-								<div className="grid gap-1">
-									<div className="flex items-center gap-2">
-										<h3 className="font-bold">Username</h3>
-									</div>
-									<div className="flex items-center gap-0.5">
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-									</div>
-									<div>
-										<p className="text-sm text-muted-foreground">
-											This is a good quality t-shirt
-										</p>
-									</div>
-								</div>
-							</div>
-							<div className="flex gap-4">
-								<Avatar className={"w-12 h-12 border-2"}>
-									<AvatarFallback>FU</AvatarFallback>
-								</Avatar>
-								<div className="grid gap-1">
-									<div className="flex items-center gap-2">
-										<h3 className="font-bold">Username</h3>
-									</div>
-									<div className="flex items-center gap-0.5">
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-									</div>
-									<div>
-										<p className="text-sm text-muted-foreground">
-											This is a good quality t-shirt
-										</p>
+						{reviews && reviews.length > 0 ? (
+							reviews.map((review) => (
+								<div key={review._id} className="grid gap-6">
+									<div className="flex gap-4">
+										<Avatar className={"w-12 h-12 border-2 font-semibold"}>
+											<AvatarFallback>
+												{review.userName[0].toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+										<div className="grid gap-1">
+											<div className="flex items-center gap-2">
+												<h3 className="font-bold">{review.userName}</h3>
+											</div>
+											<div className="flex items-center gap-0.5">
+												<StarRating rating={review.reviewValue} />
+												{/* <StarIcon className="w-4 h-4 fill-yellow-500" />
+												<StarIcon className="w-4 h-4 fill-yellow-500" />
+												<StarIcon className="w-4 h-4 fill-yellow-500" />
+												<StarIcon className="w-4 h-4 fill-yellow-500" />
+												<StarIcon className="w-4 h-4 fill-yellow-500" /> */}
+											</div>
+											<div>
+												<p className="text-sm text-muted-foreground">
+													{review.reviewMessage}
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
+							))
+						) : (
+							<div className="flex flex-col items-center justify-center">
+								<CircleAlert size={48} color="#d82929" />
+								<p>No reviews available</p>
 							</div>
-							<div className="flex gap-4">
-								<Avatar className={"w-12 h-12 border-2"}>
-									<AvatarFallback>FU</AvatarFallback>
-								</Avatar>
-								<div className="grid gap-1">
-									<div className="flex items-center gap-2">
-										<h3 className="font-bold">Username</h3>
-									</div>
-									<div className="flex items-center gap-0.5">
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-										<StarIcon className="w-4 h-4 fill-yellow-500" />
-									</div>
-									<div>
-										<p className="text-sm text-muted-foreground">
-											This is a good quality t-shirt
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
+						)}
+
+						{/* Write a review */}
 						<div className="mt-10 flex flex-col gap-2.5">
 							<Label>Write a review</Label>
 							<div className="flex gap-1.5">
