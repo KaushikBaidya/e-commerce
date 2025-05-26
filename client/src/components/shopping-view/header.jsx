@@ -77,16 +77,20 @@ const HeaderRightContent = () => {
 	}, [dispatch]);
 
 	return (
-		<div className="flex flex-col lg:flex-row lg:items-center gap-4 p-6">
+		<div className="flex flex-col lg:flex-row lg:items-center gap-6 p-6">
 			<Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-				<Button
+				<div
 					onClick={() => setOpenCartSheet(true)}
-					variant="outline"
-					size="icon"
+					className="relative cursor-pointer w-10 lg:w-full"
 				>
 					<ShoppingCart className="h-6 w-6" />
+					{cartItems?.items?.length > 0 && (
+						<span className="absolute top-[-15px] right-[-15px] font-bold text-sm bg-red-500 text-white rounded-full px-2">
+							{cartItems?.items?.length}
+						</span>
+					)}
 					<span className="sr-only">cart</span>
-				</Button>
+				</div>
 				<CartWrapper
 					setOpenCartSheet={setOpenCartSheet}
 					cartItems={
