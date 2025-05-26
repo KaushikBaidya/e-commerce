@@ -68,9 +68,10 @@ function SearchProducts() {
 		});
 	}
 
-	function handleGetProductDetails(getCurrentProductId) {
+	const handleGetProductDetails = (getCurrentProductId) => {
 		dispatch(fetchProductDetails(getCurrentProductId));
-	}
+		// setOpenDetailsDialog(true);
+	};
 
 	useEffect(() => {
 		if (productDetails !== null) setOpenDetailsDialog(true);
