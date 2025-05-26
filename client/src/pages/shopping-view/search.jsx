@@ -12,17 +12,18 @@ import {
 	getSearchResults,
 	resetSearchResults,
 } from "@/store/shop/search-slice";
+import { Search } from "lucide-react";
 
 function SearchProducts() {
 	const [keyword, setKeyword] = useState("");
 	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
 	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
+
 	const { searchResults } = useSelector((state) => state.shopSearch);
 	const { productDetails } = useSelector((state) => state.shopProducts);
-
 	const { user } = useSelector((state) => state.auth);
-
 	const { cartItems } = useSelector((state) => state.shopCart);
 
 	useEffect(() => {
@@ -78,38 +79,54 @@ function SearchProducts() {
 	}, [productDetails]);
 
 	return (
-		<div className="container mx-auto md:px-6 px-4 py-8 min-h-screen">
-			<div className="flex justify-center mb-8">
-				<div className="w-full flex items-center">
-					<Input
-						value={keyword}
-						name="keyword"
-						onChange={(event) => setKeyword(event.target.value)}
-						className="py-6"
-						placeholder="Search Products..."
-					/>
+		<div className="container mx-auto px-4 md:px-6 py-8 min-h-screen">
+			{/* Search Bar */}
+			<section className="flex justify-center mb-10">
+				<div className="w-full max-w-2xl">
+					<div className="relative">
+						<Input
+							value={keyword}
+							name="keyword"
+							onChange={(event) => setKeyword(event.target.value)}
+							placeholder="Search Products..."
+							className="pl-12 py-6 text-lg"
+						/>
+						<div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+							<Search />
+						</div>
+					</div>
 				</div>
-			</div>
-			{!searchResults.length ? (
-				<h1 className="text-5xl font-extrabold">No result found!</h1>
+			</section>
+
+			{/* No Results */}
+			{!searchResults.length && keyword.trim() ? (
+				<div className="text-center mt-10">
+					<h2 className="text-2xl md:text-4xl font-semibold text-gray-600">
+						No results found for "<span className="italic">{keyword}</span>"
+					</h2>
+				</div>
 			) : null}
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-				{searchResults.map((item, index) => (
+
+			{/* Search Results Grid */}
+			<section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+				{searchResults.map((item) => (
 					<ShopProductTile
-						key={index}
+						key={item._id || item.id || item.title} // fallback if _id is unavailable
 						handleAddtoCart={handleAddtoCart}
 						product={item}
 						handleGetProductDetails={handleGetProductDetails}
 					/>
 				))}
-			</div>
-			{productDetails !== null ? (
+			</section>
+
+			{/* Product Details Dialog */}
+			{productDetails && (
 				<ProductDetails
 					open={openDetailsDialog}
 					setOpen={setOpenDetailsDialog}
 					productDetails={productDetails}
 				/>
-			) : null}
+			)}
 		</div>
 	);
 }
