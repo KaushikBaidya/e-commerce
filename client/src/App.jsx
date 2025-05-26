@@ -75,20 +75,6 @@ function App() {
 					<Route path="users" element={<AdminUsers />} />
 				</Route>
 
-				{/* <Route
-					path="/shop"
-					element={
-						<CheckAuth isAuthenticated={isAuthenticated} user={user}>
-							<ShoppingLayout />
-						</CheckAuth>
-					}
-				>
-					<Route path="home" element={<ShoppingHome />} />
-					<Route path="listing" element={<ShoppingListing />} />
-					<Route path="checkout" element={<ShoppingCheckout />} />
-					<Route path="account" element={<ShoppingAccount />} />
-				</Route> */}
-
 				<Route path="/" element={<ShoppingLayout />}>
 					{/* Public routes */}
 					<Route path="/" element={<ShoppingHome />} />

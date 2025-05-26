@@ -14,15 +14,15 @@ const ShoppingAccount = () => {
 				<div className="flex flex-col border bg-background p-6 shadow-sm">
 					<Tabs defaultValue="orders">
 						<TabsList>
-							<TabsTrigger value="orders">My Bids</TabsTrigger>
 							<TabsTrigger value="orders">Orders</TabsTrigger>
+							<TabsTrigger value="mybids">My Bids</TabsTrigger>
 							<TabsTrigger value="address">Address</TabsTrigger>
 						</TabsList>
 						<TabsContent value="orders">
-							<MyBids />
-						</TabsContent>
-						<TabsContent value="orders">
 							<ShoppingOrdersList />
+						</TabsContent>
+						<TabsContent value="mybids">
+							<MyBids />
 						</TabsContent>
 						<TabsContent value="address">
 							<Address />

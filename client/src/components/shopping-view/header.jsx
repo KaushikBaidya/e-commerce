@@ -73,7 +73,7 @@ const HeaderRightContent = () => {
 	};
 
 	useEffect(() => {
-		dispatch(fetchCartItems(user?.id));
+		if (user !== null) dispatch(fetchCartItems(user?.id));
 	}, [dispatch]);
 
 	return (
