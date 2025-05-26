@@ -63,26 +63,30 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 
 	return (
 		<Dialog open={open} onOpenChange={handleDialogClose}>
-			<DialogContent className="grid grid-cols-2 gap-8 max-w-[90vw] sm:max-w[80vw] lg:max-w-[65vw] min-h-[65vh]">
-				<div className="relative flex flex-col gap-4 h-80">
-					<img
-						src={auctionProductDetails.image}
-						alt={auctionProductDetails.title}
-						className="w-full h-full object-cover"
-					/>
-					<div className="absolute top-4 right-4">
-						<Badge
-							className={`text-white px-3 py-1 rounded-full ${
-								auctionProductDetails.isActive ? "bg-green-600" : "bg-red-500"
-							}`}
-						>
-							{auctionProductDetails.isActive ? "Active" : "Inactive"}
-						</Badge>
+			<DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[95vw] sm:max-w-[90vw] lg:max-w-[65vw] max-h-[80vh] overflow-y-auto">
+				{/* Image & Bid Button Section */}
+				<div className="relative flex flex-col gap-4">
+					<div className="relative w-full h-64 sm:h-80 md:h-full mt-4">
+						<img
+							src={auctionProductDetails.image}
+							alt={auctionProductDetails.title}
+							className="w-full h-full object-cover rounded-md"
+						/>
+						<div className="absolute top-4 right-4">
+							<Badge
+								className={`text-white px-3 py-1 rounded-full ${
+									auctionProductDetails.isActive ? "bg-green-600" : "bg-red-500"
+								}`}
+							>
+								{auctionProductDetails.isActive ? "Active" : "Inactive"}
+							</Badge>
+						</div>
 					</div>
-					<div className="flex flex-col gap-3 p-4">
+					<div className="px-4 md:px-0">
 						<Button
 							onClick={() => handlePlaceBid(auctionProductDetails._id)}
 							disabled={!user}
+							className="w-full"
 						>
 							<Gavel />
 							{user ? `Place Bid` : `Register to Bid`}
@@ -90,22 +94,25 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 					</div>
 				</div>
 
-				<div className="p-6 space-y-5">
-					<div className="flex justify-between items-center">
-						<DialogTitle className="text-3xl font-bold">
+				{/* Details Section */}
+				<div className="p-4 space-y-5">
+					<div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+						<DialogTitle className="text-2xl md:text-3xl font-bold">
 							{auctionProductDetails.title}
 						</DialogTitle>
-						<div className="flex items-center gap-2 text-muted-foreground">
-							<User className="w-5 h-5" />
+						<div className="flex items-center gap-2 text-muted-foreground text-sm">
+							<User className="w-4 h-4" />
 							<span className="font-medium">
 								{auctionProductDetails.artist}
 							</span>
 						</div>
 					</div>
 
-					<p className="text-gray-700">{auctionProductDetails.description}</p>
+					<p className="text-sm text-gray-700">
+						{auctionProductDetails.description}
+					</p>
 
-					<div className="grid grid-cols-2 gap-4 text-sm">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
 						<div className="flex flex-col">
 							<span className="text-gray-500">Starting Bid</span>
 							<span className="font-bold text-lg text-primary">
@@ -127,7 +134,9 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-2">Bid History</h3>
+						<h3 className="text-base md:text-lg font-semibold mb-2">
+							Bid History
+						</h3>
 						{auctionProductDetails.bidHistory.length ? (
 							<ul className="divide-y text-sm border rounded-md bg-gray-50">
 								{auctionProductDetails.bidHistory

@@ -84,7 +84,7 @@ const ShoppingCheckout = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="relative h-[300px] w-full overflow-hidden">
+			<div className="relative h-48 lg:h-80 w-full overflow-hidden">
 				<img src={accImg} alt={"cover-image"} />
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">

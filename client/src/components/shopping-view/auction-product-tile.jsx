@@ -38,7 +38,7 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
 					</Badge>
 				</div>
 
-				<div className="flex flex-col sm:grid sm:grid-cols-2 gap-3 text-sm">
+				<div className="grid grid-cols-2 gap-3 text-sm">
 					<div className="flex flex-col">
 						<span className="text-muted-foreground">Starting Bid</span>
 						<span className="font-semibold text-base sm:text-lg">

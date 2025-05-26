@@ -99,50 +99,50 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 
 	return (
 		<Dialog open={open} onOpenChange={handleDialogClose}>
-			<DialogContent className="grid grid-cols-2 gap-8 max-w-[90vw] sm:max-w[80vw] lg:max-w-[65vw]">
-				<div className="relative overflow-hidden rounded-lg">
+			<DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[65vw] overflow-y-auto max-h-[95vh]">
+				{/* Left: Product Image */}
+				<div className="relative w-full overflow-hidden rounded-lg">
 					<img
 						src={productDetails.image}
 						alt={productDetails.title}
-						width={600}
-						height={600}
-						className="aspect-square object-cover w-full"
+						className="w-full h-auto aspect-square object-cover"
 					/>
 				</div>
-				<div className="">
+
+				{/* Right: Product Info */}
+				<div className="flex flex-col space-y-4">
 					<div>
-						<DialogTitle className="text-3xl font-bold uppercase">
+						<DialogTitle className="text-2xl sm:text-3xl font-bold uppercase">
 							{productDetails.title}
 						</DialogTitle>
-						<p className="text-3xl my-4 text-muted-foreground">
+						<p className="text-muted-foreground text-base sm:text-xl mt-2">
 							{productDetails.description}
 						</p>
 					</div>
-					<div className="flex items-center justify-between">
+
+					<div className="flex items-center justify-between text-xl font-semibold">
 						<p
 							className={`${
 								productDetails?.salePrice > 0 ? "line-through" : ""
-							} text-2xl font-semibold text-primary`}
+							} text-primary`}
 						>
 							৳ {productDetails.price}
 						</p>
-						{productDetails?.salePrice > 0 ? (
-							<p className="text-2xl font-semibold text-muted-foreground">
+						{productDetails?.salePrice > 0 && (
+							<p className="text-muted-foreground">
 								৳ {productDetails?.salePrice}
 							</p>
-						) : null}
+						)}
 					</div>
 
-					<div className="flex items-center my-2 gap-2">
-						<div className="flex items-center gap-0.5">
-							<StarRating rating={averageReview} />
-							<span className="text-muted-foreground">
-								{averageReview.toFixed(1)}
-							</span>
-						</div>
+					<div className="flex items-center gap-2 text-base">
+						<StarRating rating={averageReview} />
+						<span className="text-muted-foreground">
+							{averageReview.toFixed(1)}
+						</span>
 					</div>
 
-					<div className="my-5">
+					<div className="my-2">
 						{productDetails?.totalStock === 0 ? (
 							<Button className="w-full opacity-60 cursor-not-allowed">
 								Out Of Stock
@@ -155,71 +155,73 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 										productDetails?.totalStock
 									)
 								}
-								className={`w-full `}
+								className="w-full"
 							>
 								<ShoppingCartIcon />
 								Add to cart
 							</Button>
 						)}
 					</div>
+
 					<Separator />
-					<div className="max-h-[300px] overflow-auto">
-						{/* Reviews */}
-						<h2 className="text-xl font-bold mb-4">Reviews</h2>
+
+					{/* Reviews */}
+					<div className="flex-1 overflow-auto max-h-[300px]">
+						<h2 className="text-lg sm:text-xl font-bold mb-4">Reviews</h2>
+
 						{reviews && reviews.length > 0 ? (
 							reviews.map((review) => (
-								<div key={review._id} className="grid gap-6">
-									<div className="flex gap-4">
-										<Avatar className={"w-12 h-12 border-2 font-semibold"}>
+								<div key={review._id} className="grid gap-4 mb-4">
+									<div className="flex gap-3">
+										<Avatar className="w-10 h-10 border-2 font-semibold">
 											<AvatarFallback>
 												{review.userName[0].toUpperCase()}
 											</AvatarFallback>
 										</Avatar>
-										<div className="grid gap-1">
+										<div className="flex flex-col gap-1">
 											<div className="flex items-center gap-2">
 												<h3 className="font-bold">{review.userName}</h3>
 											</div>
-											<div className="flex items-center gap-0.5">
+											<div className="flex items-center gap-2">
 												<StarRating rating={review.reviewValue} />
 											</div>
-											<div>
-												<p className="text-sm text-muted-foreground">
-													{review.reviewMessage}
-												</p>
-											</div>
+											<p className="text-sm text-muted-foreground">
+												{review.reviewMessage}
+											</p>
 										</div>
 									</div>
 								</div>
 							))
 						) : (
-							<div className="flex flex-col items-center justify-center">
-								<CircleAlert size={48} color="#d82929" />
-								<p>No reviews available</p>
+							<div className="flex flex-col items-center justify-center gap-2 py-4">
+								<CircleAlert size={36} color="#d82929" />
+								<p className="text-sm">No reviews available</p>
 							</div>
 						)}
+					</div>
 
-						{/* Write a review */}
-						<div className="mt-10 flex flex-col gap-2.5">
-							<Label>Write a review</Label>
-							<div className="flex gap-1.5">
-								<StarRating
-									rating={rating}
-									handleRatingChange={handleRatingChange}
-								/>
-							</div>
-							<Input
-								name="reviewMsg"
-								value={reviewMsg}
-								onChange={(event) => setReviewMsg(event.target.value)}
-								placeholder="Write a review..."
+					{/* Write a review */}
+					<div className="mt-6 flex flex-col gap-2.5">
+						<Label>Write a review</Label>
+						<div className="flex gap-1.5">
+							<StarRating
+								rating={rating}
+								handleRatingChange={handleRatingChange}
 							/>
-							<Button
-								onClick={handleAddReview}
-								disabled={reviewMsg.trim() === ""}
-							>
-								<Send className="w-6 h-6" /> Submit
-							</Button>
 						</div>
+						<Input
+							name="reviewMsg"
+							value={reviewMsg}
+							onChange={(e) => setReviewMsg(e.target.value)}
+							placeholder="Write a review..."
+						/>
+						<Button
+							onClick={handleAddReview}
+							disabled={reviewMsg.trim() === ""}
+						>
+							<Send className="w-5 h-5 mr-1" />
+							Submit
+						</Button>
 					</div>
 				</div>
 			</DialogContent>

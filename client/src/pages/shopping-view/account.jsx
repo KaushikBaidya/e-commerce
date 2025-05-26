@@ -7,11 +7,11 @@ import MyBids from "@/components/shopping-view/mybids";
 const ShoppingAccount = () => {
 	return (
 		<div className="flex flex-col">
-			<div className="relative h-[300px] w-full overflow-hidden">
+			<div className="relative h-48 lg:h-80 w-full overflow-hidden">
 				<img src={accImg} alt={"cover-image"} />
 			</div>
-			<div className="container mx-auto grid grid-cols-1 gap-8 py-8">
-				<div className="flex flex-col border bg-background p-6 shadow-sm">
+			<div className="container mx-auto grid grid-cols-1 gap-8 py-4 lg:py-8">
+				<div className="flex flex-col border bg-background p-2 md:p-6 shadow-sm">
 					<Tabs defaultValue="orders">
 						<TabsList className="grid w-full grid-cols-3">
 							<TabsTrigger value="orders">Orders</TabsTrigger>
