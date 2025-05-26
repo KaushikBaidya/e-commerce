@@ -13,13 +13,15 @@ import {
 } from "@/store/shop/auction-products-slice";
 import { toast } from "sonner";
 import { placeAuctionBid } from "@/store/shop/auction-slice";
+import AuctionDetails from "@/components/shopping-view/auction-details";
 
 const AuctionPage = () => {
 	const [currrentSlide, setCurrentSlide] = useState(0);
+	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
-	const { auctionProductList } = useSelector(
+	const { auctionProductList, auctionProductDetails, isLoading } = useSelector(
 		(state) => state.shopAuctionProducts
 	);
 
@@ -87,6 +89,10 @@ const AuctionPage = () => {
 		dispatch(fetchAllAuctionProducts());
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (auctionProductDetails !== null) setOpenDetailsDialog(true);
+	}, [auctionProductDetails]);
+
 	return (
 		<div className="flex flex-col min-h-screen">
 			<div className="relative w-full h-[600px] overflow-hidden">
@@ -130,8 +136,13 @@ const AuctionPage = () => {
 					<h2 className="text-3xl text-slate-700 font-semibold text-center mb-8">
 						Auction Products
 					</h2>
-					<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-						{auctionProductList &&
+
+					<div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+						{isLoading ? (
+							<div className="col-span-full text-center py-10 text-muted-foreground">
+								Loading auction products...
+							</div>
+						) : auctionProductList.length > 0 ? (
 							auctionProductList.map((product, index) => (
 								<AuctionProductTile
 									key={index}
@@ -139,10 +150,22 @@ const AuctionPage = () => {
 									handleGetProductDetails={handleGetProductDetails}
 									handlePlaceBid={handlePlaceBid}
 								/>
-							))}
+							))
+						) : (
+							<div className="col-span-full text-center py-10 text-muted-foreground">
+								No auction products available
+							</div>
+						)}
 					</div>
 				</div>
 			</section>
+			{auctionProductDetails !== null ? (
+				<AuctionDetails
+					open={openDetailsDialog}
+					setOpen={setOpenDetailsDialog}
+					auctionProductDetails={auctionProductDetails}
+				/>
+			) : null}
 		</div>
 	);
 };

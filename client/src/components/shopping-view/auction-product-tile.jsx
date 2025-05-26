@@ -2,14 +2,14 @@ import React from "react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Clock, CalendarDays, User, Edit, Trash2 } from "lucide-react";
+import { Clock, CalendarDays, User } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
 	const navigate = useNavigate();
 	return (
-		<Card className="w-full max-w-sm mx-auto shadow-md">
+		<Card className="w-full max-w-sm mx-auto shadow-md cursor-pointer">
 			<div onClick={() => handleGetProductDetails(auctionProduct?._id)}>
 				<div className="relative">
 					<img
@@ -75,16 +75,6 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
 					</div>
 				</CardContent>
 			</div>
-			<CardFooter>
-				<Button
-					onClick={() =>
-						navigate(`/shop/auction-product-details/${auctionProduct?._id}`)
-					}
-					className="w-full"
-				>
-					View Details
-				</Button>
-			</CardFooter>
 		</Card>
 	);
 };

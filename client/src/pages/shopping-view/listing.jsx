@@ -75,7 +75,6 @@ const ShoppingListing = () => {
 
 	const handleGetProductDetails = (getCurrentProductId) => {
 		dispatch(fetchProductDetails(getCurrentProductId));
-		// setOpenDetailsDialog(true);
 	};
 
 	const handleAddToCart = (getCurrentProductId, getTotalStock) => {

@@ -18,7 +18,7 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 );
 
 export const fetchAuctionProductDetails = createAsyncThunk(
-	"/products/fetchProductDetails",
+	"/products/fetchAuctionProductDetails",
 	async (id) => {
 		const result = await axios.get(
 			`${
@@ -34,7 +34,7 @@ const ShoppingAuctionProductsSlice = createSlice({
 	name: "shoppingAuctionProducts",
 	initialState,
 	reducers: {
-		setAuctionProductDetails: (state) => {
+		resetAuctionProductDetails: (state) => {
 			state.auctionProductDetails = null;
 		},
 	},
@@ -65,7 +65,7 @@ const ShoppingAuctionProductsSlice = createSlice({
 	},
 });
 
-export const { setAuctionProductDetails } =
+export const { resetAuctionProductDetails } =
 	ShoppingAuctionProductsSlice.actions;
 
 export default ShoppingAuctionProductsSlice.reducer;
