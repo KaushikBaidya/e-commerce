@@ -91,6 +91,12 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 		if (productDetails !== null) dispatch(getReviews(productDetails?._id));
 	}, [productDetails]);
 
+	const averageReview =
+		reviews && reviews.length > 0
+			? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
+			  reviews.length
+			: 0;
+
 	return (
 		<Dialog open={open} onOpenChange={handleDialogClose}>
 			<DialogContent className="grid grid-cols-2 gap-8 max-w-[90vw] sm:max-w[80vw] lg:max-w-[65vw]">
@@ -129,12 +135,10 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 
 					<div className="flex items-center my-2 gap-2">
 						<div className="flex items-center gap-0.5">
-							<StarIcon className="w-4 h-4 fill-yellow-500" />
-							<StarIcon className="w-4 h-4 fill-yellow-500" />
-							<StarIcon className="w-4 h-4 fill-yellow-500" />
-							<StarIcon className="w-4 h-4 fill-yellow-500" />
-							<StarIcon className="w-4 h-4 fill-yellow-500" />
-							<span className="text-muted-foreground">(3.5)</span>
+							<StarRating rating={averageReview} />
+							<span className="text-muted-foreground">
+								{averageReview.toFixed(1)}
+							</span>
 						</div>
 					</div>
 
@@ -177,11 +181,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 											</div>
 											<div className="flex items-center gap-0.5">
 												<StarRating rating={review.reviewValue} />
-												{/* <StarIcon className="w-4 h-4 fill-yellow-500" />
-												<StarIcon className="w-4 h-4 fill-yellow-500" />
-												<StarIcon className="w-4 h-4 fill-yellow-500" />
-												<StarIcon className="w-4 h-4 fill-yellow-500" />
-												<StarIcon className="w-4 h-4 fill-yellow-500" /> */}
 											</div>
 											<div>
 												<p className="text-sm text-muted-foreground">
