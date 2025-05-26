@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-	checkoutUrl: null, // changed from approvalURL
+	checkoutUrl: null,
 	isLoading: false,
 	orderId: null,
 	orderList: [],

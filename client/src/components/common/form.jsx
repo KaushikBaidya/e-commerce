@@ -72,7 +72,6 @@ const CommonForm = ({
 						name={getControlItem.name}
 						id={getControlItem.name}
 						placeholder={getControlItem.placeholder}
-						// type={getControlItem.type}
 						value={value}
 						onChange={(e) =>
 							setFormData({

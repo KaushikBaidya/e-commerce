@@ -29,8 +29,6 @@ const MyBids = () => {
 	);
 	const { orderList } = useSelector((state) => state.auctionCheckout);
 
-	console.log("auction-order-List", orderList);
-
 	const canCheckout = (auctionItemId) => {
 		const product = auctionProductList.find((p) => p._id === auctionItemId);
 		if (!product) return false;

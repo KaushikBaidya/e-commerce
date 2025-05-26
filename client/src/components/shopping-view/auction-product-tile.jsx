@@ -7,7 +7,6 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
-	// const { user } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
 	return (
 		<Card className="w-full max-w-sm mx-auto shadow-md">

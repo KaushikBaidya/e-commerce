@@ -112,7 +112,7 @@ const AdminProducts = () => {
 				</Button>
 			</div>
 
-			{/* // product list */}
+			{/*  product list */}
 			{productList && productList?.length > 0 ? (
 				<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
 					{productList.map((item) => (
@@ -132,7 +132,7 @@ const AdminProducts = () => {
 				</div>
 			)}
 
-			{/* // create product dialog */}
+			{/* create product dialog */}
 			<Sheet
 				open={openCrtProdDialog}
 				onOpenChange={() => {

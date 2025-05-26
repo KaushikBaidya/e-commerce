@@ -95,9 +95,9 @@ export default function FeaturedGallery() {
 				const nextIndex = (currentIndex + 1) % tabKeys.length;
 				return tabKeys[nextIndex];
 			});
-		}, 5000); // Change tab every 5 seconds
+		}, 5000);
 
-		return () => clearInterval(interval); // Cleanup on unmount
+		return () => clearInterval(interval);
 	}, [tabKeys]);
 
 	const tab = tabData[activeTab];

@@ -35,8 +35,6 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 export const editAuctionProduct = createAsyncThunk(
 	"/products/editAuctionProduct",
 	async ({ id, formData }) => {
-		console.log(id, formData);
-
 		const result = await axios.put(
 			`${
 				import.meta.env.VITE_API_BASE_URL

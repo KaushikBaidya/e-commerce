@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 const ShoppingOrderDetails = ({ orderDetails }) => {
 	const { user } = useSelector((state) => state.auth);
 
-	console.log(orderDetails);
-
 	return (
 		<div className="w-full capitalize">
 			<div className="grid gap-6">

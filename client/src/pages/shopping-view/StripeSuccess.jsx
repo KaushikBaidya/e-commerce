@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-// import { useDispatch } from "react-redux";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -19,7 +18,6 @@ function StripeSuccess() {
 					);
 					if (res.data.success) {
 						sessionStorage.removeItem("cartItems");
-						console.log("Order finalized and cart cleared.");
 					}
 				} catch (err) {
 					console.error("Order finalization failed:", err);

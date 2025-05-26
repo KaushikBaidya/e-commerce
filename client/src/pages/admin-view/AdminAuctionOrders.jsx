@@ -90,34 +90,3 @@ const AdminAuctionOrders = () => {
 };
 
 export default AdminAuctionOrders;
-
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Table } from "@/components/ui/table";
-// import { getAllAuctionOrdersForAdmin } from "@/store/admin/order-slice";
-// import React, { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// const AdminAuctionOrders = () => {
-// 	const { orderList } = useSelector((state) => state.adminOrder);
-// 	const dispatch = useDispatch();
-
-// 	console.log("======>", orderList);
-
-// 	useEffect(() => {
-// 		dispatch(getAllAuctionOrdersForAdmin());
-// 	}, [dispatch]);
-// 	return (
-// 		<Card>
-// 			<CardHeader>
-// 				<CardTitle className="text-xl font-semibold pt-4 px-2">
-// 					Auction Orders List
-// 				</CardTitle>
-// 			</CardHeader>
-// 			<CardContent>
-// 				<Table></Table>
-// 			</CardContent>
-// 		</Card>
-// 	);
-// };
-
-// export default AdminAuctionOrders;

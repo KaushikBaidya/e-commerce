@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-	checkoutUrl: null, // changed from approvalURL
+	checkoutUrl: null, 
 	isLoading: false,
 	orderId: null,
 	orderList: [],
@@ -12,8 +12,6 @@ const initialState = {
 export const createNewOrder = createAsyncThunk(
 	"/order/createNewOrder",
 	async (orderData) => {
-		console.log(orderData);
-
 		const response = await axios.post(
 			`${import.meta.env.VITE_API_BASE_URL}/auction/checkout/create`,
 			orderData

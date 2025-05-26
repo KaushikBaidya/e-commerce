@@ -38,7 +38,6 @@ const AuctionPage = () => {
 			? auctionProductList
 			: [];
 		if (!auctionItems.length) return toast.error("auction items empty");
-		console.log("auctionItems", auctionItems);
 
 		const auctionItem = auctionItems.find(
 			(item) => item._id === getCurrentProductId
