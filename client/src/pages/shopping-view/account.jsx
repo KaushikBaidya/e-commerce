@@ -13,7 +13,7 @@ const ShoppingAccount = () => {
 			<div className="container mx-auto grid grid-cols-1 gap-8 py-8">
 				<div className="flex flex-col border bg-background p-6 shadow-sm">
 					<Tabs defaultValue="orders">
-						<TabsList>
+						<TabsList className="grid w-full grid-cols-3">
 							<TabsTrigger value="orders">Orders</TabsTrigger>
 							<TabsTrigger value="mybids">My Bids</TabsTrigger>
 							<TabsTrigger value="address">Address</TabsTrigger>

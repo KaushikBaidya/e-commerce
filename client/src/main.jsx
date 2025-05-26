@@ -11,8 +11,18 @@ createRoot(document.getElementById("root")).render(
 	<BrowserRouter>
 		<ScrollToTop />
 		<Provider store={store}>
+			<Toaster
+				toastOptions={{
+					style: {
+						backgroundColor: "#1a1a1a",
+						color: "#fff",
+						borderRadius: "8px",
+					},
+					className: "my-custom-toast",
+					duration: 3000,
+				}}
+			/>
 			<App />
-			<Toaster />
 		</Provider>
 	</BrowserRouter>
 );

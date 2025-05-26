@@ -90,9 +90,7 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 		}
 
 		const metadata = session.metadata;
-		console.log("Metadata:", metadata);
-		console.log("Metadata userId:", metadata.userId);
-		console.log("Metadata auctionProductId:", metadata.auctionProductId);
+
 
 		if (!metadata || !metadata.userId || !metadata.auctionProductId) {
 			return res

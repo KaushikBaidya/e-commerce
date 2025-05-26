@@ -123,44 +123,4 @@ const fetchBidItems = async (req, res) => {
 	}
 };
 
-// const fetchBidItems = async (req, res) => {
-// 	try {
-// 		const { userId } = req.params;
-
-// 		if (!userId) {
-// 			return res
-// 				.status(400)
-// 				.json({ success: false, message: "User ID is required" });
-// 		}
-
-// 		// Find auctions where user has placed a bid
-// 		const auctions = await Auction.find({ "bidHistory.bidder": userId });
-
-// 		if (!auctions || auctions.length === 0) {
-// 			return res
-// 				.status(404)
-// 				.json({ success: false, message: "No auction items found" });
-// 		}
-
-// 		// Map response data
-// 		const items = auctions.map((item) => {
-// 			const userBid = item.bidHistory.find(
-// 				(bid) => bid.bidder.toString() === userId
-// 			);
-// 			return {
-// 				id: item._id,
-// 				image: item.image,
-// 				title: item.title,
-// 				currentBid: item.currentBid,
-// 				userBid: userBid?.amount || null,
-// 			};
-// 		});
-
-// 		return res.status(200).json({ success: true, data: items });
-// 	} catch (error) {
-// 		console.error("fetchBidItems error:", error);
-// 		return res.status(500).json({ success: false, message: "Server error" });
-// 	}
-// };
-
 module.exports = { placeBid, fetchBidItems };

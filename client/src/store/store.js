@@ -12,6 +12,7 @@ import ShoppingCartSlice from "./shop/cart-slice";
 import ShopAddressSlice from "./shop/address-slice";
 import shopOrderSlice from "./shop/order-slice";
 import shopSearchSlice from "./shop/search-slice";
+import shopReviewSlice from "./shop/review-slice";
 
 import AuctionSlice from "./shop/auction-slice";
 import AuctionCheckoutSlice from "./shop/auction-checkout-slice";
@@ -31,6 +32,7 @@ const store = configureStore({
 		shopAddress: ShopAddressSlice,
 		shopOrder: shopOrderSlice,
 		shopSearch: shopSearchSlice,
+		shopReview: shopReviewSlice,
 
 		shopAuction: AuctionSlice,
 		auctionCheckout: AuctionCheckoutSlice,
