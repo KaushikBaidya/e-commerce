@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const AuctionProductSchema = new mongoose.Schema(
 	{
 		image: String,
+		imagePublicId: String,
 		title: String,
 		description: String,
 		artist: String,

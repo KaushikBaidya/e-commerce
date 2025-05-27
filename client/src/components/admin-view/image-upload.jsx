@@ -14,6 +14,7 @@ const ImageUpload = ({
 	setUploadedUrl,
 	setImageLoadingState,
 	isEditMode,
+	setFormData,
 }) => {
 	const inputRef = useRef(null);
 
@@ -46,17 +47,31 @@ const ImageUpload = ({
 		setImageLoadingState(true);
 		const data = new FormData();
 		data.append("image", file);
-		const response = await axios.post(
-			"http://localhost:5000/api/admin/products/upload-image",
-			data,
-			{
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
+
+		try {
+			const response = await axios.post(
+				"http://localhost:5000/api/admin/products/upload-image",
+				data,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			);
+
+			if (response?.data.success) {
+				const { url, public_id } = response.data.data;
+
+				setUploadedUrl(url);
+				setFormData((prev) => ({
+					...prev,
+					image: url,
+					imagePublicId: public_id,
+				}));
 			}
-		);
-		if (response?.data.success) {
-			setUploadedUrl(response.data.result.url);
+		} catch (error) {
+			console.error("Image upload failed:", error);
+		} finally {
 			setImageLoadingState(false);
 		}
 	};

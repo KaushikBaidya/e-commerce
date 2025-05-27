@@ -57,24 +57,14 @@ export const addProductFormElements = [
 		name: "category",
 		componentType: "select",
 		options: [
+			{ id: "painting", label: "Painting" },
+			{ id: "sculpture", label: "Sculpture" },
+			{ id: "photography", label: "Photography" },
 			{ id: "men", label: "Men" },
 			{ id: "women", label: "Women" },
 			{ id: "kids", label: "Kids" },
 			{ id: "accessories", label: "Accessories" },
 			{ id: "footwear", label: "Footwear" },
-		],
-	},
-	{
-		label: "Brand",
-		name: "brand",
-		componentType: "select",
-		options: [
-			{ id: "nike", label: "Nike" },
-			{ id: "adidas", label: "Adidas" },
-			{ id: "puma", label: "Puma" },
-			{ id: "levi", label: "Levi's" },
-			{ id: "zara", label: "Zara" },
-			{ id: "h&m", label: "H&M" },
 		],
 	},
 	{
@@ -99,6 +89,20 @@ export const addProductFormElements = [
 		placeholder: "Enter total stock",
 	},
 ];
+
+// {
+// 	label: "Brand",
+// 	name: "brand",
+// 	componentType: "select",
+// 	options: [
+// 		{ id: "nike", label: "Nike" },
+// 		{ id: "adidas", label: "Adidas" },
+// 		{ id: "puma", label: "Puma" },
+// 		{ id: "levi", label: "Levi's" },
+// 		{ id: "zara", label: "Zara" },
+// 		{ id: "h&m", label: "H&M" },
+// 	],
+// },
 
 export const addAuctionProductElements = [
 	{
@@ -196,6 +200,9 @@ export const shoppingViewHeaderMenuItems = [
 ];
 
 export const categoryOptionsMap = {
+	painting: "Painting",
+	sculpture: "Sculpture",
+	photography: "Photography",
 	men: "Men",
 	women: "Women",
 	kids: "Kids",
@@ -203,17 +210,20 @@ export const categoryOptionsMap = {
 	footwear: "Footwear",
 };
 
-export const brandOptionsMap = {
-	nike: "Nike",
-	adidas: "Adidas",
-	puma: "Puma",
-	levi: "Levi",
-	zara: "Zara",
-	"h&m": "H&M",
-};
+// export const brandOptionsMap = {
+// 	nike: "Nike",
+// 	adidas: "Adidas",
+// 	puma: "Puma",
+// 	levi: "Levi",
+// 	zara: "Zara",
+// 	"h&m": "H&M",
+// };
 
 export const filterOptions = {
 	category: [
+		{ id: "painting", label: "Painting" },
+		{ id: "sculpture", label: "Sculpture" },
+		{ id: "photography", label: "Photography" },
 		{ id: "men", label: "Men" },
 		{ id: "women", label: "Women" },
 		{ id: "kids", label: "Kids" },

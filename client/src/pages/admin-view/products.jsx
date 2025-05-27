@@ -15,6 +15,8 @@ import {
 import CommonForm from "@/components/common/form";
 import AdminProductTile from "@/components/admin-view/product-tile";
 import ImageUpload from "@/components/admin-view/image-upload";
+import NoItemFound from "@/components/common/no-item-found";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import {
 	addNewProduct,
@@ -22,16 +24,15 @@ import {
 	editProduct,
 	fetchAllProducts,
 } from "@/store/admin/products-slice";
-import NoItemFound from "@/components/common/no-item-found";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const initialFormData = {
 	image: null,
+	imagePublicId: null,
 	title: "",
 	description: "",
 	category: "",
-	brand: "",
 	price: "",
+	salePrice: "",
 	totalStock: "",
 };
 
@@ -168,6 +169,7 @@ const AdminProducts = () => {
 						imageLoadingState={imageLoadingState}
 						setImageLoadingState={setImageLoadingState}
 						isEditMode={currentEditedId !== null}
+						setFormData={setFormData} 
 					/>
 					<div className="px-5 py-6 text-foreground">
 						<CommonForm

@@ -27,4 +27,12 @@ const imageUploadUtil = (fileBuffer) => {
 	});
 };
 
-module.exports = { upload, imageUploadUtil };
+const deleteImageFromCloudinary = async (publicId) => {
+	try {
+		await cloudinary.uploader.destroy(publicId);
+	} catch (error) {
+		console.error("Error deleting image from Cloudinary:", error);
+	}
+};
+
+module.exports = { upload, imageUploadUtil, deleteImageFromCloudinary };

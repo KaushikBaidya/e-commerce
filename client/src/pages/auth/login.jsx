@@ -58,19 +58,11 @@ const AuthLogin = () => {
 				onSubmit={onSubmit}
 			/>
 
-			<div className="flex flex-col justify-center gap-5">
-				<div className="text-center">For Demonstrations Purpose</div>
-				<div>
-					<h2 className="font-bold">Admin Credentials</h2>
-					<p>email : admin@email.com</p>
-					<p>password : 123456789</p>
-				</div>
-				<div>
-					<h2 className="font-bold">User Credentials</h2>
-					<p>email : newname@email.com</p>
-					<p>password : 123456789</p>
-				</div>
-				<Link className="font-medium text-primary mt-8 hover:underline" to="/">
+			<div className="w-full flex flex-col justify-center gap-5">
+				<Link
+					className="font-medium text-center text-primary mt-8 hover:underline"
+					to="/"
+				>
 					Go home
 				</Link>
 			</div>

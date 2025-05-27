@@ -16,6 +16,7 @@ import CommonForm from "@/components/common/form";
 import ImageUpload from "@/components/admin-view/image-upload";
 import AdminAuctionProductTile from "@/components/admin-view/auction-product-tile";
 import NoItemFound from "@/components/common/no-item-found";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import {
 	addNewAuctionProduct,
@@ -23,10 +24,10 @@ import {
 	deleteAuctionProduct,
 	editAuctionProduct,
 } from "@/store/admin/auction-products-slice";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const initialFormData = {
 	image: null,
+	imagePublicId: null,
 	title: "",
 	description: "",
 	artist: "",
@@ -39,12 +40,12 @@ const initialFormData = {
 
 const AuctionProductsView = () => {
 	const [openCrtProdDialog, setOpenCrtProdDialog] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
 	const [formData, setFormData] = useState(initialFormData);
 	const [imageFile, setImageFile] = useState(null);
 	const [uloadedImageUrl, setUloadedImageUrl] = useState("");
 	const [imageLoadingState, setImageLoadingState] = useState(false);
 	const [currentEditedId, setCurrentEditedId] = useState(null);
-	const [openDialog, setOpenDialog] = useState(false);
 	const [currentDeleteId, setCurrentDeleteId] = useState(null);
 
 	const { auctionProductList } = useSelector(
@@ -175,6 +176,7 @@ const AuctionProductsView = () => {
 						imageLoadingState={imageLoadingState}
 						setImageLoadingState={setImageLoadingState}
 						isEditMode={currentEditedId !== null}
+						setFormData={setFormData}
 					/>
 					<div className="px-5 py-6 text-foreground">
 						<CommonForm

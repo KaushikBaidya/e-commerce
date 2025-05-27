@@ -1,10 +1,13 @@
 const AuctionProduct = require("../../models/Auction");
+const cloudinary = require("cloudinary").v2;
+const { deleteImageFromCloudinary } = require("../../helper/cloudinary");
 
 //add auctionable product
 const addAuctionProduct = async (req, res) => {
 	try {
 		const {
 			image,
+			imagePublicId,
 			title,
 			description,
 			artist,
@@ -24,6 +27,7 @@ const addAuctionProduct = async (req, res) => {
 
 		const newlyAddedProduct = new AuctionProduct({
 			image,
+			imagePublicId,
 			title,
 			description,
 			artist,
@@ -68,6 +72,7 @@ const editAuctionProduct = async (req, res) => {
 		const { id } = req.params;
 		const {
 			image,
+			imagePublicId,
 			title,
 			description,
 			artist,
@@ -84,6 +89,14 @@ const editAuctionProduct = async (req, res) => {
 				success: false,
 				message: "Auction Product not found",
 			});
+		}
+
+		if (
+			image &&
+			image !== findAuctionProduct.image &&
+			findAuctionProduct.imagePublicId
+		) {
+			await deleteImageFromCloudinary(findAuctionProduct.imagePublicId);
 		}
 
 		findAuctionProduct.title = title || findAuctionProduct.title;
@@ -118,13 +131,20 @@ const editAuctionProduct = async (req, res) => {
 const deleteAuctionProduct = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const deletedProduct = await AuctionProduct.findByIdAndDelete(id);
+
+		const deletedProduct = await AuctionProduct.findById(id);
 		if (!deletedProduct) {
 			return res.status(404).json({
 				success: false,
 				message: "Auctionable product not found",
 			});
 		}
+
+		if (deletedProduct.imagePublicId) {
+			await cloudinary.uploader.destroy(deletedProduct.imagePublicId);
+		}
+
+		await deletedProduct.deleteOne();
 		res.status(200).json({
 			success: true,
 			message: "Auctionable product deleted successfully",

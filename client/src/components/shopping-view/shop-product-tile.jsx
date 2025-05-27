@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { brandOptionsMap, categoryOptionsMap } from "@/config";
+import { categoryOptionsMap } from "@/config";
 import { ShoppingCartIcon } from "lucide-react";
 
 const ShopProductTile = ({
@@ -43,7 +43,7 @@ const ShopProductTile = ({
 
 					<div className="flex justify-between text-sm text-muted-foreground">
 						<span>{categoryOptionsMap[product?.category]}</span>
-						<span>{brandOptionsMap[product?.brand]}</span>
+						{/* <span>{brandOptionsMap[product?.brand]}</span> */}
 					</div>
 
 					<div className="flex justify-between items-center">

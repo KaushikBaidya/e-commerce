@@ -10,6 +10,8 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const CommonForm = ({
 	formControls,
@@ -22,10 +24,39 @@ const CommonForm = ({
 	function renderInputByComponentType(getControlItem) {
 		let element = null;
 
+		const [showPassword, setShowPassword] = useState(false);
+
 		const value = formData[getControlItem.name] || "";
 		switch (getControlItem.componentType) {
 			case "input":
-				element = (
+				if (getControlItem.type === "password") {
+					return (
+						<div className="relative">
+							<Input
+								name={getControlItem.name}
+								id={getControlItem.name}
+								placeholder={getControlItem.placeholder}
+								type={showPassword ? "text" : "password"}
+								value={value}
+								onChange={(e) =>
+									setFormData({
+										...formData,
+										[getControlItem.name]: e.target.value,
+									})
+								}
+							/>
+							<button
+								type="button"
+								className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+								onClick={() => setShowPassword((prev) => !prev)}
+								tabIndex={-1}
+							>
+								{showPassword ? <EyeOff /> : <Eye />}
+							</button>
+						</div>
+					);
+				}
+				return (
 					<Input
 						name={getControlItem.name}
 						id={getControlItem.name}
