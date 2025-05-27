@@ -23,7 +23,6 @@ import StripeSuccess from "./pages/shopping-view/StripeSuccess";
 import SearchProducts from "./pages/shopping-view/search";
 import AuctionProductsView from "./pages/admin-view/auction-products";
 import AuctionPage from "./pages/shopping-view/AuctionPage";
-import AuctionDetails from "./pages/shopping-view/auctionDetails";
 import AuctionCheckout from "./pages/shopping-view/auction-checkout";
 import AuctionStripeSuccess from "./pages/shopping-view/AuctionStripeSuccess";
 import AdminAuctionOrders from "./pages/admin-view/AdminAuctionOrders";
@@ -80,10 +79,6 @@ function App() {
 					<Route path="/" element={<ShoppingHome />} />
 					<Route path="shop/listing" element={<ShoppingListing />} />
 					<Route path="shop/auction" element={<AuctionPage />} />
-					<Route
-						path="shop/auction-product-details/:id"
-						element={<AuctionDetails />}
-					/>
 					<Route path="shop/search" element={<SearchProducts />} />
 
 					{/* Protected routes */}

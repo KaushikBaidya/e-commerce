@@ -7,7 +7,7 @@ const AdminProductTile = ({
 	setFormData,
 	setOpenCrtProdDialog,
 	setCurrentEditedId,
-	handleDelete,
+	openDeleteDialog,
 }) => {
 	return (
 		<Card className="w-full max-w-sm mx-auto">
@@ -47,7 +47,7 @@ const AdminProductTile = ({
 					</Button>
 					<Button
 						variant="destructive"
-						onClick={() => handleDelete(product?._id)}
+						onClick={() => openDeleteDialog(product?._id)}
 					>
 						<Trash2 />
 						Delete

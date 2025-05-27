@@ -9,7 +9,7 @@ const AdminAuctionProductTile = ({
 	setFormData,
 	setOpenCrtProdDialog,
 	setCurrentEditedId,
-	handleDelete,
+	openDeleteDialog,
 }) => {
 	const formatDateTimeLocal = (isoString) => {
 		if (!isoString) return "";
@@ -99,14 +99,14 @@ const AdminAuctionProductTile = ({
 							});
 						}}
 					>
-						<Edit className="w-4 h-4 mr-2" />
+						<Edit className="w-4 h-4" />
 						Edit
 					</Button>
 					<Button
 						variant="destructive"
-						onClick={() => handleDelete(auctionProduct?._id)}
+						onClick={() => openDeleteDialog(auctionProduct?._id)}
 					>
-						<Trash2 className="w-4 h-4 mr-2" />
+						<Trash2 className="w-4 h-4" />
 						Delete
 					</Button>
 				</CardFooter>
