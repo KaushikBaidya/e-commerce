@@ -12,10 +12,8 @@ import { placeAuctionBid } from "@/store/shop/auction-slice";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
-// import { setProductDetails } from "@/store/shop/products-slice";
 
 const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
-	const { id } = useParams();
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
 
@@ -32,13 +30,20 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 		const item = auctionProductDetails;
 		if (!item) return toast.error("No auction item found");
 
+		if (item.highestBidder === user.id) {
+			toast.error("You are already the highest bidder");
+			return;
+		}
+
 		const now = new Date();
 		if (new Date(item.startTime) > now)
 			return toast.error("Auction hasn't started yet");
 		if (new Date(item.endTime) < now)
 			return toast.error("Auction has already ended");
 
-		const nextBid = (item.currentBid || item.startingBid) + item.bidIncrement;
+		const nextBid = item.currentBid
+			? item.currentBid + item.bidIncrement
+			: item.startingBid;
 
 		dispatch(
 			placeAuctionBid({
@@ -66,11 +71,11 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 			<DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[95vw] sm:max-w-[90vw] lg:max-w-[65vw] max-h-[80vh] overflow-y-auto">
 				{/* Image & Bid Button Section */}
 				<div className="relative flex flex-col gap-4">
-					<div className="relative w-full h-64 sm:h-80 md:h-full mt-4">
+					<div className="relative w-full sm:h-80 md:h-full mt-4">
 						<img
 							src={auctionProductDetails.image}
 							alt={auctionProductDetails.title}
-							className="w-full h-full object-cover rounded-md"
+							className="w-full h-[500px] object-cover rounded-md"
 						/>
 						<div className="absolute top-4 right-4">
 							<Badge
@@ -112,7 +117,7 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 						{auctionProductDetails.description}
 					</p>
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
 						<div className="flex flex-col">
 							<span className="text-gray-500">Starting Bid</span>
 							<span className="font-bold text-lg text-primary">
@@ -127,7 +132,7 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 						</div>
 						<div className="flex flex-col">
 							<span className="text-gray-500">Bid Increment</span>
-							<span className="text-md font-semibold">
+							<span className="font-bold text-lg text-primary">
 								৳ {auctionProductDetails.bidIncrement}
 							</span>
 						</div>
@@ -138,7 +143,7 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 							Bid History
 						</h3>
 						{auctionProductDetails.bidHistory.length ? (
-							<ul className="divide-y text-sm border rounded-md bg-gray-50">
+							<ul className="divide-y text-sm border rounded-md bg-gray-50 h-[300px] overflow-y-auto">
 								{auctionProductDetails.bidHistory
 									.slice()
 									.reverse()

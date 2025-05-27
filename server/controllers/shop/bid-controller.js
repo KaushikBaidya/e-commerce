@@ -38,23 +38,37 @@ const placeBid = async (req, res) => {
 			});
 		}
 
-		// Calculate minimum allowed bid
-		const minimumAllowedBid = auction.currentBid
-			? auction.currentBid + auction.bidIncrement
-			: auction.startingBid;
-
-		if (bidAmount < minimumAllowedBid) {
+		// Prevent highest bidder from bidding again
+		if (auction.highestBidder?.toString() === userId) {
 			return res.status(400).json({
 				success: false,
-				message: `Bid must be at least ৳${minimumAllowedBid}`,
+				message: "You are already the highest bidder",
 			});
 		}
 
-		// Update currentBid and highestBidder
+		// Determine minimum allowed bid
+		let minimumAllowedBid;
+		if (auction.currentBid) {
+			minimumAllowedBid = auction.currentBid + auction.bidIncrement;
+			if (bidAmount < minimumAllowedBid) {
+				return res.status(400).json({
+					success: false,
+					message: `Bid must be at least ৳${minimumAllowedBid}`,
+				});
+			}
+		} else {
+			// First bid: must be exactly equal to startingBid
+			if (bidAmount !== auction.startingBid) {
+				return res.status(400).json({
+					success: false,
+					message: `First bid must be exactly ৳${auction.startingBid}`,
+				});
+			}
+		}
+
+		// Update bid details
 		auction.currentBid = bidAmount;
 		auction.highestBidder = userId;
-
-		// Add to bid history
 		auction.bidHistory.push({
 			bidder: userId,
 			amount: bidAmount,
