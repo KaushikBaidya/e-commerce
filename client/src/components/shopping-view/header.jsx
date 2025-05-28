@@ -21,7 +21,7 @@ import { Label } from "../ui/label";
 
 import logo from "@/assets/logo.png";
 
-const MenuItems = () => {
+const MenuItems = ({ setOpen }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 
@@ -55,7 +55,10 @@ const MenuItems = () => {
 		<nav className="flex flex-col lg:flex-row mb-3 lg:mb-0 lg:items-center gap-5 p-6">
 			{shoppingViewHeaderMenuItems.map((item) => (
 				<Label
-					onClick={() => handleNavigate(item)}
+					onClick={() => {
+						handleNavigate(item);
+						setOpen(false);
+					}}
 					key={item.id}
 					className="text-base cursor-pointer"
 				>
@@ -66,7 +69,7 @@ const MenuItems = () => {
 	);
 };
 
-const HeaderRightContent = () => {
+const HeaderRightContent = ({ setOpen }) => {
 	const [openCartSheet, setOpenCartSheet] = useState(false);
 
 	const { user } = useSelector((state) => state.auth);
@@ -77,7 +80,11 @@ const HeaderRightContent = () => {
 
 	const handleLogout = () => {
 		dispatch(logoutUser());
-		navigate("/auth/login");
+		if (setOpen) setOpen(false);
+
+		setTimeout(() => {
+			navigate("/auth/login");
+		}, 100);
 	};
 
 	useEffect(() => {
@@ -129,13 +136,21 @@ const HeaderRightContent = () => {
 							<span className="font-bold uppercase">{user?.userName}</span>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem onClick={() => navigate("/shop/account")}>
+						<DropdownMenuItem
+							onClick={() => {
+								navigate("/shop/account");
+								setOpen(false);
+							}}
+						>
 							<UserCog className="mr-2 h-4 w-4" />
 							Account
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem onClick={handleLogout}>
-							<LogOut className="mr-2 h-4 w-4" />
+						<DropdownMenuItem
+							className="flex gap-2"
+							onClick={() => handleLogout()}
+						>
+							<LogOut className="h-4 w-4" />
 							Logout
 						</DropdownMenuItem>
 					</DropdownMenuContent>
@@ -145,7 +160,7 @@ const HeaderRightContent = () => {
 	);
 };
 
-const ShoppingHeader = () => {
+const ShoppingHeader = ({ open, setOpen }) => {
 	return (
 		<header className="fixed top-0 z-40 w-full bg-background border-b">
 			<div className="w-full flex h-16 items-center justify-between px-4 md:px-6">
@@ -154,7 +169,7 @@ const ShoppingHeader = () => {
 						<img src={logo} alt="logo" className="h-8 w-8" />
 						<span className="font-bold uppercase text-xl">Galería</span>
 					</Link>
-					<Sheet>
+					<Sheet open={open} onOpenChange={setOpen}>
 						<SheetTrigger>
 							<span className="lg:hidden">
 								<Menu className="h-6 w-6" />
@@ -162,8 +177,8 @@ const ShoppingHeader = () => {
 							</span>
 						</SheetTrigger>
 						<SheetContent side="left" className="w-full max-w-xs">
-							<MenuItems />
-							<HeaderRightContent />
+							<MenuItems setOpen={setOpen} />
+							<HeaderRightContent setOpen={setOpen} />
 						</SheetContent>
 					</Sheet>
 				</div>
