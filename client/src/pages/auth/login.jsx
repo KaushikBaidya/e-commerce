@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import GoogleLoginButton from "./google-login-button";
 
 const initialState = {
 	email: "",
@@ -59,6 +60,7 @@ const AuthLogin = () => {
 			/>
 
 			<div className="w-full flex flex-col justify-center gap-5">
+				<GoogleLoginButton/>
 				<Link
 					className="font-medium text-center text-primary mt-8 hover:underline"
 					to="/"

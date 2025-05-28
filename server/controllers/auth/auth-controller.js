@@ -1,133 +1,151 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 
-// register
+// const { OAuth2Client } = require("google-auth-library");
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const generateTokens = (user) => {
+	const accessToken = jwt.sign(
+		{ id: user._id, email: user.email, role: user.role },
+		process.env.JWT_SECRET,
+		{ expiresIn: "15m" }
+	);
+
+	const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, {
+		expiresIn: "7d",
+	});
+
+	return { accessToken, refreshToken };
+};
+
+const refreshAccessToken = (req, res) => {
+	const token = req.cookies.refreshToken;
+	if (!token)
+		return res.status(401).json({ success: false, message: "No token" });
+
+	try {
+		const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+		const accessToken = jwt.sign({ id: decoded.id }, process.env.JWT_SECRET, {
+			expiresIn: "15m",
+		});
+		res.json({ success: true, accessToken });
+	} catch (err) {
+		return res
+			.status(403)
+			.json({ success: false, message: "Invalid refresh token" });
+	}
+};
+
+const setCookie = (res, token) => {
+	res.cookie("token", token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "strict",
+	});
+};
 
 const registerUser = async (req, res) => {
 	const { userName, email, password } = req.body;
-
-	if (!userName || !email || !password) {
-		return res.status(400).json({
-			success: false,
-			message: "All fields are required",
-		});
-	}
+	if (!userName || !email || !password)
+		return res
+			.status(400)
+			.json({ success: false, message: "All fields are required" });
 
 	try {
-		const checkUser = await User.findOne({ email });
-		if (checkUser) {
+		const existing = await User.findOne({ email });
+		if (existing)
 			return res.json({
 				success: false,
 				message: "User already exists with this email",
 			});
-		}
 
-		const hashPassword = await bcrypt.hash(password, 10);
-		const newUser = new User({
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const newUser = await User.create({
 			userName,
 			email,
-			password: hashPassword,
+			password: hashedPassword,
 		});
-		await newUser.save();
-		res.status(200).json({
-			success: true,
-			message: "User created successfully",
-		});
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({
-			success: false,
-			message: "Something went wrong",
-		});
+		res
+			.status(200)
+			.json({ success: true, message: "User created successfully" });
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ success: false, message: "Server error" });
 	}
 };
-
-// login
 
 const loginUser = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
-		const checkUser = await User.findOne({ email });
-		if (!checkUser) {
-			return res.json({
-				success: false,
-				message: "User does not exist with this email",
-			});
+		const user = await User.findOne({ email });
+		if (!user) {
+			return res.json({ success: false, message: "Invalid email or password" });
 		}
 
-		const checkPassword = await bcrypt.compare(password, checkUser.password);
-		if (!checkPassword) {
-			return res.json({
-				success: false,
-				message: "Password is incorrect",
-			});
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) {
+			return res.json({ success: false, message: "Invalid email or password" });
 		}
-		const token = jwt.sign(
-			{
-				id: checkUser._id,
-				role: checkUser.role,
-				email: checkUser.email,
-				userName: checkUser.userName,
-			},
-			"CLIENT_SECRET",
-			{
-				expiresIn: "7d",
-			}
-		);
+
+		const { accessToken, refreshToken } = generateTokens(user);
 
 		res
-			.cookie("token", token, {
+			.cookie("accessToken", accessToken, {
 				httpOnly: true,
-				secure: false,
+				sameSite: "strict",
+				secure: process.env.NODE_ENV === "production",
+			})
+			.cookie("refreshToken", refreshToken, {
+				httpOnly: true,
+				sameSite: "strict",
+				secure: process.env.NODE_ENV === "production",
 			})
 			.json({
 				success: true,
-				message: "User logged in successfully",
+				message: "Logged in successfully",
 				user: {
-					email: checkUser.email,
-					role: checkUser.role,
-					id: checkUser._id,
-					userName: checkUser.userName,
+					id: user._id,
+					userName: user.userName,
+					email: user.email,
+					role: user.role,
 				},
 			});
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({
-			success: false,
-			message: "Something went wrong",
-		});
+	} catch (err) {
+		console.error("Login error:", err);
+		res.status(500).json({ success: false, message: "Server error" });
 	}
 };
 
-// logout
 const logout = (req, res) => {
-	res.clearCookie("token").json({
-		success: true,
-		message: "User logged out successfully",
-	});
+	res.clearCookie("token");
+	res.clearCookie("accessToken");
+	res
+		.clearCookie("refreshToken")
+		.json({ success: true, message: "Logged out" });
 };
 
-// auth-middleware
-
-const authMiddleware = async (req, res, next) => {
-	const token = req.cookies.token;
+const authMiddleware = (req, res, next) => {
+	const token = req.cookies.accessToken;
 	if (!token)
-		return res.status(401).json({
-			success: false,
-			message: "Unauthorized User!",
-		});
+		return res.status(401).json({ success: false, message: "Unauthorized" });
+
 	try {
-		const decoded = jwt.verify(token, "CLIENT_SECRET");
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		req.user = decoded;
 		next();
-	} catch (error) {
-		res.status(401).json({
-			success: false,
-			message: "Unauthorized User!",
-		});
+	} catch (err) {
+		res.status(401).json({ success: false, message: "Unauthorized" });
 	}
 };
 
-module.exports = { registerUser, loginUser, logout, authMiddleware };
+module.exports = {
+	registerUser,
+	loginUser,
+	logout,
+	refreshAccessToken,
+	generateTokens,
+	authMiddleware,
+};

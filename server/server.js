@@ -1,11 +1,11 @@
 require("dotenv").config();
-
 const express = require("express");
+require("./helper/passport");
 
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
+const passport = require("passport");
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-route");
 const adminOrderRouter = require("./routes/admin/order-route");
@@ -59,6 +59,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.use(passport.initialize());
 
 // api-routes
 app.use("/api/auth", authRouter);

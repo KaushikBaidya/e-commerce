@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import axiosInstance from "../../lib/axiosInstance";
 
 const initialState = {
 	isAuthenticated: false,
@@ -22,38 +23,17 @@ export const registerUser = createAsyncThunk(
 );
 
 export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
-	const response = await axios.post(
-		`${import.meta.env.VITE_API_BASE_URL}/auth/login`,
-		formData,
-		{
-			withCredentials: true,
-		}
-	);
-	return response.data;
-});
-
-export const logoutUser = createAsyncThunk("/auth/logut", async () => {
-	const response = await axios.post(
-		`${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
-		{},
-		{
-			withCredentials: true,
-		}
-	);
+	const response = await axiosInstance.post("/auth/login", formData);
 	return response.data;
 });
 
 export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-	const response = await axios.get(
-		`${import.meta.env.VITE_API_BASE_URL}/auth/check-auth`,
-		{
-			withCredentials: true,
-			headers: {
-				"cache-control":
-					"no-store, no-cache, must-revalidatem, proxy-revalidate",
-			},
-		}
-	);
+	const response = await axiosInstance.get("/auth/check-auth");
+	return response.data;
+});
+
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+	const response = await axiosInstance.post("/auth/logout");
 	return response.data;
 });
 
