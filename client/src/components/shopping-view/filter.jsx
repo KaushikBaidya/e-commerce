@@ -35,7 +35,7 @@ const ProductFilter = ({ filters, handleFilter }) => {
 								))}
 							</div>
 						</div>
-						<Separator />
+						{/* <Separator /> */}
 					</Fragment>
 				))}
 			</div>
