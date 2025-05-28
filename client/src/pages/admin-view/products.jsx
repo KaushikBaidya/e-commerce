@@ -16,7 +16,6 @@ import CommonForm from "@/components/common/form";
 import AdminProductTile from "@/components/admin-view/product-tile";
 import ImageUpload from "@/components/admin-view/image-upload";
 import NoItemFound from "@/components/common/no-item-found";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import {
 	addNewProduct,
