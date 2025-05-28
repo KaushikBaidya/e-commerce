@@ -11,9 +11,22 @@ import {
 } from "@/store/shop/address-slice";
 import { toast } from "sonner";
 import AddressCard from "./adress-card";
-import { current } from "@reduxjs/toolkit";
 import { Button } from "../ui/button";
-import { CircleSlash } from "lucide-react";
+import { CircleSlash, XIcon } from "lucide-react";
+
+import * as Yup from "yup";
+
+const addressValidationSchema = Yup.object({
+	address: Yup.string().required("Address is required"),
+	city: Yup.string().required("City is required"),
+	pincode: Yup.string()
+		.matches(/^\d{4,10}$/, "Pincode must be 4 to 10 digits")
+		.required("Pincode is required"),
+	phone: Yup.string()
+		.matches(/^[0-9]{11}$/, "Phone number must be 11 digits")
+		.required("Phone is required"),
+	notes: Yup.string().max(200, "Notes must be under 200 characters"),
+});
 
 const initialState = {
 	address: "",
@@ -22,69 +35,92 @@ const initialState = {
 	pincode: "",
 	notes: "",
 };
+
 const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 	const [formData, setFormData] = useState(initialState);
+	const [errors, setErrors] = useState({});
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [currentEditId, setCurrentEditId] = useState(null);
 	const { user } = useSelector((state) => state.auth);
 	const { addressList } = useSelector((state) => state.shopAddress);
 	const dispatch = useDispatch();
 
-	const onSubmit = (event) => {
+	const onSubmit = async (event) => {
 		event.preventDefault();
-		if (addressList.length >= 3 && currentEditId === null) {
-			setFormData(initialState);
-			toast.error("You can add only 3 addresses");
+		setIsSubmitting(true);
 
-			return;
-		}
+		try {
+			await addressValidationSchema.validate(formData, { abortEarly: false });
+			setErrors({});
 
-		currentEditId !== null
-			? dispatch(
+			if (addressList.length >= 3 && currentEditId === null) {
+				setFormData(initialState);
+				toast.error("You can add only 3 addresses", {
+					action: { label: <XIcon /> },
+				});
+				setIsSubmitting(false);
+				return;
+			}
+
+			if (currentEditId !== null) {
+				dispatch(
 					editAddress({
 						userId: user?.id,
 						addressId: currentEditId,
 						formData,
 					})
-			  ).then((data) => {
+				).then((data) => {
+					setIsSubmitting(false);
 					if (data?.payload?.success) {
 						dispatch(fetchAllAddresses(user?.id));
 						setCurrentEditId(null);
 						setFormData(initialState);
-						toast.success("Address updated successfully");
+						toast.success("Address updated successfully", {
+							action: { label: <XIcon /> },
+						});
 					}
-			  })
-			: dispatch(addNewAddress({ ...formData, userId: user?.id })).then(
+				});
+			} else {
+				dispatch(addNewAddress({ ...formData, userId: user?.id })).then(
 					(data) => {
+						setIsSubmitting(false);
 						if (data?.payload?.success) {
 							dispatch(fetchAllAddresses(user?.id));
 							setFormData(initialState);
 							toast.success(data?.payload?.message, {
-								action: {
-									label: "X",
-								},
+								action: { label: "X" },
 							});
 						}
 					}
-			  );
+				);
+			}
+		} catch (validationError) {
+			setIsSubmitting(false);
+			if (validationError.inner) {
+				const formattedErrors = {};
+				validationError.inner.forEach((err) => {
+					formattedErrors[err.path] = err.message;
+					toast.error(err.message);
+				});
+				setErrors(formattedErrors);
+			}
+		}
 	};
 
 	const isFormValid = () => {
-		return Object.keys(formData)
-			.map((key) => formData[key] !== "")
-			.every((item) => item);
-		// .map((key) => formData[key].trim() !== "") if needed will add later
+		return Object.values(formData).every((val) => val !== "");
 	};
 
 	const handleEditAddress = (getCurrentAddress) => {
 		setCurrentEditId(getCurrentAddress._id);
 		setFormData({
-			...formData,
 			address: getCurrentAddress?.address,
 			city: getCurrentAddress?.city,
 			phone: getCurrentAddress?.phone,
 			pincode: getCurrentAddress?.pincode,
 			notes: getCurrentAddress?.notes,
 		});
+		setErrors({});
 	};
 
 	const handleDeleteAddress = (getCurrentAddress) => {
@@ -94,9 +130,7 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 			if (data?.payload?.success) {
 				dispatch(fetchAllAddresses(user?.id));
 				toast.success(data?.payload?.message, {
-					action: {
-						label: "X",
-					},
+					action: { label: <XIcon /> },
 				});
 			}
 		});
@@ -105,6 +139,7 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 	const cancelEdit = () => {
 		setCurrentEditId(null);
 		setFormData(initialState);
+		setErrors({});
 	};
 
 	useEffect(() => {
@@ -126,19 +161,21 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 						/>
 					))
 				) : (
-					<div></div>
+					<div>No addresses added yet.</div>
 				)}
 			</div>
-			<CardHeader className={"flex items-center justify-between"}>
+
+			<CardHeader className="flex items-center justify-between">
 				<CardTitle>
 					{currentEditId ? "Edit Address" : "Add New Address"}
 				</CardTitle>
 				{currentEditId && (
-					<Button onClick={() => cancelEdit()}>
-						<CircleSlash /> Cancel
+					<Button onClick={cancelEdit}>
+						<CircleSlash className="mr-1" /> Cancel
 					</Button>
 				)}
 			</CardHeader>
+
 			<CardContent className="space-y-4">
 				<CommonForm
 					formControls={addressFormControls}
@@ -146,7 +183,8 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 					setFormData={setFormData}
 					onSubmit={onSubmit}
 					buttonText={currentEditId ? "Edit Address" : "Add New Address"}
-					isBtnDisabled={!isFormValid()}
+					isBtnDisabled={!isFormValid() || isSubmitting}
+					errors={errors}
 				/>
 			</CardContent>
 		</Card>
