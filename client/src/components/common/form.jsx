@@ -18,30 +18,30 @@ const CommonForm = ({
 	formData,
 	setFormData,
 	onSubmit,
+	errors,
 	buttonText,
 	isBtnDisabled,
 }) => {
-	function renderInputByComponentType(getControlItem) {
-		let element = null;
+	const [showPassword, setShowPassword] = useState(false);
 
-		const [showPassword, setShowPassword] = useState(false);
+	function renderInputByComponentType(controlItem) {
+		const value = formData[controlItem.name] || "";
 
-		const value = formData[getControlItem.name] || "";
-		switch (getControlItem.componentType) {
+		switch (controlItem.componentType) {
 			case "input":
-				if (getControlItem.type === "password") {
+				if (controlItem.type === "password") {
 					return (
 						<div className="relative">
 							<Input
-								name={getControlItem.name}
-								id={getControlItem.name}
-								placeholder={getControlItem.placeholder}
+								name={controlItem.name}
+								id={controlItem.name}
+								placeholder={controlItem.placeholder}
 								type={showPassword ? "text" : "password"}
 								value={value}
 								onChange={(e) =>
 									setFormData({
 										...formData,
-										[getControlItem.name]: e.target.value,
+										[controlItem.name]: e.target.value,
 									})
 								}
 							/>
@@ -58,102 +58,93 @@ const CommonForm = ({
 				}
 				return (
 					<Input
-						name={getControlItem.name}
-						id={getControlItem.name}
-						placeholder={getControlItem.placeholder}
-						type={getControlItem.type}
+						name={controlItem.name}
+						id={controlItem.name}
+						placeholder={controlItem.placeholder}
+						type={controlItem.type}
 						value={value}
 						onChange={(e) =>
 							setFormData({
 								...formData,
-								[getControlItem.name]: e.target.value,
+								[controlItem.name]: e.target.value,
 							})
 						}
 					/>
 				);
-				break;
 
 			case "select":
-				element = (
+				return (
 					<Select
 						onValueChange={(value) =>
-							setFormData({ ...formData, [getControlItem.name]: value })
+							setFormData({ ...formData, [controlItem.name]: value })
 						}
 						value={value}
 					>
 						<SelectTrigger className="w-full">
-							<SelectValue placeholder={getControlItem.label} />
+							<SelectValue placeholder={controlItem.label} />
 						</SelectTrigger>
-						<SelectContent className={"max-h-60 bg-white text-foreground"}>
-							{getControlItem.options && getControlItem.options.length > 0
-								? getControlItem.options.map((optionItem) => (
-										<SelectItem key={optionItem.id} value={optionItem.id}>
-											{optionItem.label}
-										</SelectItem>
-								  ))
-								: null}
+						<SelectContent className="max-h-60 bg-white text-foreground">
+							{controlItem.options?.map((optionItem) => (
+								<SelectItem key={optionItem.id} value={optionItem.id}>
+									{optionItem.label}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				);
-				break;
 
 			case "textarea":
-				element = (
+				return (
 					<Textarea
-						name={getControlItem.name}
-						id={getControlItem.name}
-						placeholder={getControlItem.placeholder}
+						name={controlItem.name}
+						id={controlItem.name}
+						placeholder={controlItem.placeholder}
 						value={value}
 						onChange={(e) =>
 							setFormData({
 								...formData,
-								[getControlItem.name]: e.target.value,
+								[controlItem.name]: e.target.value,
 							})
 						}
 					/>
 				);
-				break;
 
 			case "checkbox":
-				element = (
+				return (
 					<div className="flex items-center space-x-2">
 						<Checkbox
-							id={getControlItem.name}
-							checked={!!formData[getControlItem.name]} // Coerce to boolean
+							id={controlItem.name}
+							checked={!!formData[controlItem.name]}
 							onCheckedChange={(checked) =>
 								setFormData({
 									...formData,
-									[getControlItem.name]: checked,
+									[controlItem.name]: checked,
 								})
 							}
 						/>
-						<Label htmlFor={getControlItem.name}>
-							{getControlItem.checkboxLabel || getControlItem.label}
+						<Label htmlFor={controlItem.name}>
+							{controlItem.checkboxLabel || controlItem.label}
 						</Label>
 					</div>
 				);
-				break;
 
 			default:
-				element = (
+				return (
 					<Input
-						name={getControlItem.name}
-						id={getControlItem.name}
-						placeholder={getControlItem.placeholder}
-						type={getControlItem.type}
+						name={controlItem.name}
+						id={controlItem.name}
+						placeholder={controlItem.placeholder}
+						type={controlItem.type}
 						value={value}
 						onChange={(e) =>
 							setFormData({
 								...formData,
-								[getControlItem.name]: e.target.value,
+								[controlItem.name]: e.target.value,
 							})
 						}
 					/>
 				);
-				break;
 		}
-
-		return element;
 	}
 
 	return (
@@ -161,8 +152,13 @@ const CommonForm = ({
 			<div className="flex flex-col gap-3">
 				{formControls.map((controlItem) => (
 					<div className="grid w-full gap-1.5" key={controlItem.name}>
-						<Label className="mb-1">{controlItem.label}</Label>
+						<Label className="mb-1" htmlFor={controlItem.name}>
+							{controlItem.label}
+						</Label>
 						{renderInputByComponentType(controlItem)}
+						{errors && errors[controlItem.name] && (
+							<p className="text-sm text-red-500">{errors[controlItem.name]}</p>
+						)}
 					</div>
 				))}
 			</div>

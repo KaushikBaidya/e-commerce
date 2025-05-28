@@ -3,10 +3,19 @@ import { loginFormControls } from "@/config";
 import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import GoogleLoginButton from "./google-login-button";
 import { Separator } from "@/components/ui/separator";
+import * as Yup from "yup";
+import { XIcon } from "lucide-react";
+
+const loginValidationSchema = Yup.object({
+	email: Yup.string().email("Invalid email").required("Email is required"),
+	password: Yup.string()
+		.required("Password is required")
+		.min(6, "Password must be at least 6 characters"),
+});
 
 const initialState = {
 	email: "",
@@ -15,33 +24,55 @@ const initialState = {
 
 const AuthLogin = () => {
 	const [formData, setFormData] = useState(initialState);
+	const [errors, setErrors] = useState({});
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const dispatch = useDispatch();
-	const onSubmit = (e) => {
-		e.preventDefault();
+	const navigate = useNavigate();
 
-		dispatch(loginUser(formData)).then((data) => {
-			if (data?.payload?.success) {
-				toast.success(data?.payload?.message, {
+	const onSubmit = async (e) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+
+		try {
+			await loginValidationSchema.validate(formData, { abortEarly: false });
+			setErrors({});
+
+			const result = await dispatch(loginUser(formData));
+
+			if (result?.payload?.success) {
+				toast.success(result.payload.message, {
 					action: {
-						label: "X",
+						label: <XIcon />,
 					},
 				});
+				navigate("/"); // Navigate on success
 			} else {
-				toast.error(data?.payload?.message, {
+				toast.error(result.payload.message || "Login failed", {
 					action: {
-						label: "X",
+						label: <XIcon />,
 					},
 				});
 			}
-		});
+		} catch (validationError) {
+			if (validationError.inner) {
+				const formattedErrors = {};
+				validationError.inner.forEach((err) => {
+					formattedErrors[err.path] = err.message;
+				});
+				setErrors(formattedErrors);
+			}
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
+
 	return (
 		<div className="mx-auto w-full max-w-md space-y-6">
-			<div className="txt-center">
+			<div className="text-center">
 				<h1 className="text-4xl font-extrabold tracking-tight text-foreground">
 					Login
 				</h1>
-				<p className="mt-2 ">
+				<p className="mt-2">
 					Don't have an account?
 					<Link
 						className="font-medium text-primary ml-2 hover:underline"
@@ -58,6 +89,8 @@ const AuthLogin = () => {
 				formData={formData}
 				setFormData={setFormData}
 				onSubmit={onSubmit}
+				isBtnDisabled={isSubmitting}
+				errors={errors}
 			/>
 
 			<div className="flex items-center gap-4 my-6">

@@ -21,6 +21,7 @@ export const registerFormControls = [
 		type: "password",
 	},
 ];
+
 export const loginFormControls = [
 	{
 		name: "email",
@@ -90,20 +91,6 @@ export const addProductFormElements = [
 	},
 ];
 
-// {
-// 	label: "Brand",
-// 	name: "brand",
-// 	componentType: "select",
-// 	options: [
-// 		{ id: "nike", label: "Nike" },
-// 		{ id: "adidas", label: "Adidas" },
-// 		{ id: "puma", label: "Puma" },
-// 		{ id: "levi", label: "Levi's" },
-// 		{ id: "zara", label: "Zara" },
-// 		{ id: "h&m", label: "H&M" },
-// 	],
-// },
-
 export const addAuctionProductElements = [
 	{
 		label: "Title",
@@ -160,6 +147,57 @@ export const addAuctionProductElements = [
 		componentType: "checkbox",
 	},
 ];
+
+export const addressFormControls = [
+	{
+		label: "Address",
+		name: "address",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter your address",
+	},
+	{
+		label: "City",
+		name: "city",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter your city",
+	},
+	{
+		label: "Pincode",
+		name: "pincode",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter your pincode",
+	},
+	{
+		label: "Phone",
+		name: "phone",
+		componentType: "input",
+		type: "text",
+		placeholder: "Enter your phone number",
+	},
+	{
+		label: "Notes",
+		name: "notes",
+		componentType: "textarea",
+		placeholder: "Enter any additional notes",
+	},
+];
+
+// {
+// 	label: "Brand",
+// 	name: "brand",
+// 	componentType: "select",
+// 	options: [
+// 		{ id: "nike", label: "Nike" },
+// 		{ id: "adidas", label: "Adidas" },
+// 		{ id: "puma", label: "Puma" },
+// 		{ id: "levi", label: "Levi's" },
+// 		{ id: "zara", label: "Zara" },
+// 		{ id: "h&m", label: "H&M" },
+// 	],
+// },
 
 export const shoppingViewHeaderMenuItems = [
 	{
@@ -265,41 +303,4 @@ export const sortOptions = [
 	{ id: "price-hightolow", label: "Price: High to Low" },
 	{ id: "title-atoz", label: "Title: A to Z" },
 	{ id: "title-ztoa", label: "Title: Z to A" },
-];
-
-export const addressFormControls = [
-	{
-		label: "Address",
-		name: "address",
-		componentType: "input",
-		type: "text",
-		placeholder: "Enter your address",
-	},
-	{
-		label: "City",
-		name: "city",
-		componentType: "input",
-		type: "text",
-		placeholder: "Enter your city",
-	},
-	{
-		label: "Pincode",
-		name: "pincode",
-		componentType: "input",
-		type: "text",
-		placeholder: "Enter your pincode",
-	},
-	{
-		label: "Phone",
-		name: "phone",
-		componentType: "input",
-		type: "text",
-		placeholder: "Enter your phone number",
-	},
-	{
-		label: "Notes",
-		name: "notes",
-		componentType: "textarea",
-		placeholder: "Enter any additional notes",
-	},
 ];
