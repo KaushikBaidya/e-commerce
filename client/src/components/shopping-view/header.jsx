@@ -88,7 +88,7 @@ const HeaderRightContent = ({ setOpen }) => {
 
 	useEffect(() => {
 		if (user !== null) dispatch(fetchCartItems(user?.id));
-	}, [dispatch]);
+	}, [dispatch, user]);
 
 	return (
 		<div className="flex flex-col lg:flex-row lg:items-center gap-6 p-6">
