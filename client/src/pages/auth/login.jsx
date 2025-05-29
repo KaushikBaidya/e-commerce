@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import GoogleLoginButton from "./google-login-button";
 import { Separator } from "@/components/ui/separator";
 import * as Yup from "yup";
-import { XIcon } from "lucide-react";
 
 const loginValidationSchema = Yup.object({
 	email: Yup.string().email("Invalid email").required("Email is required"),
@@ -42,14 +41,14 @@ const AuthLogin = () => {
 			if (result?.payload?.success) {
 				toast.success(result.payload.message, {
 					action: {
-						label: <XIcon />,
+						label: "close",
 					},
 				});
-				navigate("/"); // Navigate on success
+				navigate("/");
 			} else {
 				toast.error(result.payload.message || "Login failed", {
 					action: {
-						label: <XIcon />,
+						label: "close",
 					},
 				});
 			}
@@ -68,7 +67,7 @@ const AuthLogin = () => {
 
 	return (
 		<div className="mx-auto w-full max-w-md space-y-6">
-			<div className="text-center">
+			<div className="flex flex-col justify-start gap-2">
 				<h1 className="text-4xl font-extrabold tracking-tight text-foreground">
 					Login
 				</h1>
@@ -93,6 +92,9 @@ const AuthLogin = () => {
 				errors={errors}
 			/>
 
+			<Link to="/forgot-password" className="text-sm hover:underline pt-4">
+				Forgot Password
+			</Link>
 			<div className="flex items-center gap-4 my-6">
 				<Separator className="flex-1" />
 				<span className="text-gray-500 text-sm">Or</span>

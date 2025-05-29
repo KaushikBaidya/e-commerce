@@ -7,7 +7,10 @@ const {
 	authMiddleware,
 	refreshAccessToken,
 } = require("../../controllers/auth/auth-controller");
-const jwt = require("jsonwebtoken");
+const {
+	sendResetLink,
+	resetPassword,
+} = require("../../controllers/auth/forgot-password-controller");
 
 const router = express.Router();
 
@@ -52,5 +55,8 @@ router.get(
 );
 
 router.post("/refresh", refreshAccessToken);
+
+router.post("/forgot-password", sendResetLink);
+router.post("/reset-password/:token", resetPassword);
 
 module.exports = router;

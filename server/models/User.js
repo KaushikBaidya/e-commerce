@@ -12,6 +12,9 @@ const UserSchema = new mongoose.Schema({
 	role: { type: String, default: "user" },
 	authProvider: { type: String, default: "local" },
 	googleId: { type: String, default: null },
+
+	resetPasswordToken: { type: String },
+	resetPasswordExpires: { type: Date },
 });
 
 module.exports = mongoose.model("User", UserSchema);

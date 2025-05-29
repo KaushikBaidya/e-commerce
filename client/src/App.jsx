@@ -27,6 +27,8 @@ import AuctionCheckout from "./pages/shopping-view/auction-checkout";
 import AuctionStripeSuccess from "./pages/shopping-view/AuctionStripeSuccess";
 import AdminAuctionOrders from "./pages/admin-view/AdminAuctionOrders";
 import AdminUsers from "./pages/admin-view/AdminUsers";
+import ForgotPassword from "./pages/auth/forgot-password";
+import ResetPassword from "./pages/auth/reset-password";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -57,6 +59,7 @@ function App() {
 					<Route path="login" element={<AuthLogin />} />
 					<Route path="register" element={<AuthRegister />} />
 				</Route>
+
 				<Route
 					path="/admin"
 					element={
@@ -80,6 +83,8 @@ function App() {
 					<Route path="shop/listing" element={<ShoppingListing />} />
 					<Route path="shop/auction" element={<AuctionPage />} />
 					<Route path="shop/search" element={<SearchProducts />} />
+					<Route path="forgot-password" element={<ForgotPassword />} />
+					<Route path="reset-password/:token" element={<ResetPassword />} />
 
 					{/* Protected routes */}
 					<Route
