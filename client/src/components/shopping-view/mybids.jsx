@@ -144,7 +144,10 @@ const MyBids = () => {
 							})
 						) : (
 							<TableRow>
-								<TableCell colSpan={4} className="text-center text-gray-500">
+								<TableCell
+									colSpan={4}
+									className="text-center text-gray-500 py-10"
+								>
 									You haven't placed any bids yet.
 								</TableCell>
 							</TableRow>

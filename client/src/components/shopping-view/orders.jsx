@@ -27,7 +27,6 @@ const ShoppingOrdersList = () => {
 	const { user } = useSelector((state) => state.auth);
 	const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
 
-
 	function handleFetchOrderDetails(getId) {
 		dispatch(getOrderDetails(getId));
 	}
@@ -62,8 +61,8 @@ const ShoppingOrdersList = () => {
 					</TableHeader>
 					<TableBody>
 						{orderList && orderList.length > 0 ? (
-							orderList.map((order) => (
-								<TableRow>
+							orderList.map((order, index) => (
+								<TableRow key={index}>
 									<TableCell>@_{order?._id} </TableCell>
 									<TableCell>{order?.orderDate.split("T")[0]} </TableCell>
 									<TableCell>
@@ -113,7 +112,14 @@ const ShoppingOrdersList = () => {
 								</TableRow>
 							))
 						) : (
-							<h1>No orders found</h1>
+							<TableRow>
+								<TableCell
+									colSpan={5}
+									className="text-center text-gray-500 py-10"
+								>
+									No orders found
+								</TableCell>
+							</TableRow>
 						)}
 					</TableBody>
 				</Table>

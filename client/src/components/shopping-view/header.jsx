@@ -186,7 +186,7 @@ const ShoppingHeader = ({ open, setOpen }) => {
 					<MenuItems />
 				</div>
 				<div className="hidden lg:block">
-					<HeaderRightContent />
+					<HeaderRightContent setOpen={setOpen} />
 				</div>
 			</div>
 		</header>
