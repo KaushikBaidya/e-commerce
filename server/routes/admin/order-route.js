@@ -5,7 +5,6 @@ const {
 	getOrderDetailsForAdmin,
 	updateOrderStatus,
 	getAllAuctionOrdersOfAllUsers,
-	getAllUsers,
 } = require("../../controllers/admin/order-controller");
 
 const router = express.Router();
