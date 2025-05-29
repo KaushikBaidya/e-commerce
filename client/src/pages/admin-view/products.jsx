@@ -34,6 +34,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Edit, Trash2, Search } from "lucide-react";
+import Loading from "@/components/common/loading-component";
 
 const initialFormData = {
 	image: null,
@@ -58,13 +59,16 @@ const AdminProducts = () => {
 
 	const [searchTerm, setSearchTerm] = useState("");
 
-	const { productList } = useSelector((state) => state.adminProducts);
+	const { productList, isLoading } = useSelector(
+		(state) => state.adminProducts
+	);
 
+	const dispatch = useDispatch();
+	
 	const filteredProducts = productList?.filter((product) =>
 		product.title.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
-	const dispatch = useDispatch();
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -150,74 +154,78 @@ const AdminProducts = () => {
 			</div>
 
 			{/*  product list */}
-			<div className="w-full max-h-[80vh] overflow-y-auto">
-				{filteredProducts && filteredProducts.length > 0 ? (
-					<Table className="w-full">
-						<TableHeader>
-							<TableRow>
-								<TableHead>Image</TableHead>
-								<TableHead>Title</TableHead>
-								<TableHead>Category</TableHead>
-								<TableHead>Price</TableHead>
-								<TableHead>Sale Price</TableHead>
-								<TableHead>Stock</TableHead>
-								<TableHead className="text-right">Actions</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{filteredProducts.map((product, index) => (
-								<TableRow key={index} className="hover:bg-gray-100">
-									<TableCell>
-										<img
-											src={product?.image}
-											alt={product?.title}
-											className="w-16 h-16 object-cover rounded"
-										/>
-									</TableCell>
-									<TableCell>{product?.title}</TableCell>
-									<TableCell>{product?.category}</TableCell>
-									<TableCell
-										className={
-											product?.salePrice > 0
-												? "line-through text-muted-foreground"
-												: ""
-										}
-									>
-										৳ {product?.price}
-									</TableCell>
-									<TableCell>
-										{product?.salePrice > 0 ? `৳ ${product?.salePrice}` : "—"}
-									</TableCell>
-									<TableCell>{product?.totalStock}</TableCell>
-									<TableCell className="flex justify-end gap-2 mt-4">
-										<Button
-											size="sm"
-											onClick={() => {
-												setOpenCrtProdDialog(true);
-												setCurrentEditedId(product?._id);
-												setFormData(product);
-											}}
-										>
-											<Edit className="w-4 h-4 mr-1" />
-											Edit
-										</Button>
-										<Button
-											variant="destructive"
-											size="sm"
-											onClick={() => openDeleteDialog(product?._id)}
-										>
-											<Trash2 className="w-4 h-4 mr-1" />
-											Delete
-										</Button>
-									</TableCell>
+			{isLoading ? (
+				<Loading />
+			) : (
+				<div className="w-full max-h-[80vh] overflow-y-auto">
+					{filteredProducts && filteredProducts.length > 0 ? (
+						<Table className="w-full">
+							<TableHeader>
+								<TableRow>
+									<TableHead>Image</TableHead>
+									<TableHead>Title</TableHead>
+									<TableHead>Category</TableHead>
+									<TableHead>Price</TableHead>
+									<TableHead>Sale Price</TableHead>
+									<TableHead>Stock</TableHead>
+									<TableHead className="text-right">Actions</TableHead>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				) : (
-					<NoItemFound />
-				)}
-			</div>
+							</TableHeader>
+							<TableBody>
+								{filteredProducts.map((product, index) => (
+									<TableRow key={index} className="hover:bg-gray-100">
+										<TableCell>
+											<img
+												src={product?.image}
+												alt={product?.title}
+												className="w-16 h-16 object-cover rounded"
+											/>
+										</TableCell>
+										<TableCell>{product?.title}</TableCell>
+										<TableCell>{product?.category}</TableCell>
+										<TableCell
+											className={
+												product?.salePrice > 0
+													? "line-through text-muted-foreground"
+													: ""
+											}
+										>
+											৳ {product?.price}
+										</TableCell>
+										<TableCell>
+											{product?.salePrice > 0 ? `৳ ${product?.salePrice}` : "—"}
+										</TableCell>
+										<TableCell>{product?.totalStock}</TableCell>
+										<TableCell className="flex justify-end gap-2 mt-4">
+											<Button
+												size="sm"
+												onClick={() => {
+													setOpenCrtProdDialog(true);
+													setCurrentEditedId(product?._id);
+													setFormData(product);
+												}}
+											>
+												<Edit className="w-4 h-4 mr-1" />
+												Edit
+											</Button>
+											<Button
+												variant="destructive"
+												size="sm"
+												onClick={() => openDeleteDialog(product?._id)}
+											>
+												<Trash2 className="w-4 h-4 mr-1" />
+												Delete
+											</Button>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					) : (
+						<NoItemFound />
+					)}
+				</div>
+			)}
 
 			{/* create product dialog */}
 			<Sheet

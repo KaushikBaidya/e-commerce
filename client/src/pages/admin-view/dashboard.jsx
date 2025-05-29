@@ -63,63 +63,70 @@ const AdminDashboard = () => {
 				</CardTitle>
 			</Card>
 
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-				{stats.map((stat, idx) => (
-					<Card key={idx} className="shadow border p-4">
-						<CardContent className="flex items-center justify-between">
-							<div>
-								<h4 className="text-muted-foreground text-sm">{stat.title}</h4>
-								<p className="text-2xl font-bold">{stat.value}</p>
-							</div>
-							<div className="bg-muted p-2 rounded-full">{stat.icon}</div>
+			{/* when realtime data will be added */}
+			{/* {isLoading ? <Loading /> : <></>} */}
+
+			<div>
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+					{stats.map((stat, idx) => (
+						<Card key={idx} className="shadow border p-4">
+							<CardContent className="flex items-center justify-between">
+								<div>
+									<h4 className="text-muted-foreground text-sm">
+										{stat.title}
+									</h4>
+									<p className="text-2xl font-bold">{stat.value}</p>
+								</div>
+								<div className="bg-muted p-2 rounded-full">{stat.icon}</div>
+							</CardContent>
+						</Card>
+					))}
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<Card>
+						<CardHeader>
+							<CardTitle className="text-lg font-semibold">
+								Monthly Revenue
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="h-72">
+							<ResponsiveContainer width="100%" height="100%">
+								<BarChart data={revenueData}>
+									<XAxis dataKey="month" />
+									<YAxis />
+									<CartesianGrid strokeDasharray="3 3" />
+									<Tooltip />
+									<Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+								</BarChart>
+							</ResponsiveContainer>
 						</CardContent>
 					</Card>
-				))}
-			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<Card>
-					<CardHeader>
-						<CardTitle className="text-lg font-semibold">
-							Monthly Revenue
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="h-72">
-						<ResponsiveContainer width="100%" height="100%">
-							<BarChart data={revenueData}>
-								<XAxis dataKey="month" />
-								<YAxis />
-								<CartesianGrid strokeDasharray="3 3" />
-								<Tooltip />
-								<Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-							</BarChart>
-						</ResponsiveContainer>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader>
-						<CardTitle className="text-lg font-semibold">
-							Daily Active Users
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="h-72">
-						<ResponsiveContainer width="100%" height="100%">
-							<LineChart data={usersData}>
-								<XAxis dataKey="day" />
-								<YAxis />
-								<CartesianGrid strokeDasharray="3 3" />
-								<Tooltip />
-								<Line
-									type="monotone"
-									dataKey="users"
-									stroke="#22c55e"
-									strokeWidth={3}
-								/>
-							</LineChart>
-						</ResponsiveContainer>
-					</CardContent>
-				</Card>
+					<Card>
+						<CardHeader>
+							<CardTitle className="text-lg font-semibold">
+								Daily Active Users
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="h-72">
+							<ResponsiveContainer width="100%" height="100%">
+								<LineChart data={usersData}>
+									<XAxis dataKey="day" />
+									<YAxis />
+									<CartesianGrid strokeDasharray="3 3" />
+									<Tooltip />
+									<Line
+										type="monotone"
+										dataKey="users"
+										stroke="#22c55e"
+										strokeWidth={3}
+									/>
+								</LineChart>
+							</ResponsiveContainer>
+						</CardContent>
+					</Card>
+				</div>
 			</div>
 		</div>
 	);

@@ -25,6 +25,9 @@ import {
 	editAuctionProduct,
 } from "@/store/admin/auction-products-slice";
 import DeleteDialog from "@/components/common/delete-dialog";
+import Loading from "@/components/common/loading-component";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const initialFormData = {
 	image: null,
@@ -49,10 +52,17 @@ const AuctionProductsView = () => {
 	const [currentEditedId, setCurrentEditedId] = useState(null);
 	const [currentDeleteId, setCurrentDeleteId] = useState(null);
 
-	const { auctionProductList } = useSelector(
+	const [searchTerm, setSearchTerm] = useState("");
+
+	const { auctionProductList, isLoading } = useSelector(
 		(state) => state.adminAuctionProduct
 	);
+
 	const dispatch = useDispatch();
+
+	const filteredAuctionProducts = auctionProductList?.filter((product) =>
+		product.title.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -124,9 +134,21 @@ const AuctionProductsView = () => {
 	}, [dispatch]);
 
 	return (
-		<Fragment>
-			<div className="w-full mb-5 flex justify-between border rounded p-4">
-				<h1 className="text-3xl text-gray-800 font-bold">Auction Products</h1>
+		<div className="w-full h-full">
+			<div className="w-full mb-4 flex items-center justify-between gap-4 border-b rounded p-2">
+				<h1 className="text-2xl text-gray-800 font-semibold">
+					Auction Products
+				</h1>
+				<div className="relative w-full max-w-md">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 w-5 h-5" />
+					<Input
+						type="search"
+						placeholder="Search products..."
+						className="pl-10"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+				</div>
 				<Button
 					className="capitalize"
 					onClick={() => setOpenCrtProdDialog(true)}
@@ -136,21 +158,27 @@ const AuctionProductsView = () => {
 			</div>
 
 			{/* Auction Product List */}
-			{auctionProductList && auctionProductList.length > 0 ? (
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-					{auctionProductList.map((product) => (
-						<AdminAuctionProductTile
-							key={product._id}
-							auctionProduct={product}
-							setFormData={setFormData}
-							setOpenCrtProdDialog={setOpenCrtProdDialog}
-							setCurrentEditedId={setCurrentEditedId}
-							openDeleteDialog={openDeleteDialog}
-						/>
-					))}
-				</div>
+			{isLoading ? (
+				<Loading />
 			) : (
-				<NoItemFound />
+				<div className="w-full max-h-[80vh] overflow-y-auto">
+					{filteredAuctionProducts && filteredAuctionProducts.length > 0 ? (
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+							{filteredAuctionProducts.map((product) => (
+								<AdminAuctionProductTile
+									key={product._id}
+									auctionProduct={product}
+									setFormData={setFormData}
+									setOpenCrtProdDialog={setOpenCrtProdDialog}
+									setCurrentEditedId={setCurrentEditedId}
+									openDeleteDialog={openDeleteDialog}
+								/>
+							))}
+						</div>
+					) : (
+						<NoItemFound />
+					)}
+				</div>
 			)}
 
 			{/* Create Auction Product Dialog */}
@@ -196,7 +224,7 @@ const AuctionProductsView = () => {
 				setOpenDialog={setOpenDialog}
 				handleDelete={handleDelete}
 			/>
-		</Fragment>
+		</div>
 	);
 };
 
