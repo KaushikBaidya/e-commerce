@@ -16,6 +16,8 @@ const ShoppingCheckout = () => {
 	const [isPaymentStart, setIsPaymentStart] = useState(false);
 	const dispatch = useDispatch();
 
+	console.log(cartItems);
+
 	const totalCartAmount =
 		cartItems && cartItems.items && cartItems.items.length > 0
 			? cartItems.items.reduce(

@@ -10,6 +10,7 @@ import {
 import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { RiAuctionLine } from "react-icons/ri";
 import logo from "../../assets/logo.png";
 
 const adminSidebarLinks = [
@@ -41,7 +42,7 @@ const adminSidebarLinks = [
 		id: "auction-products",
 		name: "Auction Orders",
 		path: "/admin/auction-orders",
-		icons: <BaggageClaim color="#e7cb29" />,
+		icons: <RiAuctionLine />,
 	},
 	{
 		id: "orders",

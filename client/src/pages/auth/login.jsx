@@ -44,7 +44,6 @@ const AuthLogin = () => {
 						label: "close",
 					},
 				});
-				navigate("/");
 			} else {
 				toast.error(result.payload.message || "Login failed", {
 					action: {

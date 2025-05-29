@@ -18,6 +18,15 @@ const createOrder = async (req, res) => {
 			cartId,
 		} = req.body;
 
+		const sanitizedCartItems = cartItems.map(
+			({ productId, title, quantity, price }) => ({
+				productId,
+				title,
+				quantity,
+				price,
+			})
+		);
+
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
 			mode: "payment",
@@ -27,7 +36,7 @@ const createOrder = async (req, res) => {
 					product_data: {
 						name: item.title,
 					},
-					unit_amount: Math.round(item.price * 100), // Stripe expects cents
+					unit_amount: Math.round(item.price * 100),
 				},
 				quantity: item.quantity,
 			})),
@@ -42,7 +51,7 @@ const createOrder = async (req, res) => {
 				totalAmount,
 				orderDate,
 				orderUpdateDate,
-				cartItems: JSON.stringify(cartItems),
+				cartItems: JSON.stringify(sanitizedCartItems),
 				addressInfo: JSON.stringify(addressInfo),
 			},
 		});
@@ -52,7 +61,7 @@ const createOrder = async (req, res) => {
 			checkoutUrl: session.url,
 		});
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 		res.status(500).json({
 			success: false,
 			message: "Stripe Checkout Session creation failed",
