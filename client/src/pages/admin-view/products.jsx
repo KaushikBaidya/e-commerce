@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/sheet";
 
 import CommonForm from "@/components/common/form";
-import AdminProductTile from "@/components/admin-view/product-tile";
 import ImageUpload from "@/components/admin-view/image-upload";
 import NoItemFound from "@/components/common/no-item-found";
 
@@ -25,6 +24,16 @@ import {
 } from "@/store/admin/products-slice";
 
 import DeleteDialog from "@/components/common/delete-dialog";
+import { Input } from "@/components/ui/input";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Edit, Trash2, Search } from "lucide-react";
 
 const initialFormData = {
 	image: null,
@@ -47,7 +56,13 @@ const AdminProducts = () => {
 	const [currentEditedId, setCurrentEditedId] = useState(null);
 	const [currentDeleteId, setCurrentDeleteId] = useState(null);
 
+	const [searchTerm, setSearchTerm] = useState("");
+
 	const { productList } = useSelector((state) => state.adminProducts);
+
+	const filteredProducts = productList?.filter((product) =>
+		product.title.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 
 	const dispatch = useDispatch();
 
@@ -116,33 +131,93 @@ const AdminProducts = () => {
 	}, [dispatch]);
 
 	return (
-		<Fragment>
-			<div className="w-full mb-5 flex justify-between border rounded p-4">
-				<h1 className="text-3xl text-gray-800 font-bold">Products</h1>
+		<div className="w-full h-full">
+			<div className="w-full mb-4 flex items-center justify-between gap-4 border-b rounded p-2">
+				<h1 className="text-2xl text-gray-800 font-semibold">Products</h1>
+				<div className="relative w-full max-w-md">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 w-5 h-5" />
+					<Input
+						type="search"
+						placeholder="Search products..."
+						className="pl-10"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+				</div>
 				<Button onClick={() => setOpenCrtProdDialog(true)}>
 					Add new product
 				</Button>
 			</div>
 
 			{/*  product list */}
-			{productList && productList?.length > 0 ? (
-				<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-					{productList.map((item) => (
-						<AdminProductTile
-							key={item._id}
-							product={item}
-							setFormData={setFormData}
-							setOpenCrtProdDialog={setOpenCrtProdDialog}
-							setCurrentEditedId={setCurrentEditedId}
-							openDeleteDialog={openDeleteDialog}
-						/>
-					))}
-				</div>
-			) : (
-				<div className="w-full h-full flex items-center justify-center">
+			<div className="w-full max-h-[80vh] overflow-y-auto">
+				{filteredProducts && filteredProducts.length > 0 ? (
+					<Table className="w-full">
+						<TableHeader>
+							<TableRow>
+								<TableHead>Image</TableHead>
+								<TableHead>Title</TableHead>
+								<TableHead>Category</TableHead>
+								<TableHead>Price</TableHead>
+								<TableHead>Sale Price</TableHead>
+								<TableHead>Stock</TableHead>
+								<TableHead className="text-right">Actions</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{filteredProducts.map((product, index) => (
+								<TableRow key={index} className="hover:bg-gray-100">
+									<TableCell>
+										<img
+											src={product?.image}
+											alt={product?.title}
+											className="w-16 h-16 object-cover rounded"
+										/>
+									</TableCell>
+									<TableCell>{product?.title}</TableCell>
+									<TableCell>{product?.category}</TableCell>
+									<TableCell
+										className={
+											product?.salePrice > 0
+												? "line-through text-muted-foreground"
+												: ""
+										}
+									>
+										৳ {product?.price}
+									</TableCell>
+									<TableCell>
+										{product?.salePrice > 0 ? `৳ ${product?.salePrice}` : "—"}
+									</TableCell>
+									<TableCell>{product?.totalStock}</TableCell>
+									<TableCell className="flex justify-end gap-2 mt-4">
+										<Button
+											size="sm"
+											onClick={() => {
+												setOpenCrtProdDialog(true);
+												setCurrentEditedId(product?._id);
+												setFormData(product);
+											}}
+										>
+											<Edit className="w-4 h-4 mr-1" />
+											Edit
+										</Button>
+										<Button
+											variant="destructive"
+											size="sm"
+											onClick={() => openDeleteDialog(product?._id)}
+										>
+											<Trash2 className="w-4 h-4 mr-1" />
+											Delete
+										</Button>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				) : (
 					<NoItemFound />
-				</div>
-			)}
+				)}
+			</div>
 
 			{/* create product dialog */}
 			<Sheet
@@ -190,7 +265,7 @@ const AdminProducts = () => {
 				setOpenDialog={setOpenDialog}
 				handleDelete={handleDelete}
 			/>
-		</Fragment>
+		</div>
 	);
 };
 
