@@ -39,56 +39,56 @@ const ResetPassword = () => {
 	};
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 min-h-[60vh]">
-			<div className="flex items-center justify-center">
-				<img src={Password} alt="" />
+		<div className="max-w-screen-xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-5 place-items-center min-h-[60vh] p-5">
+			<div>
+				<img
+					src={Password}
+					alt=""
+					className="hidden lg:block w-full h-auto max-w-md mx-auto"
+				/>
 			</div>
 
-			<div className="flex items-center justify-center p-8">
-				<div className="w-full max-w-md">
-					<h2 className="text-2xl font-bold mb-6 text-center">
-						Reset Your Password
-					</h2>
-					<form onSubmit={handleSubmit} className="space-y-4">
-						<div className="relative">
-							<input
-								type={showPassword ? "text" : "password"}
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								placeholder="New Password"
-								required
-								className="w-full px-4 py-2 border rounded"
-							/>
-							<span
-								onClick={() => setShowPassword((prev) => !prev)}
-								className="absolute top-2.5 right-3 cursor-pointer text-gray-500"
-							>
-								{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-							</span>
-						</div>
+			<div className="w-full flex flex-col p-5">
+				<h2 className="text-2xl font-bold mb-6">Reset Your Password</h2>
+				<form onSubmit={handleSubmit} className="space-y-4">
+					<div className="relative">
+						<input
+							type={showPassword ? "text" : "password"}
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder="New Password"
+							required
+							className="w-full px-4 py-2 border rounded"
+						/>
+						<span
+							onClick={() => setShowPassword((prev) => !prev)}
+							className="absolute top-2.5 right-3 cursor-pointer text-gray-500"
+						>
+							{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+						</span>
+					</div>
 
-						<div className="relative">
-							<input
-								type={showConfirm ? "text" : "password"}
-								value={confirmPassword}
-								onChange={(e) => setConfirmPassword(e.target.value)}
-								placeholder="Confirm Password"
-								required
-								className="w-full px-4 py-2 border rounded"
-							/>
-							<span
-								onClick={() => setShowConfirm((prev) => !prev)}
-								className="absolute top-2.5 right-3 cursor-pointer text-gray-500"
-							>
-								{showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-							</span>
-						</div>
+					<div className="relative">
+						<input
+							type={showConfirm ? "text" : "password"}
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							placeholder="Confirm Password"
+							required
+							className="w-full px-4 py-2 border rounded"
+						/>
+						<span
+							onClick={() => setShowConfirm((prev) => !prev)}
+							className="absolute top-2.5 right-3 cursor-pointer text-gray-500"
+						>
+							{showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+						</span>
+					</div>
 
-						<Button type="submit" disabled={loading} className="w-full">
-							{loading ? "Resetting..." : "Reset Password"}
-						</Button>
-					</form>
-				</div>
+					<Button type="submit" disabled={loading} className="w-full">
+						{loading ? "Resetting..." : "Reset Password"}
+					</Button>
+				</form>
 			</div>
 		</div>
 	);

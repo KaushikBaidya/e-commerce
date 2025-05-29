@@ -29,6 +29,7 @@ import AdminAuctionOrders from "./pages/admin-view/AdminAuctionOrders";
 import AdminUsers from "./pages/admin-view/AdminUsers";
 import ForgotPassword from "./pages/auth/forgot-password";
 import ResetPassword from "./pages/auth/reset-password";
+import Loading from "./components/common/loading-component";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -42,7 +43,7 @@ function App() {
 	}, [dispatch]);
 
 	if (isLoading) {
-		return <Skeleton className="w-[600px] h-[600px] rounded-full" />;
+		return <Loading />;
 	}
 
 	return (
