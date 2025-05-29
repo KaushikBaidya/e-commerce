@@ -14,6 +14,7 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import {
 	fetchAllFilteredProducts,
 	fetchProductDetails,
+	resetProducts,
 } from "@/store/shop/products-slice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -39,12 +40,16 @@ const ShoppingListing = () => {
 	const [sort, setSort] = useState(null);
 	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
+	const [page, setPage] = useState(1);
+	const [lazyProducts, setLazyProducts] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+
 	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
 
 	const { cartItems } = useSelector((state) => state.shopCart);
 	const { user } = useSelector((state) => state.auth);
-	const { productList, productDetails } = useSelector(
+	const { productList, productDetails, isLoading } = useSelector(
 		(state) => state.shopProducts
 	);
 
@@ -108,6 +113,16 @@ const ShoppingListing = () => {
 		});
 	};
 
+	const handleScroll = () => {
+		const scrollTop = window.scrollY;
+		const windowHeight = window.innerHeight;
+		const fullHeight = document.documentElement.scrollHeight;
+
+		if (scrollTop + windowHeight + 100 >= fullHeight && hasMore && !isLoading) {
+			setPage((prev) => prev + 1);
+		}
+	};
+
 	useEffect(() => {
 		setSort("price-lowtohigh");
 		setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
@@ -121,10 +136,25 @@ const ShoppingListing = () => {
 	}, [filters]);
 
 	useEffect(() => {
-		if (filters !== null && sort !== null)
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, [hasMore, isLoading]);
+
+	useEffect(() => {
+		if (filters !== null && sort !== null) {
+			dispatch(resetProducts());
+			setPage(1);
 			dispatch(
-				fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+				fetchAllFilteredProducts({
+					filterParams: filters,
+					sortParams: sort,
+					page: 1,
+					limit: 12,
+				})
 			);
+		}
 	}, [dispatch, sort, filters]);
 
 	useEffect(() => {

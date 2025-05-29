@@ -23,6 +23,7 @@ import {
 	editProduct,
 	fetchAllProducts,
 } from "@/store/admin/products-slice";
+
 import DeleteDialog from "@/components/common/delete-dialog";
 
 const initialFormData = {
@@ -47,6 +48,7 @@ const AdminProducts = () => {
 	const [currentDeleteId, setCurrentDeleteId] = useState(null);
 
 	const { productList } = useSelector((state) => state.adminProducts);
+
 	const dispatch = useDispatch();
 
 	const onSubmit = (e) => {

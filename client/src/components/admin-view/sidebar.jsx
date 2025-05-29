@@ -39,7 +39,7 @@ const adminSidebarLinks = [
 		icons: <ShoppingBasket />,
 	},
 	{
-		id: "auction-products",
+		id: "auction-orders",
 		name: "Auction Orders",
 		path: "/admin/auction-orders",
 		icons: <RiAuctionLine />,
