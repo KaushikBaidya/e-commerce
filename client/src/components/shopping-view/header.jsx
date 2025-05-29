@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,6 @@ import { Label } from "../ui/label";
 import logo from "@/assets/logo.png";
 
 const MenuItems = ({ setOpen }) => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 
 	const handleNavigate = (getCurrentItem) => {
@@ -57,7 +56,7 @@ const MenuItems = ({ setOpen }) => {
 				<Label
 					onClick={() => {
 						handleNavigate(item);
-						setOpen(false);
+						if (setOpen) setOpen(false);
 					}}
 					key={item.id}
 					className="text-base cursor-pointer"
@@ -139,7 +138,7 @@ const HeaderRightContent = ({ setOpen }) => {
 						<DropdownMenuItem
 							onClick={() => {
 								navigate("/shop/account");
-								setOpen(false);
+								if (setOpen) setOpen(false);
 							}}
 						>
 							<UserCog className="mr-2 h-4 w-4" />
