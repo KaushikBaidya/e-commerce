@@ -13,6 +13,7 @@ import {
 	resetSearchResults,
 } from "@/store/shop/search-slice";
 import { Search } from "lucide-react";
+import Loading from "@/components/common/loading-component";
 
 function SearchProducts() {
 	const [keyword, setKeyword] = useState("");
@@ -21,7 +22,7 @@ function SearchProducts() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const dispatch = useDispatch();
 
-	const { searchResults } = useSelector((state) => state.shopSearch);
+	const { searchResults, isLoading } = useSelector((state) => state.shopSearch);
 	const { productDetails } = useSelector((state) => state.shopProducts);
 	const { user } = useSelector((state) => state.auth);
 	const { cartItems } = useSelector((state) => state.shopCart);
@@ -71,7 +72,6 @@ function SearchProducts() {
 
 	const handleGetProductDetails = (getCurrentProductId) => {
 		dispatch(fetchProductDetails(getCurrentProductId));
-		// setOpenDetailsDialog(true);
 	};
 
 	useEffect(() => {
@@ -80,46 +80,53 @@ function SearchProducts() {
 
 	return (
 		<div className="container mx-auto px-4 md:px-6 py-8 min-h-screen">
-			{/* Search Bar */}
-			<section className="flex justify-center mb-10">
-				<div className="w-full max-w-2xl">
-					<div className="relative">
-						<Input
-							value={keyword}
-							name="keyword"
-							onChange={(event) => setKeyword(event.target.value)}
-							placeholder="Search Products..."
-							className="pl-12 py-6 text-lg"
-						/>
-						<div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-							<Search />
+			{/* Loading State */}
+			{isLoading ? (
+				<Loading />
+			) : (
+				<>
+					{/* Search Input */}
+					<section className="flex justify-center mb-10">
+						<div className="w-full max-w-2xl">
+							<div className="relative">
+								<Input
+									value={keyword}
+									name="keyword"
+									onChange={(event) => setKeyword(event.target.value)}
+									placeholder="Search Products..."
+									className="pl-12 py-6 text-lg"
+								/>
+								<div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+									<Search />
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-			</section>
+					</section>
 
-			{/* No Results */}
-			{!searchResults.length && keyword.trim() ? (
-				<div className="text-center mt-10">
-					<h2 className="text-2xl md:text-4xl font-semibold text-gray-600">
-						No results found for "<span className="italic">{keyword}</span>"
-					</h2>
-				</div>
-			) : null}
+					{/* No Results */}
+					{!searchResults.length && keyword.trim() ? (
+						<div className="text-center mt-10">
+							<h2 className="text-2xl md:text-4xl font-semibold text-gray-600">
+								No results found for "<span className="italic">{keyword}</span>"
+							</h2>
+						</div>
+					) : null}
 
-			{/* Search Results Grid */}
-			<section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-				{searchResults.map((item) => (
-					<ShopProductTile
-						key={item._id || item.id || item.title} // fallback if _id is unavailable
-						handleAddtoCart={handleAddtoCart}
-						product={item}
-						handleGetProductDetails={handleGetProductDetails}
-					/>
-				))}
-			</section>
+					{/* Products Grid */}
+					<section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+						{searchResults.map((item) => (
+							<ShopProductTile
+								key={item._id || item.id || item.title}
+								handleAddtoCart={handleAddtoCart}
+								product={item}
+								handleGetProductDetails={handleGetProductDetails}
+							/>
+						))}
+					</section>
+				</>
+			)}
 
-			{/* Product Details Dialog */}
+			{/* Product Details Modal */}
 			{productDetails && (
 				<ProductDetails
 					open={openDetailsDialog}

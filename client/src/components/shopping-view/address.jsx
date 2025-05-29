@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import { CircleSlash, XIcon } from "lucide-react";
 
 import * as Yup from "yup";
+import Loading from "../common/loading-component";
 
 const addressValidationSchema = Yup.object({
 	address: Yup.string().required("Address is required"),
@@ -42,7 +43,7 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [currentEditId, setCurrentEditId] = useState(null);
 	const { user } = useSelector((state) => state.auth);
-	const { addressList } = useSelector((state) => state.shopAddress);
+	const { addressList, isLoading } = useSelector((state) => state.shopAddress);
 	const dispatch = useDispatch();
 
 	const onSubmit = async (event) => {
@@ -148,22 +149,26 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 
 	return (
 		<Card>
-			<div className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
-				{addressList && addressList.length > 0 ? (
-					addressList.map((address, index) => (
-						<AddressCard
-							key={index}
-							selectedId={selectedId}
-							setCurrentSelectedAddress={setCurrentSelectedAddress}
-							addressInfo={address}
-							handleDeleteAddress={handleDeleteAddress}
-							handleEditAddress={handleEditAddress}
-						/>
-					))
-				) : (
-					<div>No addresses added yet.</div>
-				)}
-			</div>
+			{isLoading ? (
+				<Loading />
+			) : (
+				<div className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
+					{addressList && addressList.length > 0 ? (
+						addressList.map((address, index) => (
+							<AddressCard
+								key={index}
+								selectedId={selectedId}
+								setCurrentSelectedAddress={setCurrentSelectedAddress}
+								addressInfo={address}
+								handleDeleteAddress={handleDeleteAddress}
+								handleEditAddress={handleEditAddress}
+							/>
+						))
+					) : (
+						<div>No addresses added yet.</div>
+					)}
+				</div>
+			)}
 
 			<CardHeader className="flex items-center justify-between">
 				<CardTitle>

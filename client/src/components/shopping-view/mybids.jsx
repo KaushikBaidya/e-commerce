@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import { CircleCheckBig } from "lucide-react";
 import { fetchAllAuctionProducts } from "@/store/shop/auction-products-slice";
 import { getAllOrdersByUserId } from "@/store/shop/auction-checkout-slice";
+import Loading from "../common/loading-component";
 
 const MyBids = () => {
 	const dispatch = useDispatch();
@@ -27,7 +28,9 @@ const MyBids = () => {
 	const { auctionProductList } = useSelector(
 		(state) => state.shopAuctionProducts
 	);
-	const { orderList } = useSelector((state) => state.auctionCheckout);
+	const { orderList, isLoading } = useSelector(
+		(state) => state.auctionCheckout
+	);
 
 	const canCheckout = (auctionItemId) => {
 		const product = auctionProductList.find((p) => p._id === auctionItemId);
@@ -67,94 +70,100 @@ const MyBids = () => {
 					My Bid History
 				</CardTitle>
 			</CardHeader>
-			<CardContent>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>Artwork</TableHead>
-							<TableHead>Your Bid</TableHead>
-							<TableHead>Current Bid</TableHead>
-							<TableHead>Status</TableHead>
-							<TableHead>
-								<span className="sr-only">Action</span>
-							</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{auctionItems.length ? (
-							auctionItems.map((item) => {
-								const isLeading = item.userBid >= item.currentBid;
-								return (
-									<TableRow key={item.id}>
-										<TableCell className="flex items-center gap-3">
-											<img
-												src={item.image}
-												alt={item.title}
-												className="h-10 w-10 object-cover rounded-md border"
-											/>
-											<span>{item.title}</span>
-										</TableCell>
-										<TableCell>৳ {item.userBid.toLocaleString()}</TableCell>
-										<TableCell>৳ {item.currentBid.toLocaleString()}</TableCell>
-										<TableCell>
-											<span
-												className={`font-medium ${
-													isLeading ? "text-green-600" : "text-red-500"
-												}`}
-											>
-												{isLeading ? "Leading" : "Outbid"}
-											</span>
-										</TableCell>
-										<TableCell className="flex justify-end">
-											{(() => {
-												const product = auctionProductList.find(
-													(p) => p._id === item.id
-												);
-												const auctionEnded =
-													product && new Date(product.endTime) < new Date();
-												const isWinner =
-													product && product.highestBidder === user?.id;
-												const hasPaid = hasPaidForAuction(item.id);
-
-												if (isWinner && auctionEnded && !hasPaid) {
-													return (
-														<Button onClick={() => handleNavigate(item.id)}>
-															<CircleCheckBig className="mr-1" /> Checkout
-														</Button>
-													);
-												} else if (isWinner && auctionEnded && hasPaid) {
-													return (
-														<span className="text-green-600 font-semibold my-4">
-															Paid
-														</span>
-													);
-												} else if (!isWinner && auctionEnded) {
-													return (
-														<span className="text-red-500 font-medium my-4">
-															Sold Out
-														</span>
-													);
-												} else {
-													return null;
-												}
-											})()}
-										</TableCell>
-									</TableRow>
-								);
-							})
-						) : (
+			{isLoading ? (
+				<Loading />
+			) : (
+				<CardContent>
+					<Table>
+						<TableHeader>
 							<TableRow>
-								<TableCell
-									colSpan={4}
-									className="text-center text-gray-500 py-10"
-								>
-									You haven't placed any bids yet.
-								</TableCell>
+								<TableHead>Artwork</TableHead>
+								<TableHead>Your Bid</TableHead>
+								<TableHead>Current Bid</TableHead>
+								<TableHead>Status</TableHead>
+								<TableHead>
+									<span className="sr-only">Action</span>
+								</TableHead>
 							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</CardContent>
+						</TableHeader>
+						<TableBody>
+							{auctionItems.length ? (
+								auctionItems.map((item) => {
+									const isLeading = item.userBid >= item.currentBid;
+									return (
+										<TableRow key={item.id}>
+											<TableCell className="flex items-center gap-3">
+												<img
+													src={item.image}
+													alt={item.title}
+													className="h-10 w-10 object-cover rounded-md border"
+												/>
+												<span>{item.title}</span>
+											</TableCell>
+											<TableCell>৳ {item.userBid.toLocaleString()}</TableCell>
+											<TableCell>
+												৳ {item.currentBid.toLocaleString()}
+											</TableCell>
+											<TableCell>
+												<span
+													className={`font-medium ${
+														isLeading ? "text-green-600" : "text-red-500"
+													}`}
+												>
+													{isLeading ? "Leading" : "Outbid"}
+												</span>
+											</TableCell>
+											<TableCell className="flex justify-end">
+												{(() => {
+													const product = auctionProductList.find(
+														(p) => p._id === item.id
+													);
+													const auctionEnded =
+														product && new Date(product.endTime) < new Date();
+													const isWinner =
+														product && product.highestBidder === user?.id;
+													const hasPaid = hasPaidForAuction(item.id);
+
+													if (isWinner && auctionEnded && !hasPaid) {
+														return (
+															<Button onClick={() => handleNavigate(item.id)}>
+																<CircleCheckBig className="mr-1" /> Checkout
+															</Button>
+														);
+													} else if (isWinner && auctionEnded && hasPaid) {
+														return (
+															<span className="text-green-600 font-semibold my-4">
+																Paid
+															</span>
+														);
+													} else if (!isWinner && auctionEnded) {
+														return (
+															<span className="text-red-500 font-medium my-4">
+																Sold Out
+															</span>
+														);
+													} else {
+														return null;
+													}
+												})()}
+											</TableCell>
+										</TableRow>
+									);
+								})
+							) : (
+								<TableRow>
+									<TableCell
+										colSpan={4}
+										className="text-center text-gray-500 py-10"
+									>
+										You haven't placed any bids yet.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				</CardContent>
+			)}
 		</Card>
 	);
 };
