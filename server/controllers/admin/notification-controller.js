@@ -1,20 +1,31 @@
-import AdminNotifications from "../../models/AdminNotifications";
+const AdminNotifications = require("../../models/AdminNotifications");
+
+const createNotificationService = async ({ title, message, type }) => {
+	const notification = new AdminNotifications({
+		title,
+		message,
+		type,
+		createdAt: new Date(),
+		read: false,
+	});
+	await notification.save();
+	return notification;
+};
 
 const createNotification = async (req, res) => {
 	try {
 		const { title, message, type } = req.body;
-
-		const newNotification = new AdminNotifications({
+		const notification = await createNotificationService({
 			title,
 			message,
 			type,
 		});
-
-		await newNotification.save();
-		res.status(201).json({ success: true, message: "Notification created" });
+		res.status(201).json({ success: true, notification });
 	} catch (error) {
-		console.error("Create Notification Error:", error);
-		res.status(500).json({ success: false, message: "Server error" });
+		console.error("Error creating notification:", error);
+		res
+			.status(500)
+			.json({ success: false, message: "Failed to create notification" });
 	}
 };
 
@@ -55,6 +66,7 @@ const deleteNotification = async (req, res) => {
 
 module.exports = {
 	createNotification,
+	createNotificationService,
 	getNotifications,
 	markAsRead,
 	deleteNotification,

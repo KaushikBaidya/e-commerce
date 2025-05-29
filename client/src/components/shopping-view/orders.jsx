@@ -10,7 +10,12 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { View } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogTitle,
+	DialogTrigger,
+} from "../ui/dialog";
 import ShoppingOrderDetails from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,6 +24,7 @@ import {
 	resetOrderDetails,
 } from "@/store/shop/order-slice";
 import { Badge } from "../ui/badge";
+import Loading from "../common/loading-component";
 
 const ShoppingOrdersList = () => {
 	const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -49,7 +55,7 @@ const ShoppingOrdersList = () => {
 				</CardTitle>
 			</CardHeader>
 			{isLoading ? (
-				<isLoading />
+				<Loading />
 			) : (
 				<CardContent>
 					<Table>
@@ -110,6 +116,7 @@ const ShoppingOrdersList = () => {
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="max-w-[90vw] sm:max-w[80vw] lg:max-w-[50vw]">
+													<DialogTitle>Order Details</DialogTitle>
 													<ShoppingOrderDetails orderDetails={orderDetails} />
 												</DialogContent>
 											</Dialog>

@@ -2,6 +2,9 @@ const stripe = require("../../helper/stripe");
 const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
+const {
+	createNotificationService,
+} = require("../admin/notification-controller");
 
 const createOrder = async (req, res) => {
 	try {
@@ -32,7 +35,7 @@ const createOrder = async (req, res) => {
 			mode: "payment",
 			line_items: cartItems.map((item) => ({
 				price_data: {
-					currency: "usd",
+					currency: "bdt",
 					product_data: {
 						name: item.title,
 					},
@@ -88,12 +91,22 @@ const finalizeOrderFromSession = async (req, res) => {
 
 		const metadata = session.metadata;
 
-		if (!metadata || !metadata.cartItems || !metadata.addressInfo) {
+		if (
+			!metadata ||
+			!metadata.userId ||
+			!metadata.cartId ||
+			!metadata.cartItems ||
+			!metadata.addressInfo
+		) {
+			console.error("Missing metadata:", metadata);
 			return res.status(400).json({
 				success: false,
 				message: "Missing required session metadata",
 			});
 		}
+
+		// Log parsed values for debugging
+		console.log("Finalizing order with metadata:", metadata);
 
 		const newOrder = new Order({
 			userId: metadata.userId,
@@ -132,6 +145,13 @@ const finalizeOrderFromSession = async (req, res) => {
 		}
 
 		await newOrder.save();
+
+		await createNotificationService({
+			title: "New Order Placed",
+			message: `Order ID ${newOrder._id} has been placed by user ${metadata.userId}`,
+			type: "order",
+		});
+
 		await Cart.findByIdAndDelete(metadata.cartId);
 
 		res.status(200).json({
@@ -146,6 +166,7 @@ const finalizeOrderFromSession = async (req, res) => {
 		});
 	}
 };
+
 
 const getAllOrdersByUser = async (req, res) => {
 	try {

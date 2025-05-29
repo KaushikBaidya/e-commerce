@@ -1,20 +1,17 @@
 const express = require("express");
 
-import {
+const {
 	createNotification,
 	getNotifications,
 	markAsRead,
 	deleteNotification,
-} from "../controllers/notificationController.js";
+} = require("../../controllers/admin/notification-controller");
 
 const router = express.Router();
 
 router.post("/", createNotification);
-
 router.get("/", getNotifications);
-
 router.patch("/:id/read", markAsRead);
-
 router.delete("/:id", deleteNotification);
 
 module.exports = router;

@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchCartItems } from "@/store/shop/cart-slice";
 
 function StripeSuccess() {
 	const [searchParams] = useSearchParams();
 	const sessionId = searchParams.get("session_id");
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (sessionId) {
@@ -25,6 +28,7 @@ function StripeSuccess() {
 			};
 
 			finalizeOrder();
+			dispatch(fetchCartItems());
 		}
 	}, [sessionId]);
 
