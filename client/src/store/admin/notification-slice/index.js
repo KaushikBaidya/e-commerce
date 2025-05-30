@@ -8,37 +8,51 @@ const initialState = {
 	unreadCount: 0,
 };
 
-
 export const fetchAdminNotifications = createAsyncThunk(
 	"adminNotifications/fetchAll",
-	async () => {
-		const response = await axios.get(
-			`${import.meta.env.VITE_API_BASE_URL}/admin/notifications`
-		);
-		return response.data.notifications;
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/notifications`
+			);
+			const notifications = response?.data?.data;
+			if (!Array.isArray(notifications)) {
+				throw new Error("Invalid response format");
+			}
+			return notifications;
+		} catch (error) {
+			return rejectWithValue(error.response?.data?.message || error.message);
+		}
 	}
 );
 
 export const markNotificationAsRead = createAsyncThunk(
 	"adminNotifications/markAsRead",
-	async (id) => {
-		const response = await axios.patch(
-			`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}/read`
-		);
-		return response.data.notification;
+	async (id, { rejectWithValue }) => {
+		try {
+			const response = await axios.patch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}/read`
+			);
+			return response?.data?.data;
+		} catch (error) {
+			return rejectWithValue(error.response?.data?.message || error.message);
+		}
 	}
 );
 
 export const deleteAdminNotification = createAsyncThunk(
 	"adminNotifications/delete",
-	async (id) => {
-		await axios.delete(
-			`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}`
-		);
-		return id;
+	async (id, { rejectWithValue }) => {
+		try {
+			await axios.delete(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}`
+			);
+			return id;
+		} catch (error) {
+			return rejectWithValue(error.response?.data?.message || error.message);
+		}
 	}
 );
-
 
 const adminNotificationSlice = createSlice({
 	name: "adminNotifications",
@@ -53,11 +67,11 @@ const adminNotificationSlice = createSlice({
 			.addCase(fetchAdminNotifications.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.notifications = action.payload;
-				state.unreadCount = action.payload.filter((n) => !n.read).length;
+				state.unreadCount = action.payload.filter((n) => !n.isRead).length;
 			})
 			.addCase(fetchAdminNotifications.rejected, (state, action) => {
 				state.isLoading = false;
-				state.error = action.error.message;
+				state.error = action.payload;
 			})
 			.addCase(markNotificationAsRead.fulfilled, (state, action) => {
 				const updated = action.payload;
@@ -65,25 +79,25 @@ const adminNotificationSlice = createSlice({
 					(n) => n._id === updated._id
 				);
 				if (index !== -1) {
-					if (!state.notifications[index].read && updated.read) {
+					if (!state.notifications[index].isRead && updated.isRead) {
 						state.unreadCount--;
 					}
 					state.notifications[index] = updated;
 				}
 			})
 			.addCase(markNotificationAsRead.rejected, (state, action) => {
-				state.error = action.error.message;
+				state.error = action.payload;
 			})
 			.addCase(deleteAdminNotification.fulfilled, (state, action) => {
 				const id = action.payload;
 				const deleted = state.notifications.find((n) => n._id === id);
 				state.notifications = state.notifications.filter((n) => n._id !== id);
-				if (deleted && !deleted.read) {
+				if (deleted && !deleted.isRead) {
 					state.unreadCount--;
 				}
 			})
 			.addCase(deleteAdminNotification.rejected, (state, action) => {
-				state.error = action.error.message;
+				state.error = action.payload;
 			});
 	},
 });

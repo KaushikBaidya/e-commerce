@@ -5,6 +5,7 @@ import AdminProductsSlice from "./admin/products-slice";
 import AdminAuctionProductsSlice from "./admin/auction-products-slice";
 import AdminOrderSlice from "./admin/order-slice";
 import AdminUserSlice from "./admin/user-slice";
+import adminNotificationSlice from "./admin/notification-slice";
 
 import ShoppingProductsSlice from "./shop/products-slice";
 import ShoppingAuctionProductsSlice from "./shop/auction-products-slice";
@@ -25,6 +26,7 @@ const store = configureStore({
 		adminAuctionProduct: AdminAuctionProductsSlice,
 		adminOrder: AdminOrderSlice,
 		adminUser: AdminUserSlice,
+		adminNotifications: adminNotificationSlice,
 
 		shopProducts: ShoppingProductsSlice,
 		shopAuctionProducts: ShoppingAuctionProductsSlice,

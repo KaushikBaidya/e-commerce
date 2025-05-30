@@ -148,7 +148,7 @@ const finalizeOrderFromSession = async (req, res) => {
 
 		await createNotificationService({
 			title: "New Order Placed",
-			message: `Order ID ${newOrder._id} has been placed by user ${metadata.userId}`,
+			message: `An order has been placed. Order ID: ${newOrder._id}`,
 			type: "order",
 		});
 
@@ -166,7 +166,6 @@ const finalizeOrderFromSession = async (req, res) => {
 		});
 	}
 };
-
 
 const getAllOrdersByUser = async (req, res) => {
 	try {

@@ -68,7 +68,7 @@ const AdminOrdersList = () => {
 							</TableHeader>
 							<TableBody>
 								{orderList.map((order) => (
-									<TableRow>
+									<TableRow key={order?._id}>
 										<TableCell> @_{order?._id}</TableCell>
 										<TableCell>{order?.orderDate.split("T")[0]} </TableCell>
 										<TableCell>
