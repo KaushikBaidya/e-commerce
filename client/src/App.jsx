@@ -30,6 +30,7 @@ import AdminUsers from "./pages/admin-view/AdminUsers";
 import ForgotPassword from "./pages/auth/forgot-password";
 import ResetPassword from "./pages/auth/reset-password";
 import Loading from "./components/common/loading-component";
+import AllNotifications from "./pages/admin-view/AllNotifications";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -76,6 +77,7 @@ function App() {
 					<Route path="auction-orders" element={<AdminAuctionOrders />} />
 					<Route path="features" element={<AdminFeatures />} />
 					<Route path="users" element={<AdminUsers />} />
+					<Route path="notifications" element={<AllNotifications />} />
 				</Route>
 
 				<Route path="/" element={<ShoppingLayout />}>

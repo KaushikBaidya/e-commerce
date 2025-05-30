@@ -6,6 +6,8 @@ import { logoutUser } from "@/store/auth-slice";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { BsExclamationDiamond } from "react-icons/bs";
+import { FiCheckSquare } from "react-icons/fi";
+import { IoTrashBinOutline } from "react-icons/io5";
 import {
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -16,6 +18,7 @@ import { Label } from "recharts";
 import {
 	deleteAdminNotification,
 	fetchAdminNotifications,
+	markAllNotificationsAsRead,
 	markNotificationAsRead,
 } from "@/store/admin/notification-slice";
 import { Separator } from "../ui/separator";
@@ -34,6 +37,10 @@ const AdminHeader = ({ setOpen }) => {
 	const handleLogout = () => {
 		dispatch(logoutUser());
 		navigate("/auth/login");
+	};
+
+	const handleNavigate = () => {
+		navigate("/admin/notifications");
 	};
 
 	useEffect(() => {
@@ -61,6 +68,17 @@ const AdminHeader = ({ setOpen }) => {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
 						<DropdownMenuLabel>Notifications</DropdownMenuLabel>
+						<div className="flex items-center justify-between px-2 py-1">
+							<Button
+								onClick={() => dispatch(markAllNotificationsAsRead())}
+								variant={"outline"}
+							>
+								Mark all read
+							</Button>
+							<Button onClick={handleNavigate} variant={"link"}>
+								All Notifications
+							</Button>
+						</div>
 						{isLoading ? (
 							<DropdownMenuItem>Loading...</DropdownMenuItem>
 						) : notifications.length > 0 ? (
@@ -89,7 +107,7 @@ const AdminHeader = ({ setOpen }) => {
 													dispatch(markNotificationAsRead(notification?._id))
 												}
 											>
-												✓
+												<FiCheckSquare />
 											</Button>
 											<Button
 												variant="ghost"
@@ -100,7 +118,7 @@ const AdminHeader = ({ setOpen }) => {
 													dispatch(deleteAdminNotification(notification?._id))
 												}
 											>
-												🗑️
+												<IoTrashBinOutline />
 											</Button>
 										</div>
 									</div>

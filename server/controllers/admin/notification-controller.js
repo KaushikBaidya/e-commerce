@@ -57,6 +57,16 @@ const markAsRead = async (req, res) => {
 	}
 };
 
+const markAllAsRead = async (req, res) => {
+	try {
+		await AdminNotifications.updateMany({ isRead: false }, { isRead: true });
+		res.status(200).json({ success: true, message: "All marked as read" });
+	} catch (error) {
+		console.error("Mark All As Read Error:", error);
+		res.status(500).json({ success: false, message: "Server error" });
+	}
+};
+
 const deleteNotification = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -73,5 +83,6 @@ module.exports = {
 	createNotificationService,
 	getNotifications,
 	markAsRead,
+	markAllAsRead,
 	deleteNotification,
 };

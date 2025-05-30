@@ -42,6 +42,20 @@ export const markNotificationAsRead = createAsyncThunk(
 	}
 );
 
+export const markAllNotificationsAsRead = createAsyncThunk(
+	"adminNotifications/markAllAsRead",
+	async (_, { rejectWithValue }) => {
+		try {
+			await axios.patch(
+				`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/read-all`
+			);
+			return true; // simple success flag
+		} catch (error) {
+			return rejectWithValue(error.response?.data?.message || error.message);
+		}
+	}
+);
+
 export const deleteAdminNotification = createAsyncThunk(
 	"adminNotifications/delete",
 	async (id, { rejectWithValue }) => {
@@ -89,6 +103,13 @@ const adminNotificationSlice = createSlice({
 			})
 			.addCase(markNotificationAsRead.rejected, (state, action) => {
 				state.error = action.payload;
+			})
+			.addCase(markAllNotificationsAsRead.fulfilled, (state) => {
+				state.notifications = state.notifications.map((n) => ({
+					...n,
+					isRead: true,
+				}));
+				state.unreadCount = 0;
 			})
 			.addCase(deleteAdminNotification.fulfilled, (state, action) => {
 				const id = action.payload;
