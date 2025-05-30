@@ -82,7 +82,7 @@ const addProduct = async (req, res) => {
 //get all products
 const fetchAllProducts = async (req, res) => {
 	try {
-		const productList = await Product.find({});
+		const productList = await Product.find({}).sort({ createdAt: -1 });
 		res.status(200).json({ success: true, data: productList });
 	} catch (error) {
 		console.log(error);

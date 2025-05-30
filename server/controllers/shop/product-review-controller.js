@@ -21,11 +21,11 @@ const addProductReview = async (req, res) => {
 		}
 
 		// Check if the user has already reviewed the product
-		const checkEsistingReview = await ProductReview.findOne({
+		const checkExsistingReview = await ProductReview.findOne({
 			productId,
 			userId,
 		});
-		if (checkEsistingReview) {
+		if (checkExsistingReview) {
 			return res.status(400).json({
 				success: false,
 				message: "You have already reviewed this product",
@@ -66,7 +66,9 @@ const addProductReview = async (req, res) => {
 // Get all product reviews
 const getProductReview = async (req, res) => {
 	const { productId } = req.params;
-	const reviews = await ProductReview.find({ productId });
+	const reviews = await ProductReview.find({ productId }).sort({
+		createdAt: -1,
+	});
 	res.status(200).json({ success: true, data: reviews });
 	try {
 	} catch (error) {

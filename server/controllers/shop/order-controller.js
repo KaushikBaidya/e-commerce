@@ -171,7 +171,7 @@ const getAllOrdersByUser = async (req, res) => {
 	try {
 		const { userId } = req.params;
 
-		const orders = await Order.find({ userId });
+		const orders = await Order.find({ userId }).sort({ createdAt: -1 });
 
 		if (!orders.length) {
 			return res.status(404).json({
