@@ -33,6 +33,8 @@ export const markNotificationAsRead = createAsyncThunk(
 			const response = await axios.patch(
 				`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}/read`
 			);
+			console.log("===>", response?.data);
+
 			return response?.data?.data;
 		} catch (error) {
 			return rejectWithValue(error.response?.data?.message || error.message);

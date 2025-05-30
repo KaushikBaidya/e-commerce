@@ -45,8 +45,12 @@ const getNotifications = async (req, res) => {
 const markAsRead = async (req, res) => {
 	try {
 		const { id } = req.params;
-		await AdminNotifications.findByIdAndUpdate(id, { isRead: true });
-		res.status(200).json({ success: true, message: "Marked as read" });
+		const updated = await AdminNotifications.findByIdAndUpdate(
+			id,
+			{ isRead: true },
+			{ new: true }
+		);
+		res.status(200).json({ success: true, data: updated });
 	} catch (error) {
 		console.error("Mark As Read Error:", error);
 		res.status(500).json({ success: false, message: "Server error" });

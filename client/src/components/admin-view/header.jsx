@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/store/auth-slice";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { BsExclamationDiamond } from "react-icons/bs";
 import {
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -12,7 +13,11 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Label } from "recharts";
-import { fetchAdminNotifications } from "@/store/admin/notification-slice";
+import {
+	deleteAdminNotification,
+	fetchAdminNotifications,
+	markNotificationAsRead,
+} from "@/store/admin/notification-slice";
 import { Separator } from "../ui/separator";
 
 const AdminHeader = ({ setOpen }) => {
@@ -24,7 +29,7 @@ const AdminHeader = ({ setOpen }) => {
 		(state) => state.adminNotifications
 	);
 
-	console.log("Admin Notifications: ", notifications);
+	const unreadCount = notifications.filter((n) => !n.isRead).length;
 
 	const handleLogout = () => {
 		dispatch(logoutUser());
@@ -47,12 +52,10 @@ const AdminHeader = ({ setOpen }) => {
 						<div className="relative flex items-center justify-center w-10 h-10 rounded-full text-gray-400 hover:text-gray-700 cursor-pointer">
 							<Bell size={25} />
 							<Label className="sr-only">Notifications</Label>
-							{notifications.length > 0 ? (
+							{unreadCount > 0 && (
 								<span className="absolute top-[-5px] right-[-10px] font-bold text-sm bg-black text-white rounded-full px-2">
-									{notifications.length}
+									{unreadCount}
 								</span>
-							) : (
-								""
 							)}
 						</div>
 					</DropdownMenuTrigger>
@@ -61,17 +64,54 @@ const AdminHeader = ({ setOpen }) => {
 						{isLoading ? (
 							<DropdownMenuItem>Loading...</DropdownMenuItem>
 						) : notifications.length > 0 ? (
-							notifications.map((notification, index) => (
+							notifications.map((notification) => (
 								<DropdownMenuItem
-									className="flex flex-col gap-2 text-sm"
-									key={index}
+									key={notification._id}
+									className="flex flex-col gap-2 items-start text-sm group"
 								>
-									{notification.message}
+									<div className="w-full flex items-center justify-between">
+										<p
+											className={`flex-1 ${
+												notification.isRead
+													? "text-muted-foreground"
+													: "font-semibold"
+											}`}
+										>
+											{notification.message}
+										</p>
+										<div className="flex gap-2 items-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+											<Button
+												variant="ghost"
+												size="icon"
+												className="text-blue-600 hover:text-blue-800"
+												title="Mark as read"
+												onClick={() =>
+													dispatch(markNotificationAsRead(notification?._id))
+												}
+											>
+												✓
+											</Button>
+											<Button
+												variant="ghost"
+												size="icon"
+												className="text-red-600 hover:text-red-800"
+												title="Delete"
+												onClick={() =>
+													dispatch(deleteAdminNotification(notification?._id))
+												}
+											>
+												🗑️
+											</Button>
+										</div>
+									</div>
 									<Separator />
 								</DropdownMenuItem>
 							))
 						) : (
-							<DropdownMenuItem>No notifications</DropdownMenuItem>
+							<DropdownMenuItem className="flex flex-col items-center justify-center py-5 gap-2">
+								<BsExclamationDiamond size={30} />
+								<p>No notifications</p>
+							</DropdownMenuItem>
 						)}
 					</DropdownMenuContent>
 				</DropdownMenu>
