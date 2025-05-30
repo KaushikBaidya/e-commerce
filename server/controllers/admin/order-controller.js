@@ -27,7 +27,7 @@ const getAllOrdersOfAllUsers = async (req, res) => {
 
 const getAllAuctionOrdersOfAllUsers = async (req, res) => {
 	try {
-		const orders = await AuctionOrder.find({});
+		const orders = await AuctionOrder.find({}).sort({ createdAt: -1 });
 
 		if (!orders.length) {
 			return res.status(404).json({

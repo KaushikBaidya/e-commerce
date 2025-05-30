@@ -56,7 +56,7 @@ const usersData = [
 
 const AdminDashboard = () => {
 	return (
-		<div className="space-y-6 px-4 py-4">
+		<div className="space-y-6">
 			<Card>
 				<CardTitle className="text-3xl font-bold mt-4 ml-4">
 					Admin Dashboard
@@ -66,7 +66,7 @@ const AdminDashboard = () => {
 			{/* when realtime data will be added */}
 			{/* {isLoading ? <Loading /> : <></>} */}
 
-			<div>
+			<div className="space-y-6">
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					{stats.map((stat, idx) => (
 						<Card key={idx} className="shadow border p-4">
@@ -97,7 +97,7 @@ const AdminDashboard = () => {
 									<YAxis />
 									<CartesianGrid strokeDasharray="3 3" />
 									<Tooltip />
-									<Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+									<Bar dataKey="revenue" fill="#242424" radius={[4, 4, 0, 0]} />
 								</BarChart>
 							</ResponsiveContainer>
 						</CardContent>
@@ -119,7 +119,7 @@ const AdminDashboard = () => {
 									<Line
 										type="monotone"
 										dataKey="users"
-										stroke="#22c55e"
+										stroke="#242424"
 										strokeWidth={3}
 									/>
 								</LineChart>

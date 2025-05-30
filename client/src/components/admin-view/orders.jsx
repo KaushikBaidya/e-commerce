@@ -10,7 +10,12 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { View } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogTitle,
+	DialogTrigger,
+} from "../ui/dialog";
 import AdminOrderDetails from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +24,7 @@ import {
 	resetOrderDetails,
 	fetchOrderDetailsForAdmin,
 } from "@/store/admin/order-slice";
+
 import { Badge } from "../ui/badge";
 import NoItemFound from "../common/no-item-found";
 import Loading from "../common/loading-component";
@@ -29,6 +35,7 @@ const AdminOrdersList = () => {
 	const { orderList, orderDetails, isLoading } = useSelector(
 		(state) => state.adminOrder
 	);
+
 
 	function handleFetchOrderDetails(getId) {
 		dispatch(fetchOrderDetailsForAdmin(getId));
@@ -68,7 +75,7 @@ const AdminOrdersList = () => {
 							</TableHeader>
 							<TableBody>
 								{orderList.map((order) => (
-									<TableRow>
+									<TableRow key={order?._id}>
 										<TableCell> @_{order?._id}</TableCell>
 										<TableCell>{order?.orderDate.split("T")[0]} </TableCell>
 										<TableCell>
@@ -111,6 +118,7 @@ const AdminOrdersList = () => {
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="max-w-[90vw] sm:max-w[80vw] lg:max-w-[50vw]">
+													<DialogTitle>Order Details</DialogTitle>
 													<AdminOrderDetails orderDetails={orderDetails} />
 												</DialogContent>
 											</Dialog>

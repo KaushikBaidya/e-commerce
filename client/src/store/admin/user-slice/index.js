@@ -15,6 +15,17 @@ export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
 	return response.data;
 });
 
+export const getUsersDetails = createAsyncThunk(
+	"users/getUsersDetails",
+	async (id) => {
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_BASE_URL}/admin/users/get/${id}`
+		);
+
+		return response.data;
+	}
+);
+
 const AdminUserSlice = createSlice({
 	name: "AdminUserSlice",
 	initialState,
@@ -31,6 +42,17 @@ const AdminUserSlice = createSlice({
 			.addCase(getAllUsers.rejected, (state) => {
 				state.isLoading = false;
 				state.userList = [];
+			})
+			.addCase(getUsersDetails.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getUsersDetails.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.userDetails = action.payload.data;
+			})
+			.addCase(getUsersDetails.rejected, (state) => {
+				state.isLoading = false;
+				state.userDetails = null;
 			});
 	},
 });

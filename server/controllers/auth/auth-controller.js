@@ -2,6 +2,9 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
+const {
+	createNotificationService,
+} = require("../admin/notification-controller");
 
 // const { OAuth2Client } = require("google-auth-library");
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -10,7 +13,7 @@ const generateTokens = (user) => {
 	const accessToken = jwt.sign(
 		{ id: user._id, email: user.email, role: user.role },
 		process.env.JWT_SECRET,
-		{ expiresIn: "15m" }
+		{ expiresIn: "50m" }
 	);
 
 	const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, {
@@ -67,6 +70,13 @@ const registerUser = async (req, res) => {
 			email,
 			password: hashedPassword,
 		});
+
+		await createNotificationService({
+			title: "New User Registered",
+			message: `A new user has been registered: ${newUser.userName}`,
+			type: "user",
+		});
+
 		res
 			.status(200)
 			.json({ success: true, message: "User created successfully" });

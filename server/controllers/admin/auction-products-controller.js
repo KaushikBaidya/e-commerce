@@ -58,7 +58,9 @@ const addAuctionProduct = async (req, res) => {
 //get all auctionable products
 const fetchAllAuctionProducts = async (req, res) => {
 	try {
-		const auctionProductList = await AuctionProduct.find({});
+		const auctionProductList = await AuctionProduct.find({}).sort({
+			createdAt: -1,
+		});
 		res.status(200).json({ success: true, data: auctionProductList });
 	} catch (error) {
 		console.log(error);
