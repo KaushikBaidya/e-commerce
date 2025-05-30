@@ -1,4 +1,7 @@
 const Auction = require("../../models/Auction");
+const {
+	createNotificationService,
+} = require("../admin/notification-controller");
 
 const placeBid = async (req, res) => {
 	try {
@@ -76,6 +79,13 @@ const placeBid = async (req, res) => {
 		});
 
 		await auction.save();
+
+		// Notify admin about the new bid
+		await createNotificationService({
+			title: "New Bid Placed",
+			message: `User ${userId} placed a new bid of ৳${bidAmount} on auction ${auction.title}`,
+			type: "auction",
+		});
 
 		res.status(200).json({
 			success: true,

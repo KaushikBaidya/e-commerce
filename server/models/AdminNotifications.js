@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ["order", "review", "user", "bid"],
+			enum: ["order", "review", "user", "auction"],
 			default: "order",
 		},
 		isRead: {

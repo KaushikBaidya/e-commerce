@@ -3,6 +3,9 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const {
+	createNotificationService,
+} = require("../controllers/admin/notification-controller");
 
 const generateTokens = (user) => {
 	const accessToken = jwt.sign(
@@ -45,6 +48,12 @@ passport.use(
 						role: "user",
 					});
 				}
+
+				await createNotificationService({
+					title: "New User Registered",
+					message: `A new user has been registered: ${user.email}`,
+					type: "user",
+				});
 
 				// ✅ Now that user is guaranteed to exist
 				const { accessToken, refreshToken } = generateTokens(user);

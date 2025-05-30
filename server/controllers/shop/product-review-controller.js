@@ -1,6 +1,9 @@
 const ProductReview = require("../../models/Review");
 const Product = require("../../models/Product");
 const Order = require("../../models/Order");
+const {
+	createNotificationService,
+} = require("../admin/notification-controller");
 
 // Add a product review
 const addProductReview = async (req, res) => {
@@ -43,6 +46,12 @@ const addProductReview = async (req, res) => {
 		});
 
 		await newProductReview.save();
+
+		await createNotificationService({
+			title: "New Review Added",
+			message: `A new review has been added: ${newProductReview.reviewMessage}`,
+			type: "review",
+		});
 
 		// Update the product rating and review count
 		const reviews = await ProductReview.find({ productId });
