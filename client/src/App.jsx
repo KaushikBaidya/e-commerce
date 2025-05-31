@@ -31,6 +31,8 @@ import ForgotPassword from "./pages/auth/forgot-password";
 import ResetPassword from "./pages/auth/reset-password";
 import Loading from "./components/common/loading-component";
 import AllNotifications from "./pages/admin-view/AllNotifications";
+import VerifyEmail from "./pages/auth/verify-email";
+import VerifyTokenPage from "./pages/auth/verify-token";
 
 function App() {
 	const { user, isAuthenticated, isLoading } = useSelector(
@@ -88,6 +90,8 @@ function App() {
 					<Route path="shop/search" element={<SearchProducts />} />
 					<Route path="forgot-password" element={<ForgotPassword />} />
 					<Route path="reset-password/:token" element={<ResetPassword />} />
+					<Route path="verify-email" element={<VerifyEmail />} />
+					<Route path="verify/:token" element={<VerifyTokenPage />} />
 
 					{/* Protected routes */}
 					<Route

@@ -1,4 +1,6 @@
 require("dotenv").config();
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
@@ -56,11 +58,35 @@ const registerUser = async (req, res) => {
 				message: "User already exists with this email",
 			});
 
+		const token = crypto.randomBytes(32).toString("hex");
+		const expiry = Date.now() + 1000 * 60 * 60 * 24;
+
+		const transporter = nodemailer.createTransport({
+			service: "Gmail",
+			auth: {
+				user: process.env.EMAIL_USER,
+				pass: process.env.EMAIL_PASS,
+			},
+		});
+
+		const mailOptions = {
+			from: process.env.EMAIL_USER,
+			to: email,
+			subject: "Account Verification",
+			html: `<p>Click <a href="http://localhost:5173/verify/${token}">here</a> to verify your account.</p>`,
+		};
+
+		await transporter.sendMail(mailOptions);
+
 		const hashedPassword = await bcrypt.hash(password, 10);
+
 		const newUser = await User.create({
 			userName,
 			email,
 			password: hashedPassword,
+			verificationToken: token,
+			verificationExpires: new Date(expiry),
+			isVerified: false,
 		});
 
 		await createNotificationService({
@@ -72,6 +98,35 @@ const registerUser = async (req, res) => {
 		res
 			.status(200)
 			.json({ success: true, message: "User created successfully" });
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ success: false, message: "Server error" });
+	}
+};
+
+const verifyEmail = async (req, res) => {
+	const { token } = req.query;
+	if (!token)
+		return res.status(400).json({ success: false, message: "Token missing" });
+
+	try {
+		const user = await User.findOne({
+			verificationToken: token,
+			verificationExpires: { $gt: Date.now() },
+		});
+
+		if (!user)
+			return res
+				.status(400)
+				.json({ success: false, message: "Invalid or expired token" });
+
+		user.isVerified = true;
+		user.verificationToken = undefined;
+		user.verificationExpires = undefined;
+
+		await user.save();
+
+		res.json({ success: true, message: "Email verified successfully" });
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ success: false, message: "Server error" });
@@ -90,6 +145,13 @@ const loginUser = async (req, res) => {
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return res.json({ success: false, message: "Invalid email or password" });
+		}
+
+		if (!user.isVerified) {
+			return res.status(403).json({
+				success: false,
+				message: "Please verify your email before logging in",
+			});
 		}
 
 		const { accessToken, refreshToken } = generateTokens(user);
@@ -145,6 +207,7 @@ const authMiddleware = (req, res, next) => {
 
 module.exports = {
 	registerUser,
+	verifyEmail,
 	loginUser,
 	logout,
 	refreshAccessToken,

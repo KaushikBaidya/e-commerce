@@ -53,7 +53,7 @@ const AuthRegister = () => {
 					},
 				});
 
-				navigate("/auth/login");
+				navigate("/verify-email");
 			} else {
 				toast.error(result.payload.message, {
 					action: {

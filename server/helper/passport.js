@@ -46,6 +46,7 @@ passport.use(
 						password: null,
 						authProvider: "google",
 						role: "user",
+						isVerified: true,
 					});
 				}
 

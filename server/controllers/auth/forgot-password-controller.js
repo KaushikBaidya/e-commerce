@@ -21,7 +21,7 @@ const sendResetLink = async (req, res) => {
 		}
 
 		const token = crypto.randomBytes(32).toString("hex");
-		const expiry = Date.now() + 1000 * 60 * 60; // 1 hour
+		const expiry = Date.now() + 1000 * 60 * 60;
 
 		user.resetPasswordToken = token;
 		user.resetPasswordExpires = expiry;

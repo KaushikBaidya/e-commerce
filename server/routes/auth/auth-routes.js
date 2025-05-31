@@ -6,6 +6,7 @@ const {
 	logout,
 	authMiddleware,
 	refreshAccessToken,
+	verifyEmail
 } = require("../../controllers/auth/auth-controller");
 const {
 	sendResetLink,
@@ -15,6 +16,8 @@ const {
 const router = express.Router();
 
 router.post("/register", registerUser);
+router.get("/verify-email", verifyEmail);
+
 router.post("/login", loginUser);
 router.post("/logout", logout);
 

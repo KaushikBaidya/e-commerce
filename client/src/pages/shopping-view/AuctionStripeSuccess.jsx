@@ -35,7 +35,7 @@ function AuctionStripeSuccess() {
 	}, [sessionId]);
 
 	return (
-		<div className="flex flex-col items-center justify-center mt-20 h-screen">
+		<div className="flex flex-col items-center justify-center my-20 max-h-[60vh]">
 			<h1 className="text-3xl font-bold text-green-600">Payment Successful!</h1>
 			<p className="mt-4 text-gray-600">Your order has been placed.</p>
 			<div className="my-10 flex items-center justify-center">
