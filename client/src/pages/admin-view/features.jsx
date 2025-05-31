@@ -1,7 +1,5 @@
-import React from "react";
-
 const AdminFeatures = () => {
-	return <div>Features</div>;
+  return <div>Features</div>;
 };
 
 export default AdminFeatures;
