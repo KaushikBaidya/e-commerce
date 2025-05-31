@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
@@ -7,9 +8,6 @@ const User = require("../../models/User");
 const {
 	createNotificationService,
 } = require("../admin/notification-controller");
-
-// const { OAuth2Client } = require("google-auth-library");
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const generateTokens = (user) => {
 	const accessToken = jwt.sign(
@@ -73,7 +71,33 @@ const registerUser = async (req, res) => {
 			from: process.env.EMAIL_USER,
 			to: email,
 			subject: "Account Verification",
-			html: `<p>Click <a href="http://localhost:5173/verify/${token}">here</a> to verify your account.</p>`,
+			html: `<div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
+				<h2 style="color: #333;">Welcome to Galería! 🎉</h2>
+				<p style="font-size: 16px; color: #555;">
+					Hi there,<br />
+					Thank you for registering! Please confirm your email address by clicking the button below:
+				</p>
+
+				<div style="text-align: center; margin: 30px 0;">
+					<a
+						href="http://localhost:5173/verify/${token}"
+						style="background-color: #4f46e5; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;"
+					>
+						✅ Verify Email
+					</a>
+				</div>
+
+				<p style="font-size: 14px; color: #777;">
+					If you did not create an account, you can safely ignore this email.<br />
+					This link will expire in 24 hours.
+				</p>
+
+				<hr style="margin: 30px 0;" />
+				<p style="font-size: 12px; color: #aaa; text-align: center;">
+					&copy; ${new Date().getFullYear()} Your Company Name. All rights reserved.
+				</p>
+			</div>
+			`,
 		};
 
 		await transporter.sendMail(mailOptions);
