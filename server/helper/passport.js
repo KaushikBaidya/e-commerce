@@ -13,7 +13,7 @@ const generateTokens = (user) => {
 			id: user._id,
 			email: user.email,
 			role: user.role,
-			userName: user.userName, // ✅ add this
+			userName: user.userName,
 		},
 		process.env.JWT_SECRET,
 		{ expiresIn: "15m" }
@@ -55,10 +55,8 @@ passport.use(
 					type: "user",
 				});
 
-				// ✅ Now that user is guaranteed to exist
 				const { accessToken, refreshToken } = generateTokens(user);
 
-				// You can attach tokens to user object or request if needed
 				user.tokens = { accessToken, refreshToken };
 
 				return done(null, user);
@@ -68,35 +66,3 @@ passport.use(
 		}
 	)
 );
-
-// passport.use(
-// 	new GoogleStrategy(
-// 		{
-// 			clientID: process.env.GOOGLE_CLIENT_ID,
-// 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-// 			callbackURL: "/api/auth/google/callback",
-// 		},
-// 		async (accessToken, refreshToken, profile, done) => {
-// 			try {
-// 				const email = profile.emails[0].value;
-// 				let user = await User.findOne({ email });
-
-// 				const { accessToken, refreshToken } = generateTokens(user);
-
-// 				if (!user) {
-// 					user = await User.create({
-// 						userName: profile.displayName,
-// 						email,
-// 						googleId: profile.id,
-// 						password: null,
-// 						authProvider: "google",
-// 						role: "user",
-// 					});
-// 				}
-// 				return done(null, user);
-// 			} catch (error) {
-// 				return done(error, null);
-// 			}
-// 		}
-// 	)
-// );

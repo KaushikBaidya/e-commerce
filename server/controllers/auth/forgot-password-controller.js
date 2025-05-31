@@ -20,7 +20,6 @@ const sendResetLink = async (req, res) => {
 				.json({ success: false, message: "No user with that email" });
 		}
 
-		// Generate token
 		const token = crypto.randomBytes(32).toString("hex");
 		const expiry = Date.now() + 1000 * 60 * 60; // 1 hour
 
@@ -29,16 +28,14 @@ const sendResetLink = async (req, res) => {
 
 		await user.save();
 
-		// Set up your email transport
 		const transporter = nodemailer.createTransport({
-			service: "Gmail", // or another SMTP service
+			service: "Gmail",
 			auth: {
 				user: process.env.EMAIL_USER,
 				pass: process.env.EMAIL_PASS,
 			},
 		});
 
-		// Send email
 		const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
 		await transporter.sendMail({
 			from: `"Galería Support" <${process.env.EMAIL_USER}>`,
@@ -82,7 +79,7 @@ const resetPassword = async (req, res) => {
 	try {
 		const user = await User.findOne({
 			resetPasswordToken: token,
-			resetPasswordExpires: { $gt: Date.now() }, // check if not expired
+			resetPasswordExpires: { $gt: Date.now() },
 		});
 
 		if (!user) {

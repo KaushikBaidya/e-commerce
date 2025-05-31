@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
 	authProvider: { type: String, default: "local" },
 	googleId: { type: String, default: null },
 
+	isVerified: { type: Boolean, default: false },
+	verificationToken: { type: String, default: null },
+	verificationExpires: { type: Date, default: null },
+
 	resetPasswordToken: { type: String },
 	resetPasswordExpires: { type: Date },
 });

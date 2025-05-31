@@ -41,14 +41,6 @@ const refreshAccessToken = (req, res) => {
 	}
 };
 
-const setCookie = (res, token) => {
-	res.cookie("token", token, {
-		httpOnly: true,
-		secure: process.env.NODE_ENV === "production",
-		sameSite: "strict",
-	});
-};
-
 const registerUser = async (req, res) => {
 	const { userName, email, password } = req.body;
 	if (!userName || !email || !password)
