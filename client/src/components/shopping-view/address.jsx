@@ -14,6 +14,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import AddressCard from './adress-card';
 
+import useYupValidation from '@/hooks/useYupValidation';
 import * as Yup from 'yup';
 import Loading from '../common/loading-component';
 
@@ -39,9 +40,12 @@ const initialState = {
 
 const Address = ({ selectedId, setCurrentSelectedAddress }) => {
   const [formData, setFormData] = useState(initialState);
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentEditId, setCurrentEditId] = useState(null);
+
+  const { validateForm, errors, setErrors } = useYupValidation(addressValidationSchema);
+
   const { user } = useSelector((state) => state.auth);
   const { addressList, isLoading } = useSelector((state) => state.shopAddress);
   const dispatch = useDispatch();
@@ -50,67 +54,58 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    try {
-      await addressValidationSchema.validate(formData, { abortEarly: false });
-      setErrors({});
-
-      if (addressList.length >= 3 && currentEditId === null) {
-        setFormData(initialState);
-        toast.error('You can add only 3 addresses', {
-          action: {
-            label: 'close',
-          },
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (currentEditId !== null) {
-        dispatch(
-          editAddress({
-            userId: user?.id,
-            addressId: currentEditId,
-            formData,
-          })
-        ).then((data) => {
-          setIsSubmitting(false);
-          if (data?.payload?.success) {
-            dispatch(fetchAllAddresses(user?.id));
-            setCurrentEditId(null);
-            setFormData(initialState);
-            toast.success('Address updated successfully', {
-              action: {
-                label: 'close',
-              },
-            });
-          }
-        });
-      } else {
-        dispatch(addNewAddress({ ...formData, userId: user?.id })).then((data) => {
-          setIsSubmitting(false);
-          if (data?.payload?.success) {
-            dispatch(fetchAllAddresses(user?.id));
-            setFormData(initialState);
-            toast.success(data?.payload?.message, {
-              action: { label: 'close' },
-            });
-          }
-        });
-      }
-    } catch (validationError) {
+    const { isValid } = await validateForm(formData);
+    if (!isValid) {
       setIsSubmitting(false);
-      if (validationError.inner) {
-        const formattedErrors = {};
-        validationError.inner.forEach((err) => {
-          formattedErrors[err.path] = err.message;
-          toast.error(err.message, {
-            action: {
-              label: 'close',
-            },
+      // Optionally show toasts here for each error
+      Object.values(errors).forEach((msg) =>
+        toast.error(msg, {
+          action: { label: 'close' },
+        })
+      );
+      return;
+    }
+
+    if (addressList.length >= 3 && currentEditId === null) {
+      toast.error('You can add only 3 addresses', {
+        action: {
+          label: 'close',
+        },
+      });
+      setFormData(initialState);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (currentEditId !== null) {
+      dispatch(
+        editAddress({
+          userId: user?.id,
+          addressId: currentEditId,
+          formData,
+        })
+      ).then((data) => {
+        setIsSubmitting(false);
+        if (data?.payload?.success) {
+          dispatch(fetchAllAddresses(user?.id));
+          setCurrentEditId(null);
+          setFormData(initialState);
+          toast.success('Address updated successfully', {
+            action: { label: 'close' },
           });
-        });
-        setErrors(formattedErrors);
-      }
+        }
+      });
+    } else {
+      dispatch(addNewAddress({ ...formData, userId: user?.id })).then((data) => {
+        setIsSubmitting(false);
+        if (data?.payload?.success) {
+          dispatch(fetchAllAddresses(user?.id));
+          setFormData(initialState);
+          toast.success(data?.payload?.message, {
+            action: { label: 'close' },
+          });
+        }
+      });
     }
   };
 

@@ -23,7 +23,7 @@ const useYupValidation = (validationSchema) => {
     }
   };
 
-  return { validateForm, errors };
+  return { validateForm, errors, setErrors };
 };
 
 export default useYupValidation;
