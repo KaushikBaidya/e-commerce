@@ -7,30 +7,44 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 	const { user } = useSelector((state) => state.auth);
 
 	return (
-		<div className="w-full capitalize">
-			<div className="grid gap-6">
-				<div className="grid gap-2">
-					<div className="flex items-center justify-between mt-6">
+		<div className="w-full capitalize space-y-6">
+			<div className="grid grid-cols-12 gap-4 bg-white p-5 rounded-xl shadow-sm border">
+				<div className="col-span-6 space-y-3">
+					<h2 className="text-lg font-semibold text-foreground">
+						Order Summary
+					</h2>
+					<div className="flex justify-between text-sm text-muted-foreground">
 						<p className="font-medium">Order ID</p>
-						<Label># {orderDetails?._id}</Label>
+						<span className="text-foreground font-semibold">
+							# {orderDetails?._id}
+						</span>
 					</div>
-					<div className="flex items-center justify-between mt-2">
+					<div className="flex justify-between text-sm text-muted-foreground">
 						<p className="font-medium">Order Date</p>
-						<Label>{orderDetails?.orderDate.split("T")[0]}</Label>
+						<span>{orderDetails?.orderDate.split("T")[0]}</span>
 					</div>
-					<div className="flex items-center justify-between mt-2">
+					<div className="flex justify-between text-sm text-muted-foreground">
 						<p className="font-medium">Order Price</p>
-						<Label>৳ {orderDetails?.totalAmount}</Label>
+						<span className="text-primary font-semibold">
+							৳ {orderDetails?.totalAmount}
+						</span>
 					</div>
+				</div>
 
-					<div className="flex items-center justify-between mt-2">
+				<div className="col-span-1 flex justify-center">
+					<div className="w-0.5 h-full bg-gray-200" />
+				</div>
+
+				<div className="col-span-5 space-y-3">
+					<h2 className="text-lg font-semibold text-foreground">Status</h2>
+					<div className="flex justify-between text-sm text-muted-foreground">
 						<p className="font-medium">Order Status</p>
-						<Label
-							className={`py-1 px-3 ${
+						<span
+							className={`rounded-full text-white text-xs font-semibold px-3 py-1 ${
 								orderDetails?.orderStatus === "confirmed"
-									? "bg-blue-400"
+									? "bg-blue-500"
 									: orderDetails?.orderStatus === "pending"
-									? "bg-yellow-400"
+									? "bg-yellow-500"
 									: orderDetails?.orderStatus === "in-progress"
 									? "bg-orange-500"
 									: orderDetails?.orderStatus === "shipped"
@@ -45,58 +59,55 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
 							}`}
 						>
 							{orderDetails?.orderStatus}
-						</Label>
+						</span>
 					</div>
-					<div className="flex items-center justify-between mt-2">
+					<div className="flex justify-between text-sm text-muted-foreground">
 						<p className="font-medium">Payment Status</p>
-						<Label>{orderDetails?.paymentStatus}</Label>
+						<span className="text-foreground font-semibold">
+							{orderDetails?.paymentStatus}
+						</span>
 					</div>
 				</div>
-				<Separator />
-				<div className="grid gap-4">
-					<div className="grid gap-2">
-						<div className="font-medium text-lg text-center">Order Details</div>
-						<Separator />
-						<ul className="grid gap-3">
-							{/* Header Row */}
-							<li className="grid grid-cols-3 gap-3 font-semibold border-b pb-2">
-								<span className="text-center">Product</span>
-								<span className="text-center">Quantity</span>
-								<span className="text-center">Price</span>
-							</li>
+			</div>
 
-							{/* Item Rows */}
-							{orderDetails?.cartItems && orderDetails.cartItems.length > 0 ? (
-								orderDetails.cartItems.map((item, index) => (
-									<li
-										key={index}
-										className="grid grid-cols-3 gap-3 justify-items-center border-b py-1"
-									>
-										<span className="capitalize">{item.title}</span>
-										<span>{item.quantity}</span>
-										<span>৳ {item.price}</span>
-									</li>
-								))
-							) : (
-								<li className="text-center col-span-3 text-gray-500">
-									No items found.
-								</li>
-							)}
-						</ul>
-					</div>
+			<div className="bg-white p-5 rounded-xl shadow-sm border">
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Items</h2>
+				<div className="grid grid-cols-3 gap-3 font-semibold border-b pb-2 text-sm text-muted-foreground">
+					<span className="text-center">Product</span>
+					<span className="text-center">Quantity</span>
+					<span className="text-center">Price</span>
 				</div>
-				<div className="grid gap-4">
-					<div className="grid gap-2">
-						<div className="font-semibold">Shipping Address</div>
-						<div className="grid grid-cols-3 gap-1 text-muted-foreground capitalize">
-							<span>{user.userName}</span>
-							<span>{orderDetails?.addressInfo?.address}</span>
-							<span>{orderDetails?.addressInfo?.city}</span>
-							<span>{orderDetails?.addressInfo?.pincode}</span>
-							<span>{orderDetails?.addressInfo?.phone}</span>
-							<span>{orderDetails?.addressInfo?.notes}</span>
-						</div>
-					</div>
+				<ul className="grid gap-2 py-2 max-h-44 overflow-y-auto">
+					{orderDetails?.cartItems?.length > 0 ? (
+						orderDetails.cartItems.map((item, index) => (
+							<li
+								key={index}
+								className="grid grid-cols-3 justify-items-center text-sm py-2 border-b text-foreground"
+							>
+								<span className="capitalize">{item.title}</span>
+								<span>{item.quantity}</span>
+								<span>৳ {item.price}</span>
+							</li>
+						))
+					) : (
+						<li className="col-span-3 text-center text-gray-500">
+							No items found.
+						</li>
+					)}
+				</ul>
+			</div>
+
+			<div className="bg-white p-5 rounded-xl shadow-sm border space-y-2">
+				<h2 className="text-lg font-semibold text-foreground">
+					Shipping Address
+				</h2>
+				<div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+					<span className="lowercase">{user?.email}</span>
+					<span>{orderDetails?.addressInfo?.address}</span>
+					<span>{orderDetails?.addressInfo?.city}</span>
+					<span>{orderDetails?.addressInfo?.pincode}</span>
+					<span>{orderDetails?.addressInfo?.phone}</span>
+					<span>{orderDetails?.addressInfo?.notes}</span>
 				</div>
 			</div>
 		</div>
