@@ -21,6 +21,7 @@ const CommonForm = ({
 	errors,
 	buttonText,
 	isBtnDisabled,
+	isSubmitting,
 }) => {
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -162,7 +163,11 @@ const CommonForm = ({
 					</div>
 				))}
 			</div>
-			<Button disabled={isBtnDisabled} type="submit" className="mt-5 w-full">
+			<Button
+				disabled={isBtnDisabled || isSubmitting}
+				type="submit"
+				className="mt-5 w-full"
+			>
 				{buttonText || "Submit"}
 			</Button>
 		</form>

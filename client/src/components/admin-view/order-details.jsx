@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersDetails } from "@/store/admin/user-slice";
@@ -9,13 +7,14 @@ import {
 	updateOrderStatus,
 } from "@/store/admin/order-slice";
 import { fetchOrderDetailsForAdmin } from "@/store/admin/order-slice";
-import { use } from "react";
+import { toast } from "sonner";
 
 const initialFormData = {
 	status: "",
 };
 
 const AdminOrderDetails = ({ orderDetails }) => {
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [formData, setFormData] = useState(initialFormData);
 	const { userDetails } = useSelector((state) => state.adminUser);
 
@@ -23,23 +22,26 @@ const AdminOrderDetails = ({ orderDetails }) => {
 
 	const handleUpdateStatus = (event) => {
 		event.preventDefault();
+		setIsSubmitting(true);
 
 		const { status } = formData;
 
-		dispatch(
-			updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
-		).then((data) => {
-			if (data?.payload?.success) {
-				dispatch(fetchOrderDetailsForAdmin(orderDetails?._id));
-				dispatch(getAllOrdersForAdmin());
-				setFormData(initialFormData);
-				toast.success(data?.payload?.message, {
-					action: {
-						label: "close",
-					},
-				});
-			}
-		});
+		dispatch(updateOrderStatus({ id: orderDetails?._id, orderStatus: status }))
+			.then((data) => {
+				if (data?.payload?.success) {
+					dispatch(fetchOrderDetailsForAdmin(orderDetails?._id));
+					dispatch(getAllOrdersForAdmin());
+					setFormData(initialFormData);
+					toast.success(data?.payload?.message, {
+						action: {
+							label: "close",
+						},
+					});
+				}
+			})
+			.finally(() => {
+				setIsSubmitting(false);
+			});
 	};
 
 	useEffect(() => {
@@ -48,9 +50,7 @@ const AdminOrderDetails = ({ orderDetails }) => {
 
 	return (
 		<div className="w-full capitalize space-y-6">
-			{/* Order Summary Section */}
 			<div className="grid grid-cols-12 gap-4 bg-white p-5 rounded-xl shadow-sm border">
-				{/* Left Side */}
 				<div className="col-span-6 space-y-3">
 					<h2 className="text-lg font-semibold text-foreground">
 						Order Summary
@@ -73,12 +73,10 @@ const AdminOrderDetails = ({ orderDetails }) => {
 					</div>
 				</div>
 
-				{/* Divider */}
 				<div className="col-span-1 flex justify-center">
 					<div className="w-0.5 h-full bg-gray-200" />
 				</div>
 
-				{/* Right Side */}
 				<div className="col-span-5 space-y-3">
 					<h2 className="text-lg font-semibold text-foreground">Status</h2>
 					<div className="flex justify-between text-sm text-muted-foreground">
@@ -114,7 +112,6 @@ const AdminOrderDetails = ({ orderDetails }) => {
 				</div>
 			</div>
 
-			{/* Product List */}
 			<div className="bg-white p-5 rounded-xl shadow-sm border">
 				<h2 className="text-lg font-semibold mb-4 text-foreground">Items</h2>
 				<div className="grid grid-cols-3 gap-3 font-semibold border-b pb-2 text-sm text-muted-foreground">
@@ -142,7 +139,6 @@ const AdminOrderDetails = ({ orderDetails }) => {
 				</ul>
 			</div>
 
-			{/* Shipping Info */}
 			<div className="bg-white p-5 rounded-xl shadow-sm border space-y-2">
 				<h2 className="text-lg font-semibold text-foreground">
 					Shipping Address
@@ -157,7 +153,6 @@ const AdminOrderDetails = ({ orderDetails }) => {
 				</div>
 			</div>
 
-			{/* Status Update Form */}
 			<div className="bg-white p-5 rounded-xl shadow-sm border">
 				<CommonForm
 					formControls={[
@@ -178,6 +173,7 @@ const AdminOrderDetails = ({ orderDetails }) => {
 					setFormData={setFormData}
 					buttonText="Update Status"
 					onSubmit={handleUpdateStatus}
+					isSubmitting={isSubmitting}
 				/>
 			</div>
 		</div>
