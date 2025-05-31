@@ -49,7 +49,11 @@ function SearchProducts() {
 			if (indexOfCurrentItem > -1) {
 				const getQuantity = getCartItems[indexOfCurrentItem].quantity;
 				if (getQuantity + 1 > getTotalStock) {
-					toast.error("Product stock limit reached");
+					toast.error("Product stock limit reached", {
+						action: {
+							label: "close",
+						},
+					});
 
 					return;
 				}
@@ -65,7 +69,11 @@ function SearchProducts() {
 		).then((data) => {
 			if (data?.payload?.success) {
 				dispatch(fetchCartItems(user?.id));
-				toast("Product is added to cart");
+				toast.success("Product is added to cart", {
+					action: {
+						label: "close",
+					},
+				});
 			}
 		});
 	}

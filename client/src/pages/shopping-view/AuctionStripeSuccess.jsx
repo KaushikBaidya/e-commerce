@@ -19,7 +19,11 @@ function AuctionStripeSuccess() {
 						}
 					);
 					if (res.data.success) {
-						toast.success("Order finalized");
+						toast.success("Order finalized", {
+							action: {
+								label: "close",
+							},
+						});
 					}
 				} catch (err) {
 					console.error("Order finalization failed:", err);

@@ -18,7 +18,11 @@ const ResetPassword = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (password !== confirmPassword) {
-			toast.error("Passwords do not match.");
+			toast.error("Passwords do not match.", {
+				action: {
+					label: "close",
+				},
+			});
 			return;
 		}
 		setLoading(true);
@@ -27,12 +31,20 @@ const ResetPassword = () => {
 				`${import.meta.env.VITE_API_BASE_URL}/auth/reset-password/${token}`,
 				{ password }
 			);
-			toast.success(res.data.message || "Password reset successful!");
+			toast.success(res.data.message || "Password reset successful!", {
+				action: {
+					label: "close",
+				},
+			});
 			setPassword("");
 			setConfirmPassword("");
 			setTimeout(() => navigate("/auth/login"), 1500);
 		} catch (err) {
-			toast.error(err.response?.data?.message || "Failed to reset password.");
+			toast.error(err.response?.data?.message || "Failed to reset password.", {
+				action: {
+					label: "close",
+				},
+			});
 		} finally {
 			setLoading(false);
 		}

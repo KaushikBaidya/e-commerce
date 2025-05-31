@@ -33,25 +33,47 @@ const AuctionPage = () => {
 
 	const handlePlaceBid = (getCurrentProductId) => {
 		if (!user || user?.role !== "user") {
-			return toast.error("Please login to place bid");
+			return toast.error("Please login to place bid", {
+				action: {
+					label: "close",
+				},
+			});
 		}
 
 		const auctionItems = Array.isArray(auctionProductList)
 			? auctionProductList
 			: [];
-		if (!auctionItems.length) return toast.error("auction items empty");
+		if (!auctionItems.length)
+			return toast.error("auction items empty", {
+				action: {
+					label: "close",
+				},
+			});
 
 		const auctionItem = auctionItems.find(
 			(item) => item._id === getCurrentProductId
 		);
-		if (!auctionItem) return toast.error("No auction item found");
+		if (!auctionItem)
+			return toast.error("No auction item found", {
+				action: {
+					label: "close",
+				},
+			});
 
 		const now = new Date();
 		if (new Date(auctionItem.startTime) > now) {
-			return toast.error("Auction hasn't started yet");
+			return toast.error("Auction hasn't started yet", {
+				action: {
+					label: "close",
+				},
+			});
 		}
 		if (new Date(auctionItem.endTime) < now) {
-			return toast.error("Auction has already ended");
+			return toast.error("Auction has already ended", {
+				action: {
+					label: "close",
+				},
+			});
 		}
 
 		const baseBid = auctionItem.currentBid || auctionItem.startingBid;
@@ -67,12 +89,26 @@ const AuctionPage = () => {
 			.then((data) => {
 				if (data?.payload?.success) {
 					dispatch(fetchAllAuctionProducts());
-					toast.success("Bid placed successfully");
+					toast.success("Bid placed successfully", {
+						action: {
+							label: "close",
+						},
+					});
 				} else {
-					toast.error("Failed to place bid");
+					toast.error("Failed to place bid", {
+						action: {
+							label: "close",
+						},
+					});
 				}
 			})
-			.catch(() => toast.error("Something went wrong"));
+			.catch(() =>
+				toast.error("Something went wrong", {
+					action: {
+						label: "close",
+					},
+				})
+			);
 	};
 
 	useEffect(() => {

@@ -57,7 +57,9 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 			if (addressList.length >= 3 && currentEditId === null) {
 				setFormData(initialState);
 				toast.error("You can add only 3 addresses", {
-					action: { label: <XIcon /> },
+					action: {
+						label: "close",
+					},
 				});
 				setIsSubmitting(false);
 				return;
@@ -77,7 +79,9 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 						setCurrentEditId(null);
 						setFormData(initialState);
 						toast.success("Address updated successfully", {
-							action: { label: <XIcon /> },
+							action: {
+								label: "close",
+							},
 						});
 					}
 				});
@@ -89,7 +93,7 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 							dispatch(fetchAllAddresses(user?.id));
 							setFormData(initialState);
 							toast.success(data?.payload?.message, {
-								action: { label: "X" },
+								action: { label: "close" },
 							});
 						}
 					}
@@ -101,7 +105,11 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 				const formattedErrors = {};
 				validationError.inner.forEach((err) => {
 					formattedErrors[err.path] = err.message;
-					toast.error(err.message);
+					toast.error(err.message, {
+						action: {
+							label: "close",
+						},
+					});
 				});
 				setErrors(formattedErrors);
 			}
@@ -131,7 +139,9 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
 			if (data?.payload?.success) {
 				dispatch(fetchAllAddresses(user?.id));
 				toast.success(data?.payload?.message, {
-					action: { label: <XIcon /> },
+					action: {
+						label: "close",
+					},
 				});
 			}
 		});

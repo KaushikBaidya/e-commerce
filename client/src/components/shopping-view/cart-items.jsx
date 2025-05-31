@@ -46,7 +46,11 @@ const CartItems = ({ cartItem }) => {
 			})
 		).then((data) => {
 			if (data?.payload?.success) {
-				toast.success("Product quantity updated");
+				toast.success("Product quantity updated", {
+					action: {
+						label: "close",
+					},
+				});
 			}
 		});
 	};
@@ -56,7 +60,11 @@ const CartItems = ({ cartItem }) => {
 			deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
 		).then((data) => {
 			if (data?.payload?.success) {
-				toast.success("Product removed from cart");
+				toast.success("Product removed from cart", {
+					action: {
+						label: "close",
+					},
+				});
 			}
 		});
 	};

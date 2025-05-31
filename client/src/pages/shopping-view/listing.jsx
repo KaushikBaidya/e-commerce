@@ -85,7 +85,11 @@ const ShoppingListing = () => {
 
 	const handleAddToCart = (getCurrentProductId, getTotalStock) => {
 		if (user === null)
-			return toast.error("Please login to add this product to cart");
+			return toast.error("Please login to add this product to cart", {
+				action: {
+					label: "close",
+				},
+			});
 
 		let getCartItems = cartItems.items || [];
 
@@ -96,7 +100,11 @@ const ShoppingListing = () => {
 			if (indexOfCurrentItem > -1) {
 				const getQuantity = getCartItems[indexOfCurrentItem].quantity;
 				if (getQuantity + 1 > getTotalStock)
-					return toast.error("Product stock limit reached");
+					return toast.error("Product stock limit reached", {
+						action: {
+							label: "close",
+						},
+					});
 			}
 		}
 
@@ -109,7 +117,11 @@ const ShoppingListing = () => {
 		).then((data) => {
 			if (data?.payload?.success) {
 				dispatch(fetchCartItems(user?.id));
-				toast.success("Product is added to cart");
+				toast.success("Product is added to cart", {
+					action: {
+						label: "close",
+					},
+				});
 			}
 		});
 	};

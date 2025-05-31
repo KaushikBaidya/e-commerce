@@ -16,10 +16,18 @@ const ForgotPassword = () => {
 				`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`,
 				{ email }
 			);
-			toast.success(res.data.message || "Reset link sent successfully!");
+			toast.success(res.data.message || "Reset link sent successfully!", {
+				action: {
+					label: "close",
+				},
+			});
 			setEmail("");
 		} catch (err) {
-			toast.error(err.response?.data?.message || "Failed to send reset link.");
+			toast.error(err.response?.data?.message || "Failed to send reset link.", {
+				action: {
+					label: "close",
+				},
+			});
 		} finally {
 			setLoading(false);
 		}

@@ -35,7 +35,7 @@ const AdminOrderDetails = ({ orderDetails }) => {
 				setFormData(initialFormData);
 				toast.success(data?.payload?.message, {
 					action: {
-						label: "X",
+						label: "close",
 					},
 				});
 			}

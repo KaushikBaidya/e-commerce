@@ -49,7 +49,7 @@ const AuthRegister = () => {
 			if (result?.payload?.success) {
 				toast.success(result.payload.message, {
 					action: {
-						label: <XIcon />,
+						label: "close",
 					},
 				});
 
@@ -57,7 +57,7 @@ const AuthRegister = () => {
 			} else {
 				toast.error(result.payload.message, {
 					action: {
-						label: <XIcon />,
+						label: "close",
 					},
 				});
 			}

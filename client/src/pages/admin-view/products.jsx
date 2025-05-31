@@ -64,11 +64,10 @@ const AdminProducts = () => {
 	);
 
 	const dispatch = useDispatch();
-	
+
 	const filteredProducts = productList?.filter((product) =>
 		product.title.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -81,7 +80,11 @@ const AdminProducts = () => {
 							setFormData(initialFormData);
 							setOpenCrtProdDialog(false);
 							setCurrentEditedId(null);
-							toast.success(data?.payload?.message);
+							toast.success(data?.payload?.message, {
+								action: {
+									label: "close",
+								},
+							});
 						}
 					}
 			  )
@@ -92,7 +95,11 @@ const AdminProducts = () => {
 							setOpenCrtProdDialog(false);
 							setImageFile(null);
 							setFormData(initialFormData);
-							toast.success(data?.payload?.message);
+							toast.success(data?.payload?.message, {
+								action: {
+									label: "close",
+								},
+							});
 						}
 					}
 			  );
@@ -107,7 +114,11 @@ const AdminProducts = () => {
 		dispatch(deleteProduct(currentDeleteId)).then((data) => {
 			if (data?.payload?.success) {
 				dispatch(fetchAllProducts());
-				toast.success(data?.payload?.message);
+				toast.success(data?.payload?.message, {
+					action: {
+						label: "close",
+					},
+				});
 			}
 			setCurrentDeleteId(null);
 		});

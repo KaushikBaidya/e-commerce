@@ -24,22 +24,43 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 
 	const handlePlaceBid = (productId) => {
 		if (!user || user.role !== "user") {
-			return toast.error("Please login to place bid");
+			return toast.error("Please login to place bid", {
+				action: {
+					label: "close",
+				},
+			});
 		}
 
 		const item = auctionProductDetails;
-		if (!item) return toast.error("No auction item found");
+		if (!item)
+			return toast.error("No auction item found", {
+				action: {
+					label: "close",
+				},
+			});
 
 		if (item.highestBidder === user.id) {
-			toast.error("You are already the highest bidder");
+			toast.error("You are already the highest bidder", {
+				action: {
+					label: "close",
+				},
+			});
 			return;
 		}
 
 		const now = new Date();
 		if (new Date(item.startTime) > now)
-			return toast.error("Auction hasn't started yet");
+			return toast.error("Auction hasn't started yet", {
+				action: {
+					label: "close",
+				},
+			});
 		if (new Date(item.endTime) < now)
-			return toast.error("Auction has already ended");
+			return toast.error("Auction has already ended", {
+				action: {
+					label: "close",
+				},
+			});
 
 		const nextBid = item.currentBid
 			? item.currentBid + item.bidIncrement
@@ -55,12 +76,26 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 			.then((data) => {
 				if (data?.payload?.success) {
 					dispatch(fetchAuctionProductDetails(auctionProductDetails._id));
-					toast.success("Bid placed successfully");
+					toast.success("Bid placed successfully", {
+						action: {
+							label: "close",
+						},
+					});
 				} else {
-					toast.error("Failed to place bid");
+					toast.error("Failed to place bid", {
+						action: {
+							label: "close",
+						},
+					});
 				}
 			})
-			.catch(() => toast.error("Something went wrong"));
+			.catch(() =>
+				toast.error("Something went wrong", {
+					action: {
+						label: "close",
+					},
+				})
+			);
 	};
 
 	if (!auctionProductDetails)

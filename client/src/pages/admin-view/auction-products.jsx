@@ -81,7 +81,11 @@ const AuctionProductsView = () => {
 						setFormData(initialFormData);
 						setOpenCrtProdDialog(false);
 						setCurrentEditedId(null);
-						toast.success(data?.payload?.message);
+						toast.success(data?.payload?.message, {
+							action: {
+								label: "close",
+							},
+						});
 					}
 			  })
 			: dispatch(
@@ -92,7 +96,11 @@ const AuctionProductsView = () => {
 						setOpenCrtProdDialog(false);
 						setImageFile(null);
 						setFormData(initialFormData);
-						toast.success(data?.payload?.message);
+						toast.success(data?.payload?.message, {
+							action: {
+								label: "close",
+							},
+						});
 					}
 			  });
 	};
@@ -106,7 +114,11 @@ const AuctionProductsView = () => {
 		dispatch(deleteAuctionProduct(currentDeleteId)).then((data) => {
 			if (data?.payload?.success) {
 				dispatch(fetchAllAuctionProducts());
-				toast.success(data?.payload?.message);
+				toast.success(data?.payload?.message, {
+					action: {
+						label: "close",
+					},
+				});
 			}
 			setCurrentDeleteId(null);
 		});
