@@ -6,7 +6,7 @@ const {
 	editAddress,
 	deleteAddress,
 } = require("../../controllers/shop/address-controller");
-const { validateObjectId } = require("../../helper/validators");
+const { validateObjectId } = require("../../validator/validators");
 
 const router = express.Router();
 

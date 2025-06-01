@@ -4,7 +4,7 @@ const {
 	placeBid,
 	fetchBidItems,
 } = require("../../controllers/shop/bid-controller");
-const { validateObjectId } = require("../../helper/validators");
+const { validateObjectId } = require("../../validator/validators");
 const { body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 

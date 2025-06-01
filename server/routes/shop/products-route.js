@@ -10,7 +10,7 @@ const {
 	getAuctionProductDetails,
 } = require("../../controllers/shop/auction-products-controller");
 
-const { validateObjectId } = require("../../helper/validators");
+const { validateObjectId } = require("../../validator/validators");
 
 const router = express.Router();
 

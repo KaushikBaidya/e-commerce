@@ -2,7 +2,6 @@ const AuctionProduct = require("../../models/Auction");
 const cloudinary = require("cloudinary").v2;
 const { deleteImageFromCloudinary } = require("../../helper/cloudinary");
 
-//add auctionable product
 const addAuctionProduct = async (req, res) => {
 	try {
 		const {

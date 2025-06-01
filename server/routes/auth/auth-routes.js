@@ -18,9 +18,9 @@ const {
 	loginValidator,
 	forgotPasswordValidator,
 	resetPasswordValidator,
-} = require("../../helper/authValidators");
+} = require("../../validator/authValidators");
 
-const validateRequest = require("../../helper/validateRequest");
+const validateRequest = require("../../validator/validateRequest");
 
 const router = express.Router();
 

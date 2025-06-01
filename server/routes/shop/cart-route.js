@@ -7,7 +7,7 @@ const {
 	deleteCartItem,
 } = require("../../controllers/shop/cart-controller");
 
-const { validateObjectId } = require("../../helper/validators");
+const { validateObjectId } = require("../../validator/validators");
 
 const { body, validationResult } = require("express-validator");
 const router = express.Router();

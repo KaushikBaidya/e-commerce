@@ -6,7 +6,7 @@ const {
 	finalizeAuctionOrderFromSession,
 	getAllAuctionOrdersByUser,
 } = require("../../controllers/shop/auction-checkout-controller");
-const { validateObjectId } = require("../../helper/validators");
+const { validateObjectId } = require("../../validator/validators");
 
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
