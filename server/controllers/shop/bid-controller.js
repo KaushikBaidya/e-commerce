@@ -7,7 +7,6 @@ const placeBid = async (req, res) => {
 	try {
 		const { userId, auctionId, bidAmount } = req.body;
 
-		// Basic validation
 		if (
 			!userId ||
 			!auctionId ||
@@ -20,7 +19,6 @@ const placeBid = async (req, res) => {
 			});
 		}
 
-		// Fetch auction
 		const auction = await Auction.findById(auctionId);
 		if (!auction) {
 			return res
@@ -28,7 +26,6 @@ const placeBid = async (req, res) => {
 				.json({ success: false, message: "Auction not found" });
 		}
 
-		// Time and status check
 		const now = new Date();
 		if (
 			!auction.isActive ||
@@ -41,7 +38,6 @@ const placeBid = async (req, res) => {
 			});
 		}
 
-		// Prevent highest bidder from bidding again
 		if (auction.highestBidder?.toString() === userId) {
 			return res.status(400).json({
 				success: false,
@@ -49,7 +45,6 @@ const placeBid = async (req, res) => {
 			});
 		}
 
-		// Determine minimum allowed bid
 		let minimumAllowedBid;
 		if (auction.currentBid) {
 			minimumAllowedBid = auction.currentBid + auction.bidIncrement;
@@ -60,7 +55,6 @@ const placeBid = async (req, res) => {
 				});
 			}
 		} else {
-			// First bid: must be exactly equal to startingBid
 			if (bidAmount !== auction.startingBid) {
 				return res.status(400).json({
 					success: false,
@@ -69,18 +63,41 @@ const placeBid = async (req, res) => {
 			}
 		}
 
-		// Update bid details
-		auction.currentBid = bidAmount;
-		auction.highestBidder = userId;
-		auction.bidHistory.push({
-			bidder: userId,
-			amount: bidAmount,
-			time: now,
-		});
+		const updatedAuction = await Auction.findOneAndUpdate(
+			{
+				_id: auctionId,
+				isActive: true,
+				startTime: { $lte: now },
+				endTime: { $gte: now },
+				$or: [
+					{ currentBid: { $lt: bidAmount } }, // For ongoing bids
+					{ currentBid: { $exists: false } }, // For first bid
+				],
+			},
+			{
+				$set: {
+					currentBid: bidAmount,
+					highestBidder: userId,
+				},
+				$push: {
+					bidHistory: {
+						bidder: userId,
+						amount: bidAmount,
+						time: now,
+					},
+				},
+			},
+			{ new: true }
+		);
 
-		await auction.save();
+		if (!updatedAuction) {
+			return res.status(400).json({
+				success: false,
+				message:
+					"Bid failed — another user may have placed a higher bid already",
+			});
+		}
 
-		// Notify admin about the new bid
 		await createNotificationService({
 			title: "New Bid Placed",
 			message: `User ${userId} placed a new bid of ৳${bidAmount} on auction ${auction.title}`,
@@ -112,7 +129,6 @@ const fetchBidItems = async (req, res) => {
 				.json({ success: false, message: "User ID is required" });
 		}
 
-		// Find all auctions where the user has placed any bid
 		const auctions = await Auction.find({ "bidHistory.bidder": userId });
 
 		if (!auctions || auctions.length === 0) {
@@ -121,11 +137,10 @@ const fetchBidItems = async (req, res) => {
 				.json({ success: false, message: "No auction items found" });
 		}
 
-		// Build response with highest user bid per item
 		const items = auctions.map((item) => {
-			const userBids = item.bidHistory.filter(
-				(bid) => bid.bidder.toString() === userId
-			);
+			const userBids = item.bidHistory
+				.filter((bid) => bid.bidder.toString() === userId)
+				.sort((a, b) => new Date(b.time) - new Date(a.time)); // ✅ Sort by most recent
 
 			const highestUserBid = userBids.length
 				? Math.max(...userBids.map((b) => b.amount))
@@ -137,6 +152,7 @@ const fetchBidItems = async (req, res) => {
 				title: item.title,
 				currentBid: item.currentBid,
 				userBid: highestUserBid,
+				lastBidTime: userBids[0]?.time || null, // optional extra field
 			};
 		});
 

@@ -1,3 +1,4 @@
+import Loading from '@/components/common/loading-component';
 import AuctionDetails from '@/components/shopping-view/auction-details';
 import AuctionProductTile from '@/components/shopping-view/auction-product-tile';
 import { Button } from '@/components/ui/button';
@@ -166,7 +167,7 @@ const AuctionPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {isLoading ? (
-              <isLoading />
+              <Loading />
             ) : auctionProductList.length > 0 ? (
               auctionProductList.map((product, index) => (
                 <AuctionProductTile

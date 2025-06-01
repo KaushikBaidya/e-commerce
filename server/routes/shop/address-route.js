@@ -51,7 +51,6 @@ const validateDeleteAddress = [
 router.post("/add", validateAddressBody, addAddress);
 router.put("/update/:userId/:addressId", validateUpdateAddress, editAddress);
 
-// router.post("/add", addAddress);
 router.get("/get/:userId", validateObjectId("userId"), fetchAllAddress);
 
 router.delete(
@@ -59,6 +58,5 @@ router.delete(
 	validateDeleteAddress,
 	deleteAddress
 );
-// router.put("/update/:userId/:addressId", editAddress);
 
 module.exports = router;

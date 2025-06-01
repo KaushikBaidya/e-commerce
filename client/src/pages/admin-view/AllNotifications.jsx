@@ -34,7 +34,7 @@ const AllNotifications = () => {
             Mark all read
           </Button>
         </CardHeader>
-        <CardContent className="space-y-4 max-h-[500px] overflow-y-auto">
+        <CardContent className="space-y-4 max-h-[75vh] overflow-y-auto">
           {isLoading ? (
             <p className="text-sm text-muted-foreground">Loading...</p>
           ) : notifications.length === 0 ? (
