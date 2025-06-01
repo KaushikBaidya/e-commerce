@@ -37,7 +37,7 @@ const createAuctionCheckoutSession = async (req, res) => {
 			line_items: [
 				{
 					price_data: {
-						currency: "usd",
+						currency: "bdt",
 						product_data: {
 							name: auctionProduct.title,
 						},
@@ -91,7 +91,6 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 
 		const metadata = session.metadata;
 
-
 		if (!metadata || !metadata.userId || !metadata.auctionProductId) {
 			return res
 				.status(400)
@@ -115,7 +114,6 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 
 		await newOrder.save();
 
-		// Optionally mark auction product as inactive
 		await AuctionProduct.findByIdAndUpdate(metadata.auctionProductId, {
 			isActive: false,
 		});

@@ -6,11 +6,62 @@ const {
 	finalizeAuctionOrderFromSession,
 	getAllAuctionOrdersByUser,
 } = require("../../controllers/shop/auction-checkout-controller");
+const { validateObjectId } = require("../../helper/validators");
 
 const router = express.Router();
+const { body, validationResult } = require("express-validator");
 
-router.post("/create", createAuctionCheckoutSession);
-router.get("/list/:userId", getAllAuctionOrdersByUser);
+const validateAuctionCheckoutSession = [
+	body("userId").isMongoId().withMessage("Invalid userId"),
+
+	body("auctionProductId").isMongoId().withMessage("Invalid auctionProductId"),
+
+	body("addressInfo.address").notEmpty().withMessage("Address is required"),
+
+	body("addressInfo.city").notEmpty().withMessage("City is required"),
+
+	body("addressInfo.pincode")
+		.matches(/^\d{4,6}$/)
+		.withMessage("Invalid pincode"),
+
+	body("addressInfo.phone")
+		.matches(/^\d{10,15}$/)
+		.withMessage("Invalid phone number"),
+
+	body("orderStatus")
+		.optional()
+		.isIn(["pending", "confirmed", "shipped", "delivered", "cancelled"])
+		.withMessage("Invalid order status"),
+
+	body("paymentMethod")
+		.optional()
+		.isIn(["card", "paypal", "cod", "stripe"])
+		.withMessage("Invalid payment method"),
+
+	body("paymentStatus")
+		.optional()
+		.isIn(["unpaid", "paid"])
+		.withMessage("Invalid payment status"),
+
+	(req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+		next();
+	},
+];
+
+router.post(
+	"/create",
+	validateAuctionCheckoutSession,
+	createAuctionCheckoutSession
+);
+router.get(
+	"/list/:userId",
+	validateObjectId("userId"),
+	getAllAuctionOrdersByUser
+);
 
 router.get("/session/:sessionId", async (req, res) => {
 	try {
