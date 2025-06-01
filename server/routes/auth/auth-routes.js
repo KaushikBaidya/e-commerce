@@ -6,19 +6,28 @@ const {
 	logout,
 	authMiddleware,
 	refreshAccessToken,
-	verifyEmail
+	verifyEmail,
 } = require("../../controllers/auth/auth-controller");
 const {
 	sendResetLink,
 	resetPassword,
 } = require("../../controllers/auth/forgot-password-controller");
 
+const {
+	registerValidator,
+	loginValidator,
+	forgotPasswordValidator,
+	resetPasswordValidator,
+} = require("../../helper/authValidators");
+
+const validateRequest = require("../../helper/validateRequest");
+
 const router = express.Router();
 
-router.post("/register", registerUser);
+router.post("/register", registerValidator, validateRequest, registerUser);
 router.get("/verify-email", verifyEmail);
 
-router.post("/login", loginUser);
+router.post("/login", loginValidator, validateRequest, loginUser);
 router.post("/logout", logout);
 
 router.get("/check-auth", authMiddleware, (req, res) => {
@@ -34,14 +43,12 @@ router.get(
 	})
 );
 
-// Handle Google callback
 router.get(
 	"/google/callback",
 	passport.authenticate("google", { session: false }),
 	(req, res) => {
 		const { accessToken, refreshToken } = req.user.tokens;
 
-		// Set cookies or send JSON response
 		res
 			.cookie("accessToken", accessToken, {
 				httpOnly: true,
@@ -53,13 +60,23 @@ router.get(
 				secure: process.env.NODE_ENV === "production",
 				sameSite: "strict",
 			})
-			.redirect("http://localhost:5173"); // or send JSON if using SPA
+			.redirect("http://localhost:5173");
 	}
 );
 
 router.post("/refresh", refreshAccessToken);
 
-router.post("/forgot-password", sendResetLink);
-router.post("/reset-password/:token", resetPassword);
+router.post(
+	"/forgot-password",
+	forgotPasswordValidator,
+	validateRequest,
+	sendResetLink
+);
+router.post(
+	"/reset-password/:token",
+	resetPasswordValidator,
+	validateRequest,
+	resetPassword
+);
 
 module.exports = router;
