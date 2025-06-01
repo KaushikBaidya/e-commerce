@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const crypto = require("crypto");
+const sanitize = require("mongo-sanitize");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -42,7 +43,10 @@ const refreshAccessToken = (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-	const { userName, email, password } = req.body;
+	const userName = sanitize(req.body.userName);
+	const email = sanitize(req.body.email);
+	const password = sanitize(req.body.password);
+
 	if (!userName || !email || !password)
 		return res
 			.status(400)
@@ -158,7 +162,8 @@ const verifyEmail = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-	const { email, password } = req.body;
+	const email = sanitize(req.body.email);
+	const password = sanitize(req.body.password);
 
 	try {
 		const user = await User.findOne({ email });

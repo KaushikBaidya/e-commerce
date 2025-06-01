@@ -1,4 +1,5 @@
 const User = require("../../models/User");
+const sanitize = require("mongo-sanitize");
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -23,8 +24,9 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserDetails = async (req, res) => {
-	const { id } = req.params;
 	try {
+		const id = sanitize(req.params.id);
+
 		const user = await User.findById(id);
 		if (!user) {
 			return res.status(404).json({

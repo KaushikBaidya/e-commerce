@@ -1,6 +1,7 @@
 const stripe = require("../../helper/stripe");
 const AuctionOrder = require("../../models/AuctionOrder");
 const AuctionProduct = require("../../models/Auction");
+const sanitize = require("mongo-sanitize");
 
 const createAuctionCheckoutSession = async (req, res) => {
 	try {
@@ -14,7 +15,22 @@ const createAuctionCheckoutSession = async (req, res) => {
 			orderDate = new Date(),
 		} = req.body;
 
-		const auctionProduct = await AuctionProduct.findById(auctionProductId);
+		const sanitizedUserId = sanitize(userId);
+		const sanitizedAuctionProductId = sanitize(auctionProductId);
+		const sanitizedOrderStatus = sanitize(orderStatus);
+		const sanitizedPaymentMethod = sanitize(paymentMethod);
+		const sanitizedPaymentStatus = sanitize(paymentStatus);
+
+		const sanitizedAddressInfo = {};
+		if (addressInfo && typeof addressInfo === "object") {
+			for (const [key, value] of Object.entries(addressInfo)) {
+				sanitizedAddressInfo[key] = sanitize(value);
+			}
+		}
+
+		const auctionProduct = await AuctionProduct.findById(
+			sanitizedAuctionProductId
+		);
 		if (!auctionProduct) {
 			return res
 				.status(404)
@@ -23,7 +39,7 @@ const createAuctionCheckoutSession = async (req, res) => {
 
 		if (
 			!auctionProduct.highestBidder ||
-			auctionProduct.highestBidder.toString() !== userId
+			auctionProduct.highestBidder.toString() !== sanitizedUserId
 		) {
 			return res.status(403).json({
 				success: false,
@@ -49,16 +65,16 @@ const createAuctionCheckoutSession = async (req, res) => {
 			success_url: `http://localhost:5173/auction/stripe-success?session_id={CHECKOUT_SESSION_ID}`,
 			cancel_url: `http://localhost:5173/auction/stripe-cancel`,
 			metadata: {
-				userId: userId.toString(),
-				auctionProductId: auctionProductId.toString(),
+				userId: sanitizedUserId.toString(),
+				auctionProductId: sanitizedAuctionProductId.toString(),
 				title: auctionProduct.title,
 				image: auctionProduct.image,
-				orderStatus: orderStatus.toString(),
-				paymentMethod: paymentMethod.toString(),
-				paymentStatus: paymentStatus.toString(),
+				orderStatus: sanitizedOrderStatus.toString(),
+				paymentMethod: sanitizedPaymentMethod.toString(),
+				paymentStatus: sanitizedPaymentStatus.toString(),
 				totalAmount: auctionProduct.currentBid.toString(),
 				orderDate: new Date(orderDate).toISOString(),
-				addressInfo: JSON.stringify(addressInfo), // this is fine as a JSON string
+				addressInfo: JSON.stringify(sanitizedAddressInfo),
 			},
 		});
 
@@ -76,7 +92,7 @@ const createAuctionCheckoutSession = async (req, res) => {
 
 const finalizeAuctionOrderFromSession = async (req, res) => {
 	try {
-		const { sessionId } = req.body;
+		const sessionId = sanitize(req.body.sessionId);
 
 		const session = await stripe.checkout.sessions.retrieve(sessionId);
 
@@ -97,24 +113,34 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 				.json({ success: false, message: "Missing session metadata" });
 		}
 
+		const sanitizedMetadata = {
+			userId: sanitize(metadata.userId),
+			auctionProductId: sanitize(metadata.auctionProductId),
+			title: sanitize(metadata.title),
+			image: sanitize(metadata.image),
+			paymentMethod: sanitize(metadata.paymentMethod),
+			totalAmount: sanitize(metadata.totalAmount),
+			orderDate: sanitize(metadata.orderDate),
+		};
+
 		const newOrder = new AuctionOrder({
-			userId: metadata.userId,
+			userId: sanitizedMetadata.userId,
 			addressInfo: JSON.parse(metadata.addressInfo),
-			productId: metadata.auctionProductId,
-			title: metadata.title,
-			image: metadata.image,
+			productId: sanitizedMetadata.auctionProductId,
+			title: sanitizedMetadata.title,
+			image: sanitizedMetadata.image,
 			orderStatus: "confirmed",
-			paymentMethod: metadata.paymentMethod,
+			paymentMethod: sanitizedMetadata.paymentMethod,
 			paymentStatus: "paid",
-			totalAmount: metadata.totalAmount,
-			orderDate: metadata.orderDate,
+			totalAmount: sanitizedMetadata.totalAmount,
+			orderDate: sanitizedMetadata.orderDate,
 			paymentId: session.payment_intent,
 			payerId: session.customer_details?.email || "N/A",
 		});
 
 		await newOrder.save();
 
-		await AuctionProduct.findByIdAndUpdate(metadata.auctionProductId, {
+		await AuctionProduct.findByIdAndUpdate(sanitizedMetadata.auctionProductId, {
 			isActive: false,
 		});
 
@@ -133,7 +159,7 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 
 const getAllAuctionOrdersByUser = async (req, res) => {
 	try {
-		const { userId } = req.params;
+		const userId = sanitize(req.params.userId);
 
 		const orders = await AuctionOrder.find({ userId });
 

@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const rateLimit = require("express-rate-limit");
 const {
 	registerUser,
 	loginUser,
@@ -27,7 +28,13 @@ const router = express.Router();
 router.post("/register", registerValidator, validateRequest, registerUser);
 router.get("/verify-email", verifyEmail);
 
-router.post("/login", loginValidator, validateRequest, loginUser);
+const loginLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 5,
+	message: "Too many login attempts, try again later",
+});
+
+router.post("/login", loginLimiter, loginValidator, validateRequest, loginUser);
 router.post("/logout", logout);
 
 router.get("/check-auth", authMiddleware, (req, res) => {

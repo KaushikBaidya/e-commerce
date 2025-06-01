@@ -2,10 +2,13 @@ const Auction = require("../../models/Auction");
 const {
 	createNotificationService,
 } = require("../admin/notification-controller");
+const sanitize = require("mongo-sanitize");
 
 const placeBid = async (req, res) => {
 	try {
-		const { userId, auctionId, bidAmount } = req.body;
+		const userId = sanitize(req.body.userId);
+		const auctionId = sanitize(req.body.auctionId);
+		const bidAmount = sanitize(req.body.bidAmount);
 
 		if (
 			!userId ||
@@ -70,8 +73,8 @@ const placeBid = async (req, res) => {
 				startTime: { $lte: now },
 				endTime: { $gte: now },
 				$or: [
-					{ currentBid: { $lt: bidAmount } }, // For ongoing bids
-					{ currentBid: { $exists: false } }, // For first bid
+					{ currentBid: { $lt: bidAmount } },
+					{ currentBid: { $exists: false } },
 				],
 			},
 			{
@@ -121,7 +124,7 @@ const placeBid = async (req, res) => {
 
 const fetchBidItems = async (req, res) => {
 	try {
-		const { userId } = req.params;
+		const userId = sanitize(req.params.userId);
 
 		if (!userId) {
 			return res
@@ -140,8 +143,7 @@ const fetchBidItems = async (req, res) => {
 		const items = auctions.map((item) => {
 			const userBids = item.bidHistory
 				.filter((bid) => bid.bidder.toString() === userId)
-				.sort((a, b) => new Date(b.time) - new Date(a.time)); // ✅ Sort by most recent
-
+				.sort((a, b) => new Date(b.time) - new Date(a.time));
 			const highestUserBid = userBids.length
 				? Math.max(...userBids.map((b) => b.amount))
 				: null;
@@ -152,7 +154,7 @@ const fetchBidItems = async (req, res) => {
 				title: item.title,
 				currentBid: item.currentBid,
 				userBid: highestUserBid,
-				lastBidTime: userBids[0]?.time || null, // optional extra field
+				lastBidTime: userBids[0]?.time || null,
 			};
 		});
 

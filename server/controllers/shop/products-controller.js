@@ -1,4 +1,5 @@
 const Product = require("../../models/Product");
+const sanitize = require("mongo-sanitize");
 
 const getFilterdProducts = async (req, res) => {
 	try {
@@ -10,17 +11,25 @@ const getFilterdProducts = async (req, res) => {
 			limit = 12,
 		} = req.query;
 
+		const sanitizedCategory = sanitize(category);
+		const sanitizedBrand = sanitize(brand);
+		const sanitizedSortBy = sanitize(sortBy);
+		const sanitizedPage = sanitize(page);
+		const sanitizedLimit = sanitize(limit);
+
 		let filters = {};
 
-		if (category.length) {
-			filters.category = { $in: category.split(",") };
+		if (sanitizedCategory.length) {
+			const categoryArray = sanitizedCategory.split(",").map(item => sanitize(item.trim()));
+			filters.category = { $in: categoryArray };
 		}
-		if (brand.length) {
-			filters.brand = { $in: brand.split(",") };
+		if (sanitizedBrand.length) {
+			const brandArray = sanitizedBrand.split(",").map(item => sanitize(item.trim()));
+			filters.brand = { $in: brandArray };
 		}
 
 		let sort = {};
-		switch (sortBy) {
+		switch (sanitizedSortBy) {
 			case "price-lowtohigh":
 				sort.price = 1;
 				break;
@@ -38,14 +47,18 @@ const getFilterdProducts = async (req, res) => {
 				break;
 		}
 
-		const pageNumber = parseInt(page);
-		const pageSize = parseInt(limit);
+		const pageNumber = parseInt(sanitizedPage);
+		const pageSize = parseInt(sanitizedLimit);
 		const skip = (pageNumber - 1) * pageSize;
+
+		const validPageNumber = Math.max(1, pageNumber || 1);
+		const validPageSize = Math.min(Math.max(1, pageSize || 12), 100);
+		const validSkip = (validPageNumber - 1) * validPageSize;
 
 		const products = await Product.find(filters)
 			.sort(sort)
-			.skip(skip)
-			.limit(pageSize);
+			.skip(validSkip)
+			.limit(validPageSize);
 
 		const totalCount = await Product.countDocuments(filters);
 
@@ -62,7 +75,8 @@ const getFilterdProducts = async (req, res) => {
 
 const getProductDetails = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const id = sanitize(req.params.id);
+		
 		const product = await Product.findById(id);
 		if (!product)
 			return res

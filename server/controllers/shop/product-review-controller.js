@@ -4,12 +4,16 @@ const Order = require("../../models/Order");
 const {
 	createNotificationService,
 } = require("../admin/notification-controller");
+const sanitize = require("mongo-sanitize");
 
 // Add a product review
 const addProductReview = async (req, res) => {
 	try {
-		const { productId, userId, userName, reviewMessage, reviewValue } =
-			req.body;
+		const productId = sanitize(req.body.productId);
+		const userId = sanitize(req.body.userId);
+		const userName = sanitize(req.body.userName);
+		const reviewMessage = sanitize(req.body.reviewMessage);
+		const reviewValue = sanitize(req.body.reviewValue);
 
 		const order = await Order.findOne({
 			userId,
@@ -23,7 +27,6 @@ const addProductReview = async (req, res) => {
 			});
 		}
 
-		// Check if the user has already reviewed the product
 		const checkExsistingReview = await ProductReview.findOne({
 			productId,
 			userId,
@@ -34,8 +37,6 @@ const addProductReview = async (req, res) => {
 				message: "You have already reviewed this product",
 			});
 		}
-
-		// Create a new product review
 
 		const newProductReview = new ProductReview({
 			productId,
@@ -53,7 +54,6 @@ const addProductReview = async (req, res) => {
 			type: "review",
 		});
 
-		// Update the product rating and review count
 		const reviews = await ProductReview.find({ productId });
 		const totalReviewsLength = reviews.length;
 		const averageReview =
@@ -72,9 +72,8 @@ const addProductReview = async (req, res) => {
 	}
 };
 
-// Get all product reviews
 const getProductReview = async (req, res) => {
-	const { productId } = req.params;
+	const productId = sanitize(req.params.productId);
 	const reviews = await ProductReview.find({ productId }).sort({
 		createdAt: -1,
 	});

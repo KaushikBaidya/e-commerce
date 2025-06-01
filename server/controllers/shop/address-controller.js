@@ -1,8 +1,14 @@
 const Address = require("../../models/Address");
+const sanitize = require("mongo-sanitize");
 
 const addAddress = async (req, res) => {
 	try {
-		const { userId, address, city, pincode, phone, notes } = req.body;
+		const userId = sanitize(req.body.userId);
+		const address = sanitize(req.body.address);
+		const city = sanitize(req.body.city);
+		const pincode = sanitize(req.body.pincode);
+		const phone = sanitize(req.body.phone);
+		const notes = sanitize(req.body.notes);
 
 		if (!userId || !address || !city || !pincode || !phone || !notes) {
 			return res.status(400).json({
@@ -32,7 +38,7 @@ const addAddress = async (req, res) => {
 
 const fetchAllAddress = async (req, res) => {
 	try {
-		const { userId } = req.params;
+		const userId = sanitize(req.params.userId);
 		if (!userId) {
 			return res
 				.status(400)
@@ -50,8 +56,14 @@ const fetchAllAddress = async (req, res) => {
 
 const editAddress = async (req, res) => {
 	try {
-		const { userId, addressId } = req.params;
-		const formData = req.body;
+		// const { userId, addressId } = req.params;
+		const userId = sanitize(req.params.userId);
+		const addressId = sanitize(req.params.addressId);
+
+		const sanitizedFormData = {};
+		for (const [key, value] of Object.entries(req.body)) {
+			sanitizedFormData[key] = sanitize(value);
+		}
 
 		if (!userId || !addressId) {
 			return res.status(400).json({
@@ -62,7 +74,7 @@ const editAddress = async (req, res) => {
 
 		const address = await Address.findOneAndUpdate(
 			{ _id: addressId, userId },
-			formData,
+			sanitizedFormData,
 			{ new: true }
 		);
 
@@ -86,7 +98,9 @@ const editAddress = async (req, res) => {
 
 const deleteAddress = async (req, res) => {
 	try {
-		const { userId, addressId } = req.params;
+		// const { userId, addressId } = req.params;
+		const userId = sanitize(req.params.userId);
+		const addressId = sanitize(req.params.addressId);
 
 		if (!userId || !addressId) {
 			return res.status(400).json({

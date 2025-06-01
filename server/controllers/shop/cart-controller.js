@@ -1,9 +1,12 @@
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
+const sanitize = require("mongo-sanitize");
 
 const addToCart = async (req, res) => {
 	try {
-		const { userId, productId, quantity } = req.body;
+		const userId = sanitize(req.body.userId);
+		const productId = sanitize(req.body.productId);
+		const quantity = sanitize(req.body.quantity);
 
 		if (!userId || !productId || quantity <= 0) {
 			return res.status(400).json({
@@ -45,7 +48,8 @@ const addToCart = async (req, res) => {
 
 const fetchCartItems = async (req, res) => {
 	try {
-		const { userId } = req.params;
+		const userId = sanitize(req.params.userId);
+
 		if (!userId) {
 			return res
 				.status(400)
@@ -91,7 +95,9 @@ const fetchCartItems = async (req, res) => {
 
 const updateCartItemQty = async (req, res) => {
 	try {
-		const { userId, productId, quantity } = req.body;
+		const userId = sanitize(req.body.userId);
+		const productId = sanitize(req.body.productId);
+		const quantity = sanitize(req.body.quantity);
 
 		if (!userId || !productId || quantity <= 0) {
 			return res.status(400).json({
@@ -147,7 +153,9 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
 	try {
-		const { userId, productId } = req.params;
+		const userId = sanitize(req.params.userId);
+		const productId = sanitize(req.params.productId);
+
 		if (!userId || !productId) {
 			return res.status(400).json({
 				success: false,

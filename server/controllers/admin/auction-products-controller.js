@@ -1,9 +1,12 @@
 const AuctionProduct = require("../../models/Auction");
 const cloudinary = require("cloudinary").v2;
+const mongoSanitize = require("mongo-sanitize");
 const { deleteImageFromCloudinary } = require("../../helper/cloudinary");
 
 const addAuctionProduct = async (req, res) => {
 	try {
+		const sanitizedBody = mongoSanitize(req.body);
+
 		const {
 			image,
 			imagePublicId,
@@ -15,7 +18,7 @@ const addAuctionProduct = async (req, res) => {
 			startTime,
 			endTime,
 			isActive,
-		} = req.body;
+		} = sanitizedBody;
 
 		if (!title || !artist || !startingBid || !startTime || !endTime) {
 			return res.status(400).json({
@@ -54,9 +57,10 @@ const addAuctionProduct = async (req, res) => {
 	}
 };
 
-//get all auctionable products
 const fetchAllAuctionProducts = async (req, res) => {
 	try {
+		const sanitizedQuery = mongoSanitize(req.query);
+
 		const auctionProductList = await AuctionProduct.find({}).sort({
 			createdAt: -1,
 		});
@@ -70,7 +74,10 @@ const fetchAllAuctionProducts = async (req, res) => {
 //update auctionable product
 const editAuctionProduct = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const sanitizedParams = mongoSanitize(req.params);
+		const sanitizedBody = mongoSanitize(req.body);
+
+		const { id } = sanitizedParams;
 		const {
 			image,
 			imagePublicId,
@@ -82,7 +89,7 @@ const editAuctionProduct = async (req, res) => {
 			startTime,
 			endTime,
 			isActive,
-		} = req.body;
+		} = sanitizedBody;
 
 		const findAuctionProduct = await AuctionProduct.findById(id);
 		if (!findAuctionProduct) {
@@ -128,10 +135,10 @@ const editAuctionProduct = async (req, res) => {
 	}
 };
 
-//delete auctionable product
 const deleteAuctionProduct = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const sanitizedParams = mongoSanitize(req.params);
+		const { id } = sanitizedParams;
 
 		const deletedProduct = await AuctionProduct.findById(id);
 		if (!deletedProduct) {

@@ -1,4 +1,5 @@
 const AuctionProduct = require("../../models/Auction");
+const sanitize = require("mongo-sanitize");
 
 const getAllAuctionProducts = async (req, res) => {
 	try {
@@ -14,7 +15,7 @@ const getAllAuctionProducts = async (req, res) => {
 
 const getAuctionProductDetails = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const id = sanitize(req.params.id);
 		const product = await AuctionProduct.findById(id);
 		if (!product)
 			return res

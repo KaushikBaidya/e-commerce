@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const nodemailer = require("nodemailer");
+const sanitize = require("mongo-sanitize");
 
 const Order = require("../../models/Order");
 const User = require("../../models/User");
@@ -56,7 +57,8 @@ const getAllAuctionOrdersOfAllUsers = async (req, res) => {
 
 const getOrderDetailsForAdmin = async (req, res) => {
 	try {
-		const { id } = req.params;
+		// const { id } = req.params;
+		const id = sanitize(req.params.id);
 
 		const order = await Order.findById(id);
 
@@ -117,8 +119,8 @@ const generateOrderStatusEmail = (userName, orderId, status) => {
 
 const updateOrderStatus = async (req, res) => {
 	try {
-		const { id } = req.params;
-		const { orderStatus } = req.body;
+		const id = sanitize(req.params.id);
+		const orderStatus = sanitize(req.body.orderStatus);
 
 		const order = await Order.findById(id).populate("userId");
 

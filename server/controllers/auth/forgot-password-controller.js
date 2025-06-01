@@ -2,9 +2,10 @@ const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const User = require("../../models/User");
+const sanitize = require("mongo-sanitize");
 
 const sendResetLink = async (req, res) => {
-	const { email } = req.body;
+	const email = sanitize(req.body.email);
 
 	if (!email) {
 		return res
@@ -73,8 +74,8 @@ const sendResetLink = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-	const { token } = req.params;
-	const { password } = req.body;
+	const token = sanitize(req.params.token);
+	const password = String(req.body.password || "").trim();
 
 	try {
 		const user = await User.findOne({

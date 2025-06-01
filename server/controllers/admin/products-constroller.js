@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary").v2;
+const mongoSanitize = require("mongo-sanitize");
 const {
 	imageUploadUtil,
 	deleteImageFromCloudinary,
@@ -33,11 +34,11 @@ const handleImageUpload = async (req, res) => {
 	}
 };
 
-module.exports = handleImageUpload;
 
-//add product
 const addProduct = async (req, res) => {
 	try {
+		const sanitizedBody = mongoSanitize(req.body);
+
 		const {
 			image,
 			imagePublicId,
@@ -47,7 +48,7 @@ const addProduct = async (req, res) => {
 			price,
 			salePrice,
 			totalStock,
-		} = req.body;
+		} = sanitizedBody;
 
 		if (!title || !category || !price || !totalStock) {
 			return res.status(400).json({
@@ -79,9 +80,11 @@ const addProduct = async (req, res) => {
 	}
 };
 
-//get all products
+
 const fetchAllProducts = async (req, res) => {
 	try {
+		const sanitizedQuery = mongoSanitize(req.query);
+
 		const productList = await Product.find({}).sort({ createdAt: -1 });
 		res.status(200).json({ success: true, data: productList });
 	} catch (error) {
@@ -90,10 +93,12 @@ const fetchAllProducts = async (req, res) => {
 	}
 };
 
-//update product
 const editProduct = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const sanitizedParams = mongoSanitize(req.params);
+		const sanitizedBody = mongoSanitize(req.body);
+
+		const { id } = sanitizedParams;
 		const {
 			image,
 			imagePublicId,
@@ -104,7 +109,7 @@ const editProduct = async (req, res) => {
 			price,
 			salePrice,
 			totalStock,
-		} = req.body;
+		} = sanitizedBody;
 
 		const findProduct = await Product.findById(id);
 		if (!findProduct) {
@@ -146,7 +151,8 @@ const editProduct = async (req, res) => {
 //delete product
 const deleteProduct = async (req, res) => {
 	try {
-		const { id } = req.params;
+		const sanitizedParams = mongoSanitize(req.params);
+		const { id } = sanitizedParams;
 
 		const product = await Product.findById(id);
 		if (!product) {
@@ -156,12 +162,11 @@ const deleteProduct = async (req, res) => {
 			});
 		}
 
-		// Delete image from Cloudinary if present
 		if (product.imagePublicId) {
 			await cloudinary.uploader.destroy(product.imagePublicId);
 		}
 
-		await product.deleteOne(); // or use findByIdAndDelete(id)
+		await product.deleteOne(); 
 
 		res.status(200).json({
 			success: true,

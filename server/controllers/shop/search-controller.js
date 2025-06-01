@@ -1,8 +1,10 @@
 const Product = require("../../models/Product");
+const sanitize = require("mongo-sanitize");
 
 const searchProducts = async (req, res) => {
 	try {
-		const { keyword } = req.params;
+		const keyword = sanitize(req.query.keyword);
+
 		if (!keyword || typeof keyword !== "string") {
 			return res.status(400).json({
 				succes: false,
