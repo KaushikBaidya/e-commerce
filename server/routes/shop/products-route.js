@@ -10,12 +10,18 @@ const {
 	getAuctionProductDetails,
 } = require("../../controllers/shop/auction-products-controller");
 
+const { validateObjectId } = require("../../helper/validators");
+
 const router = express.Router();
 
 router.get("/auction-product/get", getAllAuctionProducts);
-router.get("/auction-product/get/:id", getAuctionProductDetails);
+router.get(
+	"/auction-product/get/:id",
+	validateObjectId(),
+	getAuctionProductDetails
+);
 
 router.get("/get", getFilterdProducts);
-router.get("/get/:id", getProductDetails);
+router.get("/get/:id", validateObjectId("id"), getProductDetails);
 
 module.exports = router;
