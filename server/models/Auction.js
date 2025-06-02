@@ -36,6 +36,10 @@ const AuctionProductSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		winnerNotified: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );

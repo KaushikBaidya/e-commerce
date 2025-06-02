@@ -57,7 +57,6 @@ const getAllAuctionOrdersOfAllUsers = async (req, res) => {
 
 const getOrderDetailsForAdmin = async (req, res) => {
 	try {
-		// const { id } = req.params;
 		const id = sanitize(req.params.id);
 
 		const order = await Order.findById(id);
