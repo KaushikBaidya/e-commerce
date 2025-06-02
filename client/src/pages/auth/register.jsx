@@ -1,12 +1,14 @@
-import CommonForm from '@/components/common/form';
-import { Separator } from '@/components/ui/separator';
-import { registerFormControls } from '@/config';
-import { registerUser } from '@/store/auth-slice';
-import { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import * as Yup from 'yup';
+
+import CommonForm from '@/components/common/common-form-component';
+import { Separator } from '@/components/ui/separator';
+import { registerFormControls } from '@/config';
+import { registerUser } from '@/store/auth-slice';
 import GoogleLoginButton from './google-login-button';
 
 const registerValidationSchema = Yup.object({
@@ -21,56 +23,62 @@ const registerValidationSchema = Yup.object({
     ),
 });
 
-const initialState = {
-  userName: '',
-  email: '',
-  password: '',
-};
-
 const AuthRegister = () => {
-  const [formData, setFormData] = useState(initialState);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const methods = useForm({
+    resolver: yupResolver(registerValidationSchema),
+    defaultValues: {
+      userName: '',
+      email: '',
+      password: '',
+    },
+    mode: 'onSubmit',
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (formData) => {
+    console.log('Register form data:', formData); // Debug log
 
     try {
-      await registerValidationSchema.validate(formData, { abortEarly: false });
-      setErrors({});
-
       const result = await dispatch(registerUser(formData));
+      console.log('Register result:', result); // Debug log
 
       if (result?.payload?.success) {
         toast.success(result.payload.message, {
-          action: {
-            label: 'close',
-          },
+          action: { label: 'close' },
         });
-
+        reset(); // Clear form on success
         navigate('/verify-email');
       } else {
-        toast.error(result.payload.message, {
-          action: {
-            label: 'close',
-          },
+        toast.error(result.payload?.message || 'Registration failed', {
+          action: { label: 'close' },
         });
       }
-    } catch (validationError) {
-      if (validationError.inner) {
-        const formattedErrors = {};
-        validationError.inner.forEach((err) => {
-          formattedErrors[err.path] = err.message;
-        });
-        setErrors(formattedErrors);
-      }
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error('An error occurred during registration', {
+        action: { label: 'close' },
+      });
     }
+  };
+
+  const onError = (errors) => {
+    console.log('Form validation errors:', errors);
+    // Show validation errors as toasts
+    Object.values(errors).forEach((error) => {
+      if (error?.message) {
+        toast.error(error.message, {
+          action: { label: 'close' },
+        });
+      }
+    });
   };
 
   return (
@@ -87,12 +95,10 @@ const AuthRegister = () => {
 
       <CommonForm
         formControls={registerFormControls}
-        buttonText={'Create Account'}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={onSubmit}
+        methods={methods}
+        onSubmit={handleSubmit(onSubmit, onError)}
+        buttonText="Create Account"
         isBtnDisabled={isSubmitting}
-        errors={errors}
       />
 
       <div className="flex items-center gap-4 my-6">
