@@ -57,7 +57,22 @@ function startAuctionMonitor() {
 				const userName = user.userName;
 				const userEmail = user.email;
 
-				const htmlContent = generateOrderStatusEmail(userName);
+				const htmlContent = `
+					<!DOCTYPE html>
+					<html>
+						<head>
+							<meta charset="UTF-8">
+							<title>🎉 Congratulations! You won the auction!</title>
+						</head>
+						<body>
+							<h1>🎉 Congratulations! You won the auction!</h1>
+							<p>Hi ${userName},</p>
+							<p>You have won the auction for "${auction.title}".</p>
+							<p>Please visit your dashboard for payment and delivery instructions.</p>
+							<p>Thank you!</p>
+						</body>
+					</html>
+				`;
 
 				const mailOptions = {
 					from: `"Galería" <${process.env.EMAIL_USER}>`,
@@ -68,6 +83,8 @@ function startAuctionMonitor() {
 				};
 
 				await transporter.sendMail(mailOptions);
+				auction.winnerNotified = true;
+				await auction.save();
 			}
 		}
 	}, 5000);

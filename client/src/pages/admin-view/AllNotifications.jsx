@@ -19,12 +19,12 @@ const AllNotifications = () => {
   const handleDeleteAllNotifications = () => {
     dispatch(deleteAllAdminNotifications())
       .then(() => {
-        dispatch(fetchAdminNotifications());
         toast.success('All notifications deleted successfully!', { action: { label: 'close' } });
       })
       .catch((error) => {
         console.error('Failed to delete all notifications:', error);
       });
+    dispatch(fetchAdminNotifications());
   };
 
   useEffect(() => {
