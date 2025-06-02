@@ -1,4 +1,12 @@
-import { Gem, LayoutDashboard, LayoutList, ShoppingBag, ShoppingBasket, User } from 'lucide-react';
+import {
+  Gem,
+  LayoutDashboard,
+  LayoutList,
+  ShoppingBag,
+  ShoppingBasket,
+  Trophy,
+  User,
+} from 'lucide-react';
 import { Fragment } from 'react';
 import { RiAuctionLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +25,12 @@ const adminSidebarLinks = [
     name: 'Users',
     path: '/admin/users',
     icons: <User />,
+  },
+  {
+    id: 'winners',
+    name: 'Auction Winners',
+    path: '/admin/auction-winners',
+    icons: <Trophy color="#e78529" />,
   },
   {
     id: 'auction-products',

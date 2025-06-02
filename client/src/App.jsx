@@ -9,6 +9,7 @@ import ShoppingLayout from './components/shopping-view/layout';
 import AdminAuctionOrders from './pages/admin-view/AdminAuctionOrders';
 import AdminUsers from './pages/admin-view/AdminUsers';
 import AllNotifications from './pages/admin-view/AllNotifications';
+import AuctionWinners from './pages/admin-view/AuctionWinners';
 import AuctionProductsView from './pages/admin-view/auction-products';
 import AdminDashboard from './pages/admin-view/dashboard';
 import AdminFeatures from './pages/admin-view/features';
@@ -76,6 +77,7 @@ function App() {
           <Route path="auction-orders" element={<AdminAuctionOrders />} />
           <Route path="features" element={<AdminFeatures />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="auction-winners" element={<AuctionWinners />} />
           <Route path="notifications" element={<AllNotifications />} />
         </Route>
 

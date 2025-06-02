@@ -39,7 +39,7 @@ const AdminAuctionProductTile = ({
               <User className="w-4 h-4" />
               <span className="font-medium">{auctionProduct?.artist}</span>
             </span>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-1">
               <Badge
                 className={
                   auctionProduct?.status === 'running'
@@ -79,13 +79,13 @@ const AdminAuctionProductTile = ({
               </span>
               <span>{format(new Date(auctionProduct?.startTime), 'PPP p')}</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                End Time
-              </span>
-              <span>{format(new Date(auctionProduct?.endTime), 'PPP p')}</span>
-            </div>
+          </div>
+          <div className="flex flex-col text-sm">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              End Time
+            </span>
+            <span>{format(new Date(auctionProduct?.endTime), 'PPP p')}</span>
           </div>
         </CardContent>
 
