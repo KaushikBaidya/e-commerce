@@ -151,14 +151,16 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
             </div>
           </div>
           <div className="px-4 md:px-0">
-            <Button
-              onClick={() => handlePlaceBid(liveAuction._id)}
-              disabled={!user}
-              className="w-full"
-            >
-              <Gavel />
-              {user ? `Place Bid` : `Register to Bid`}
-            </Button>
+            {liveAuction?.status === 'running' && (
+              <Button
+                onClick={() => handlePlaceBid(liveAuction._id)}
+                disabled={!user}
+                className="w-full"
+              >
+                <Gavel />
+                {user ? `Place Bid` : `Register to Bid`}
+              </Button>
+            )}
           </div>
         </div>
 
