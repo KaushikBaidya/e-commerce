@@ -3,6 +3,7 @@ const {
 	createNotificationService,
 } = require("../admin/notification-controller");
 const sanitize = require("mongo-sanitize");
+const { getIO } = require("../../helper/socket");
 
 const placeBid = async (req, res) => {
 	try {
@@ -105,6 +106,15 @@ const placeBid = async (req, res) => {
 			title: "New Bid Placed",
 			message: `User ${userId} placed a new bid of ৳${bidAmount} on auction ${auction.title}`,
 			type: "auction",
+		});
+
+		const io = getIO();
+
+		io.to(auctionId).emit("newBid", {
+			auctionId,
+			currentBid: updatedAuction.currentBid,
+			highestBidder: updatedAuction.highestBidder,
+			bidHistory: updatedAuction.bidHistory,
 		});
 
 		res.status(200).json({
