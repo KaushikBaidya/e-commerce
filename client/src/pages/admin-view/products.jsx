@@ -46,7 +46,6 @@ const productSchema = Yup.object().shape({
   salePrice: Yup.number()
     .nullable()
     .transform((value, originalValue) => {
-      // Handle empty string as null, but keep 0 as 0
       if (originalValue === '' || originalValue === null || originalValue === undefined) {
         return null;
       }
@@ -54,12 +53,10 @@ const productSchema = Yup.object().shape({
       return isNaN(numValue) ? null : numValue;
     })
     .test('sale-price-min', 'Sale price cannot be negative', function (value) {
-      // Allow null (empty) or any number >= 0 (including 0)
       return value === null || (typeof value === 'number' && value >= 0);
     })
     .test('sale-price-validation', 'Sale price must be less than regular price', function (value) {
       const { price } = this.parent;
-      // Only validate comparison if sale price is set and not 0
       if (value !== null && value !== undefined && value > 0 && price) {
         return value < price;
       }
@@ -96,11 +93,10 @@ const AdminProducts = () => {
   const { productList, isLoading } = useSelector((state) => state.adminProducts);
   const dispatch = useDispatch();
 
-  // React Hook Form setup
   const methods = useForm({
     resolver: yupResolver(productSchema),
     defaultValues: initialFormData,
-    mode: 'onChange', // This ensures validation runs on every change
+    mode: 'onChange',
   });
 
   const {
@@ -111,19 +107,15 @@ const AdminProducts = () => {
     formState: { isValid, isSubmitting },
   } = methods;
 
-  // Watch form values to check if form is valid
   const watchedValues = watch();
 
   const filteredProducts = productList?.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Update your onSubmit function with debugging:
-
   const onSubmit = async (formData) => {
     console.log('Form data before processing:', formData);
 
-    // Add image to form data
     const submitData = {
       ...formData,
       image: uloadedImageUrl || formData.image,
@@ -134,7 +126,6 @@ const AdminProducts = () => {
 
     try {
       if (currentEditedId !== null) {
-        // Edit existing product
         const data = await dispatch(editProduct({ id: currentEditedId, formData: submitData }));
         console.log('Edit response:', data);
         if (data?.payload?.success) {
@@ -147,7 +138,6 @@ const AdminProducts = () => {
           });
         }
       } else {
-        // Add new product
         const data = await dispatch(addNewProduct(submitData));
         console.log('Add response:', data);
         if (data?.payload?.success) {
@@ -196,7 +186,6 @@ const AdminProducts = () => {
     setOpenCrtProdDialog(true);
     setCurrentEditedId(product?._id);
 
-    // Reset form with product data
     reset({
       title: product?.title || '',
       description: product?.description || '',
@@ -208,7 +197,6 @@ const AdminProducts = () => {
       imagePublicId: product?.imagePublicId || null,
     });
 
-    // Set image URL for display
     setUloadedImageUrl(product?.image || '');
   };
 
@@ -220,18 +208,14 @@ const AdminProducts = () => {
       uloadedImageUrl,
     });
 
-    // Check required fields manually
     const { title, description, category, price, totalStock } = watchedValues;
     const requiredFieldsFilled = title && description && category && price && totalStock;
 
-    // Check if image exists
     const hasImage = uloadedImageUrl || watchedValues.image;
 
-    // Return true if: required fields filled, has image, not loading, and Yup validation passes
     return requiredFieldsFilled && hasImage && !imageLoadingState && isValid;
   };
 
-  // Update form when image is uploaded
   useEffect(() => {
     if (uloadedImageUrl) {
       setValue('image', uloadedImageUrl);
@@ -339,7 +323,6 @@ const AdminProducts = () => {
             setImageLoadingState={setImageLoadingState}
             isEditMode={currentEditedId !== null}
             setFormData={(data) => {
-              // Update form values when image component changes data
               Object.keys(data).forEach((key) => {
                 setValue(key, data[key]);
               });
