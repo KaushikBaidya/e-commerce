@@ -35,7 +35,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
 
-  // React Hook Form setup
   const {
     control,
     handleSubmit,
@@ -50,7 +49,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
     },
   });
 
-  // Watch form values
   const reviewMessage = watch('reviewMessage');
   const reviewValue = watch('reviewValue');
 
@@ -107,7 +105,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        reset(); // Reset form to default values
+        reset(); 
         dispatch(getReviews(productDetails?._id));
         toast.success('Review added successfully', {
           action: {
@@ -127,14 +125,13 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
   const handleDialogClose = () => {
     setOpen(false);
     dispatch(setProductDetails());
-    reset(); // Reset form when dialog closes
+    reset();
   };
 
   useEffect(() => {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
 
-  // Reset form when dialog opens
   useEffect(() => {
     if (open) {
       reset();
@@ -149,7 +146,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[65vw] overflow-y-auto max-h-[95vh]">
-        {/* Left: Product Image */}
         <div className="relative w-full overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}
@@ -158,7 +154,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
           />
         </div>
 
-        {/* Right: Product Info */}
         <div className="flex flex-col space-y-4">
           <div>
             <DialogTitle className="text-2xl sm:text-3xl font-bold uppercase">
@@ -230,12 +225,9 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
             )}
           </div>
 
-          {/* Write a review - React Hook Form */}
           <form onSubmit={handleSubmit(onSubmitReview)} className="mt-6 flex flex-col gap-2.5">
             <Label>Write a review</Label>
 
-            {/* Star Rating Controller */}
-            {/* Star Rating Controller */}
             <div className="flex gap-1">
               <Controller
                 name="reviewValue"
@@ -254,7 +246,6 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
               )}
             </div>
 
-            {/* Review Message Controller */}
             <div className="flex flex-col gap-1">
               <Controller
                 name="reviewMessage"
