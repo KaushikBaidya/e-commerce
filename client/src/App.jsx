@@ -14,7 +14,7 @@ import AuctionProductsView from './pages/admin-view/auction-products';
 import AdminDashboard from './pages/admin-view/dashboard';
 import AdminFeatures from './pages/admin-view/features';
 import AdminOrders from './pages/admin-view/oders';
-import AdminProducts from './pages/admin-view/products';
+// import AdminProducts from './pages/admin-view/products';
 import ForgotPassword from './pages/auth/forgot-password';
 import AuthLogin from './pages/auth/login';
 import AuthRegister from './pages/auth/register';
@@ -33,6 +33,7 @@ import ShoppingListing from './pages/shopping-view/listing';
 import SearchProducts from './pages/shopping-view/search';
 import Unauthorized from './pages/unauthorized';
 import { checkAuth } from './store/auth-slice';
+import AdminProducts from './pages/admin-view/AdminProducts';
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
