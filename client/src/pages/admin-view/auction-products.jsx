@@ -52,6 +52,8 @@ const AuctionProductsView = () => {
 
   const dispatch = useDispatch();
 
+  console.log('Auction Products:', auctionProductList);
+
   const filteredAuctionProducts = auctionProductList?.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );

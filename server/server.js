@@ -26,6 +26,7 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/product-review-routes");
 
 const auctionCheckoutRouter = require("./routes/shop/auction-checkout-route");
+const { startAuctionMonitor } = require("./helper/auction-monitor");
 
 // Connect to MongoDB
 mongoose
@@ -69,6 +70,7 @@ app.use(passport.initialize());
 
 // Initialize Socket.IO (moved to separate file)
 initSocket(server);
+startAuctionMonitor()
 
 // API Routes
 app.use("/api/auth", authRouter);

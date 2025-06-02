@@ -133,11 +133,15 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
             />
             <div className="absolute top-4 right-4">
               <Badge
-                className={`text-white px-3 py-1 rounded-full ${
-                  liveAuction.isActive ? 'bg-green-600' : 'bg-red-500'
-                }`}
+                className={
+                  liveAuction?.status === 'running'
+                    ? 'bg-green-500'
+                    : liveAuction?.status === 'upcoming'
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                }
               >
-                {liveAuction.isActive ? 'Active' : 'Inactive'}
+                {liveAuction?.status?.charAt(0).toUpperCase() + liveAuction?.status?.slice(1)}
               </Badge>
             </div>
           </div>

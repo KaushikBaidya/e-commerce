@@ -26,10 +26,15 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
             <span className="font-medium">{auctionProduct?.artist}</span>
           </span>
           <Badge
-            variant={auctionProduct?.isActive ? 'default' : 'secondary'}
-            className={`${auctionProduct?.isActive ? 'bg-green-500' : 'bg-red-500'} text-white`}
+            className={
+              auctionProduct?.status === 'running'
+                ? 'bg-green-500'
+                : auctionProduct?.status === 'upcoming'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
+            }
           >
-            {auctionProduct?.isActive ? 'Active' : 'Inactive'}
+            {auctionProduct?.status?.charAt(0).toUpperCase() + auctionProduct?.status?.slice(1)}
           </Badge>
         </div>
 
