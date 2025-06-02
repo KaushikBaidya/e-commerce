@@ -32,6 +32,10 @@ const AuctionProductSchema = new mongoose.Schema(
 			enum: ["upcoming", "running", "closed"],
 			default: "upcoming",
 		},
+		isSold: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
