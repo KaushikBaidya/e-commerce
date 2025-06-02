@@ -116,6 +116,15 @@ const deleteNotification = async (req, res) => {
 	}
 };
 
+const DeleteAllNotifications = async () => {
+	try {
+		await AdminNotifications.deleteMany({});
+		console.log("All notifications deleted successfully.");
+	} catch (error) {
+		console.error("Error deleting all notifications:", error);
+	}
+};
+
 module.exports = {
 	createNotification,
 	createNotificationService,
@@ -123,4 +132,5 @@ module.exports = {
 	markAsRead,
 	markAllAsRead,
 	deleteNotification,
+	DeleteAllNotifications,
 };

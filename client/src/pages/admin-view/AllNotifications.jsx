@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  deleteAllAdminNotifications,
   fetchAdminNotifications,
   markAllNotificationsAsRead,
 } from '@/store/admin/notification-slice';
@@ -8,11 +9,23 @@ import { useEffect } from 'react';
 import { FaBell, FaCheckCircle, FaInbox } from 'react-icons/fa';
 import { MdMarkEmailRead } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 const AllNotifications = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { notifications, isLoading } = useSelector((state) => state.adminNotifications);
+
+  const handleDeleteAllNotifications = () => {
+    dispatch(deleteAllAdminNotifications())
+      .then(() => {
+        dispatch(fetchAdminNotifications());
+        toast.success('All notifications deleted successfully!', { action: { label: 'close' } });
+      })
+      .catch((error) => {
+        console.error('Failed to delete all notifications:', error);
+      });
+  };
 
   useEffect(() => {
     if (user !== null) dispatch(fetchAdminNotifications());
@@ -25,14 +38,23 @@ const AllNotifications = () => {
           <CardTitle className="flex items-center gap-2 text-xl">
             <FaBell /> All Notifications
           </CardTitle>
-          <Button
-            onClick={() => dispatch(markAllNotificationsAsRead())}
-            variant={'outline'}
-            className="flex items-center gap-2"
-          >
-            <MdMarkEmailRead />
-            Mark all read
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => dispatch(markAllNotificationsAsRead())}
+              variant={'outline'}
+              className="flex items-center gap-2"
+            >
+              <MdMarkEmailRead />
+              Mark all read
+            </Button>
+            <Button
+              variant={'destructive'}
+              onClick={handleDeleteAllNotifications}
+              className="flex items-center gap-2"
+            >
+              Delete All
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4 max-h-[75vh] overflow-y-auto">
           {isLoading ? (

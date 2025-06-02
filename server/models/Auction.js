@@ -27,6 +27,11 @@ const AuctionProductSchema = new mongoose.Schema(
 		startTime: Date,
 		endTime: Date,
 		isActive: Boolean,
+		status: {
+			type: String,
+			enum: ["upcoming", "running", "closed"],
+			default: "upcoming",
+		},
 	},
 	{ timestamps: true }
 );

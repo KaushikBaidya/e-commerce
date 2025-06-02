@@ -6,6 +6,7 @@ const {
 	markAsRead,
 	deleteNotification,
 	markAllAsRead,
+	DeleteAllNotifications,
 } = require("../../controllers/admin/notification-controller");
 
 const {
@@ -27,6 +28,8 @@ router.get("/", getNotifications);
 
 router.patch("/:id/read", validateNotificationId, validateRequest, markAsRead);
 router.patch("/read-all", markAllAsRead);
+
+router.delete("/delete-all", DeleteAllNotifications);
 
 router.delete(
 	"/:id",

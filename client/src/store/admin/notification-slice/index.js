@@ -64,6 +64,18 @@ export const deleteAdminNotification = createAsyncThunk(
   }
 );
 
+export const deleteAllAdminNotifications = createAsyncThunk(
+  'adminNotifications/deleteAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/delete-all`);
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 const adminNotificationSlice = createSlice({
   name: 'adminNotifications',
   initialState,
@@ -112,6 +124,13 @@ const adminNotificationSlice = createSlice({
         }
       })
       .addCase(deleteAdminNotification.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(deleteAllAdminNotifications.fulfilled, (state) => {
+        state.notifications = [];
+        state.unreadCount = 0;
+      })
+      .addCase(deleteAllAdminNotifications.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
