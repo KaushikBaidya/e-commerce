@@ -39,17 +39,22 @@ const AdminAuctionProductTile = ({
               <User className="w-4 h-4" />
               <span className="font-medium">{auctionProduct?.artist}</span>
             </span>
-            <Badge
-              className={
-                auctionProduct?.status === 'running'
-                  ? 'bg-green-500'
-                  : auctionProduct?.status === 'upcoming'
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
-              }
-            >
-              {auctionProduct?.status?.charAt(0).toUpperCase() + auctionProduct?.status?.slice(1)}
-            </Badge>
+            <span className="flex items-center gap-2">
+              <Badge
+                className={
+                  auctionProduct?.status === 'running'
+                    ? 'bg-green-500'
+                    : auctionProduct?.status === 'upcoming'
+                      ? 'bg-yellow-500'
+                      : 'bg-red-600'
+                }
+              >
+                {auctionProduct?.status?.charAt(0).toUpperCase() + auctionProduct?.status?.slice(1)}
+              </Badge>
+              <Badge className={auctionProduct?.isSold === true ? 'bg-green-500' : 'bg-orange-500'}>
+                {auctionProduct?.isSold ? 'Sold' : 'Unsold'}
+              </Badge>
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm">

@@ -131,18 +131,23 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
               alt={liveAuction.title}
               className="w-full h-[500px] object-cover rounded-md"
             />
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
               <Badge
                 className={
                   liveAuction?.status === 'running'
                     ? 'bg-green-500'
                     : liveAuction?.status === 'upcoming'
                       ? 'bg-yellow-500'
-                      : 'bg-red-500'
+                      : 'bg-red-600'
                 }
               >
                 {liveAuction?.status?.charAt(0).toUpperCase() + liveAuction?.status?.slice(1)}
               </Badge>
+              {liveAuction?.status === 'closed' && (
+                <Badge className={liveAuction?.isSold === true ? 'bg-green-500' : 'bg-orange-500'}>
+                  {liveAuction?.isSold ? 'Sold' : 'Unsold'}
+                </Badge>
+              )}
             </div>
           </div>
           <div className="px-4 md:px-0">
