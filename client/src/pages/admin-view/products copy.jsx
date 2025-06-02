@@ -1,6 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
@@ -10,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 import ImageUpload from '@/components/admin-view/image-upload';
-import CommonForm from '@/components/common/common-form-component';
+import CommonForm from '@/components/common/form';
 import NoItemFound from '@/components/common/no-item-found';
 
 import {
@@ -33,45 +31,6 @@ import {
 } from '@/components/ui/table';
 import { Edit, Search, Trash2 } from 'lucide-react';
 
-import * as Yup from 'yup';
-
-const productSchema = Yup.object().shape({
-  title: Yup.string().required('Title is required'),
-  description: Yup.string().required('Description is required'),
-  category: Yup.string().required('Category is required'),
-  price: Yup.number()
-    .transform((value, originalValue) => (originalValue === '' ? undefined : Number(originalValue)))
-    .positive('Price must be positive')
-    .required('Price is required'),
-  salePrice: Yup.number()
-    .nullable()
-    .transform((value, originalValue) => {
-      // Handle empty string as null, but keep 0 as 0
-      if (originalValue === '' || originalValue === null || originalValue === undefined) {
-        return null;
-      }
-      const numValue = Number(originalValue);
-      return isNaN(numValue) ? null : numValue;
-    })
-    .test('sale-price-min', 'Sale price cannot be negative', function (value) {
-      // Allow null (empty) or any number >= 0 (including 0)
-      return value === null || (typeof value === 'number' && value >= 0);
-    })
-    .test('sale-price-validation', 'Sale price must be less than regular price', function (value) {
-      const { price } = this.parent;
-      // Only validate comparison if sale price is set and not 0
-      if (value !== null && value !== undefined && value > 0 && price) {
-        return value < price;
-      }
-      return true;
-    }),
-  totalStock: Yup.number()
-    .transform((value, originalValue) => (originalValue === '' ? undefined : Number(originalValue)))
-    .integer('Stock must be a whole number')
-    .min(0, 'Stock cannot be negative')
-    .required('Stock is required'),
-});
-
 const initialFormData = {
   image: null,
   imagePublicId: null,
@@ -86,91 +45,53 @@ const initialFormData = {
 const AdminProducts = () => {
   const [openCrtProdDialog, setOpenCrtProdDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uloadedImageUrl, setUloadedImageUrl] = useState('');
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const [currentDeleteId, setCurrentDeleteId] = useState(null);
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const { productList, isLoading } = useSelector((state) => state.adminProducts);
+
   const dispatch = useDispatch();
-
-  // React Hook Form setup
-  const methods = useForm({
-    resolver: yupResolver(productSchema),
-    defaultValues: initialFormData,
-    mode: 'onChange', // This ensures validation runs on every change
-  });
-
-  const {
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { isValid, isSubmitting },
-  } = methods;
-
-  // Watch form values to check if form is valid
-  const watchedValues = watch();
 
   const filteredProducts = productList?.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Update your onSubmit function with debugging:
+  const onSubmit = (e) => {
+    e.preventDefault();
 
-  const onSubmit = async (formData) => {
-    console.log('Form data before processing:', formData);
-
-    // Add image to form data
-    const submitData = {
-      ...formData,
-      image: uloadedImageUrl || formData.image,
-      imagePublicId: formData.imagePublicId,
-    };
-
-    console.log('Submit data being sent:', submitData);
-
-    try {
-      if (currentEditedId !== null) {
-        // Edit existing product
-        const data = await dispatch(editProduct({ id: currentEditedId, formData: submitData }));
-        console.log('Edit response:', data);
-        if (data?.payload?.success) {
-          dispatch(fetchAllProducts());
-          handleCloseDialog();
-          toast.success(data?.payload?.message, {
-            action: {
-              label: 'close',
-            },
-          });
-        }
-      } else {
-        // Add new product
-        const data = await dispatch(addNewProduct(submitData));
-        console.log('Add response:', data);
-        if (data?.payload?.success) {
-          dispatch(fetchAllProducts());
-          handleCloseDialog();
-          toast.success(data?.payload?.message, {
-            action: {
-              label: 'close',
-            },
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Submit error:', error);
-      toast.error('Something went wrong. Please try again.');
-    }
-  };
-  const handleCloseDialog = () => {
-    setOpenCrtProdDialog(false);
-    setCurrentEditedId(null);
-    setImageFile(null);
-    setUloadedImageUrl('');
-    reset(initialFormData);
+    currentEditedId !== null
+      ? dispatch(editProduct({ id: currentEditedId, formData })).then((data) => {
+          if (data?.payload?.success) {
+            dispatch(fetchAllProducts());
+            setFormData(initialFormData);
+            setOpenCrtProdDialog(false);
+            setCurrentEditedId(null);
+            toast.success(data?.payload?.message, {
+              action: {
+                label: 'close',
+              },
+            });
+          }
+        })
+      : dispatch(addNewProduct({ ...formData, image: uloadedImageUrl })).then((data) => {
+          if (data?.payload?.success) {
+            dispatch(fetchAllProducts());
+            setOpenCrtProdDialog(false);
+            setImageFile(null);
+            setFormData(initialFormData);
+            toast.success(data?.payload?.message, {
+              action: {
+                label: 'close',
+              },
+            });
+          }
+        });
   };
 
   const openDeleteDialog = (getCurrentProductId) => {
@@ -192,51 +113,22 @@ const AdminProducts = () => {
     });
   };
 
-  const handleEditProduct = (product) => {
-    setOpenCrtProdDialog(true);
-    setCurrentEditedId(product?._id);
-
-    // Reset form with product data
-    reset({
-      title: product?.title || '',
-      description: product?.description || '',
-      category: product?.category || '',
-      price: product?.price || '',
-      salePrice: product?.salePrice || '',
-      totalStock: product?.totalStock || '',
-      image: product?.image || null,
-      imagePublicId: product?.imagePublicId || null,
-    });
-
-    // Set image URL for display
-    setUloadedImageUrl(product?.image || '');
-  };
-
   const isFormValid = () => {
-    console.log('Form validation check:', {
-      isValid,
-      watchedValues,
-      imageLoadingState,
-      uloadedImageUrl,
-    });
-
-    // Check required fields manually
-    const { title, description, category, price, totalStock } = watchedValues;
-    const requiredFieldsFilled = title && description && category && price && totalStock;
-
-    // Check if image exists
-    const hasImage = uloadedImageUrl || watchedValues.image;
-
-    // Return true if: required fields filled, has image, not loading, and Yup validation passes
-    return requiredFieldsFilled && hasImage && !imageLoadingState && isValid;
+    return (
+      Object.values(formData).every(
+        (value) => value !== null && value !== undefined && value !== ''
+      ) && !imageLoadingState
+    );
   };
 
-  // Update form when image is uploaded
   useEffect(() => {
     if (uloadedImageUrl) {
-      setValue('image', uloadedImageUrl);
+      setFormData((prev) => ({
+        ...prev,
+        image: uloadedImageUrl,
+      }));
     }
-  }, [uloadedImageUrl, setValue]);
+  }, [uloadedImageUrl]);
 
   useEffect(() => {
     dispatch(fetchAllProducts());
@@ -299,7 +191,14 @@ const AdminProducts = () => {
                     </TableCell>
                     <TableCell>{product?.totalStock}</TableCell>
                     <TableCell className="flex justify-end gap-2 mt-4">
-                      <Button size="sm" onClick={() => handleEditProduct(product)}>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          setOpenCrtProdDialog(true);
+                          setCurrentEditedId(product?._id);
+                          setFormData(product);
+                        }}
+                      >
                         <Edit className="w-4 h-4 mr-1" />
                         Edit
                       </Button>
@@ -323,7 +222,14 @@ const AdminProducts = () => {
       )}
 
       {/* create product dialog */}
-      <Sheet open={openCrtProdDialog} onOpenChange={handleCloseDialog}>
+      <Sheet
+        open={openCrtProdDialog}
+        onOpenChange={() => {
+          setOpenCrtProdDialog(false);
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
+        }}
+      >
         <SheetContent side="right" className="overflow-auto bg-white">
           <SheetHeader>
             <SheetTitle className="text-2xl text-foreground">
@@ -338,33 +244,20 @@ const AdminProducts = () => {
             imageLoadingState={imageLoadingState}
             setImageLoadingState={setImageLoadingState}
             isEditMode={currentEditedId !== null}
-            setFormData={(data) => {
-              // Update form values when image component changes data
-              Object.keys(data).forEach((key) => {
-                setValue(key, data[key]);
-              });
-            }}
+            setFormData={setFormData}
           />
           <div className="px-5 py-6 text-foreground">
             <CommonForm
               formControls={addProductFormElements}
-              methods={methods}
-              onSubmit={handleSubmit(onSubmit)}
-              isBtnDisabled={!isValid || !uloadedImageUrl || imageLoadingState || isSubmitting}
-              buttonText={
-                isSubmitting
-                  ? currentEditedId
-                    ? 'Updating...'
-                    : 'Creating...'
-                  : currentEditedId
-                    ? 'Update Product'
-                    : 'Create Product'
-              }
+              buttonText={currentEditedId ? 'Update Product' : 'Create Product'}
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={onSubmit}
+              isBtnDisabled={!isFormValid()}
             />
           </div>
         </SheetContent>
       </Sheet>
-
       <DeleteDialog
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}

@@ -41,20 +41,20 @@ export const loginFormControls = [
 
 export const addProductFormElements = [
   {
-    label: 'Title',
+    title: 'Title',
     name: 'title',
     componentType: 'input',
     type: 'text',
     placeholder: 'Enter product title',
   },
   {
-    label: 'Description',
+    title: 'Description',
     name: 'description',
     componentType: 'textarea',
     placeholder: 'Enter product description',
   },
   {
-    label: 'Category',
+    title: 'Category',
     name: 'category',
     componentType: 'select',
     options: [
@@ -69,21 +69,21 @@ export const addProductFormElements = [
     ],
   },
   {
-    label: 'Price',
+    title: 'Price',
     name: 'price',
     componentType: 'input',
     type: 'number',
     placeholder: 'Enter product price',
   },
   {
-    label: 'Sale Price',
+    title: 'Sale Price',
     name: 'salePrice',
     componentType: 'input',
     type: 'number',
     placeholder: 'Enter sale price (optional)',
   },
   {
-    label: 'Total Stock',
+    title: 'Total Stock',
     name: 'totalStock',
     componentType: 'input',
     type: 'number',
