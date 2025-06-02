@@ -33,7 +33,7 @@ const initialFormData = {
   bidIncrement: '',
   startTime: '',
   endTime: '',
-  isActive: false,
+  isActive: '',
 };
 
 const AuctionProductsView = () => {
@@ -51,8 +51,6 @@ const AuctionProductsView = () => {
   const { auctionProductList, isLoading } = useSelector((state) => state.adminAuctionProduct);
 
   const dispatch = useDispatch();
-
-  console.log('Auction Products:', auctionProductList);
 
   const filteredAuctionProducts = auctionProductList?.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
