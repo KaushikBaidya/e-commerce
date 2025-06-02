@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
@@ -8,7 +10,6 @@ import { addReview, getReviews } from '@/store/shop/review-slice';
 
 import { CircleAlert, Send, ShoppingCartIcon } from 'lucide-react';
 
-import useYupValidation from '@/hooks/useYupValidation';
 import StarRating from '../common/star-rating';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
@@ -28,16 +29,30 @@ const reviewSchema = Yup.object().shape({
 });
 
 const ProductDetails = ({ open, setOpen, productDetails }) => {
-  const [reviewMsg, setReviewMsg] = useState('');
-  const [rating, setRating] = useState(0);
-
-  const { validateForm, errors } = useYupValidation(reviewSchema);
-
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
+
+  // React Hook Form setup
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(reviewSchema),
+    defaultValues: {
+      reviewMessage: '',
+      reviewValue: 0,
+    },
+  });
+
+  // Watch form values
+  const reviewMessage = watch('reviewMessage');
+  const reviewValue = watch('reviewValue');
 
   const handleAddToCart = (getCurrentProductId, getTotalStock) => {
     if (user === null)
@@ -81,32 +96,18 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
     });
   };
 
-  const handleRatingChange = (value) => {
-    setRating(value);
-  };
-
-  const handleAddReview = async () => {
-    const formData = {
-      reviewMessage: reviewMsg,
-      reviewValue: rating,
-    };
-
-    const { isValid } = await validateForm(formData);
-
-    if (!isValid) return;
-
+  const onSubmitReview = async (formData) => {
     dispatch(
       addReview({
         productId: productDetails?._id,
         userId: user?.id,
         userName: user?.userName,
-        reviewMessage: reviewMsg,
-        reviewValue: rating,
+        reviewMessage: formData.reviewMessage,
+        reviewValue: formData.reviewValue,
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        setRating(0);
-        setReviewMsg('');
+        reset(); // Reset form to default values
         dispatch(getReviews(productDetails?._id));
         toast.success('Review added successfully', {
           action: {
@@ -126,13 +127,19 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
   const handleDialogClose = () => {
     setOpen(false);
     dispatch(setProductDetails());
-    setRating(0);
-    setReviewMsg('');
+    reset(); // Reset form when dialog closes
   };
 
   useEffect(() => {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
+
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (open) {
+      reset();
+    }
+  }, [open, reset]);
 
   const averageReview =
     reviews && reviews.length > 0
@@ -145,8 +152,8 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
         {/* Left: Product Image */}
         <div className="relative w-full overflow-hidden rounded-lg">
           <img
-            src={productDetails.image}
-            alt={productDetails.title}
+            src={productDetails?.image}
+            alt={productDetails?.title}
             className="w-full h-auto aspect-square object-cover"
           />
         </div>
@@ -155,16 +162,16 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
         <div className="flex flex-col space-y-4">
           <div>
             <DialogTitle className="text-2xl sm:text-3xl font-bold uppercase">
-              {productDetails.title}
+              {productDetails?.title}
             </DialogTitle>
             <p className="text-muted-foreground text-base sm:text-xl mt-2">
-              {productDetails.description}
+              {productDetails?.description}
             </p>
           </div>
 
           <div className="flex items-center justify-between text-xl font-semibold">
             <p className={`${productDetails?.salePrice > 0 ? 'line-through' : ''} text-primary`}>
-              ৳ {productDetails.price}
+              ৳ {productDetails?.price}
             </p>
             {productDetails?.salePrice > 0 && (
               <p className="text-muted-foreground">৳ {productDetails?.salePrice}</p>
@@ -223,25 +230,50 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
             )}
           </div>
 
-          {/* Write a review */}
-          <div className="mt-6 flex flex-col gap-2.5">
+          {/* Write a review - React Hook Form */}
+          <form onSubmit={handleSubmit(onSubmitReview)} className="mt-6 flex flex-col gap-2.5">
             <Label>Write a review</Label>
-            <div className="flex gap-1.5">
-              <StarRating rating={rating} handleRatingChange={handleRatingChange} />
-              {errors.reviewValue && <p className="text-sm text-red-500">{errors.reviewValue}</p>}
+
+            {/* Star Rating Controller */}
+            {/* Star Rating Controller */}
+            <div className="flex gap-1">
+              <Controller
+                name="reviewValue"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <StarRating
+                    rating={value}
+                    handleRatingChange={(rating) => {
+                      onChange(rating);
+                    }}
+                  />
+                )}
+              />
+              {errors.reviewValue && (
+                <p className="text-sm text-red-500">{errors.reviewValue.message}</p>
+              )}
             </div>
-            <Input
-              name="reviewMsg"
-              value={reviewMsg}
-              onChange={(e) => setReviewMsg(e.target.value)}
-              placeholder="Write a review..."
-            />
-            {errors.reviewMessage && <p className="text-sm text-red-500">{errors.reviewMessage}</p>}
-            <Button onClick={handleAddReview} disabled={reviewMsg.trim() === '' || rating === 0}>
+
+            {/* Review Message Controller */}
+            <div className="flex flex-col gap-1">
+              <Controller
+                name="reviewMessage"
+                control={control}
+                render={({ field }) => <Input {...field} placeholder="Write a review..." />}
+              />
+              {errors.reviewMessage && (
+                <p className="text-sm text-red-500">{errors.reviewMessage.message}</p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting || reviewMessage?.trim() === '' || reviewValue === 0}
+            >
               <Send className="w-5 h-5 mr-1" />
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
-          </div>
+          </form>
         </div>
       </DialogContent>
     </Dialog>

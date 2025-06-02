@@ -5,6 +5,7 @@ const StarRating = ({ rating, handleRatingChange }) => {
   return [1, 2, 3, 4, 5].map((star, index) => (
     <Button
       key={index}
+      type="button"
       className={`p-2 rounded-full transition-colors ${
         star <= rating
           ? 'text-yellow-500 hover:bg-black'
