@@ -3,6 +3,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { Controller, FormProvider, useFormContext } from 'react-hook-form';
 
 const FormField = ({ controlItem }) => {
@@ -12,6 +14,12 @@ const FormField = ({ controlItem }) => {
     formState: { errors },
   } = useFormContext();
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const renderField = () => {
     switch (controlItem.componentType || controlItem.type) {
       case 'input':
@@ -19,19 +27,34 @@ const FormField = ({ controlItem }) => {
       case 'email':
       case 'number':
       case 'password':
+        const isPasswordField = controlItem.type === 'password';
+        const inputType = isPasswordField && showPassword ? 'text' : controlItem.type;
+
         return (
-          <Controller
-            name={controlItem.name}
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                id={controlItem.name}
-                type={controlItem.type}
-                placeholder={controlItem.placeholder}
-              />
+          <div className="relative">
+            <Controller
+              name={controlItem.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id={controlItem.name}
+                  type={inputType}
+                  placeholder={controlItem.placeholder}
+                  className={isPasswordField ? 'pr-10' : ''}
+                />
+              )}
+            />
+            {isPasswordField && (
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             )}
-          />
+          </div>
         );
 
       case 'textarea':
@@ -112,7 +135,7 @@ export default function CommonForm({ formControls, methods, onSubmit, isBtnDisab
           <FormField key={control.name} controlItem={control} />
         ))}
 
-        <Button type="submit" disabled={isBtnDisabled}>
+        <Button type="submit" disabled={isBtnDisabled} className="w-full">
           {buttonText || 'Submit'}
         </Button>
       </form>
