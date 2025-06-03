@@ -79,7 +79,7 @@ const AuctionCheckout = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-6 p-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
       <div>
         <h3 className="text-lg font-medium mb-2">Select Shipping Address</h3>
         <Address
@@ -91,7 +91,7 @@ const AuctionCheckout = () => {
         <img
           src={auctionItem.image}
           alt={auctionItem.title}
-          className="w-full h-full object-cover rounded border"
+          className="w-full h-1/2 object-cover rounded border"
         />
         <div>
           <h2 className="text-2xl font-medium">{auctionItem.title}</h2>
