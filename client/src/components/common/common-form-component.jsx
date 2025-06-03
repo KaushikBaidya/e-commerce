@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Calendar, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, FormProvider, useFormContext } from 'react-hook-form';
 
@@ -54,6 +54,70 @@ const FormField = ({ controlItem }) => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             )}
+          </div>
+        );
+
+      case 'date':
+        return (
+          <div className="relative">
+            <Controller
+              name={controlItem.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id={controlItem.name}
+                  type="date"
+                  placeholder={controlItem.placeholder}
+                  className="pr-10"
+                />
+              )}
+            />
+            <Calendar className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none" size={18} />
+          </div>
+        );
+
+      case 'time':
+        return (
+          <div className="relative">
+            <Controller
+              name={controlItem.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id={controlItem.name}
+                  type="time"
+                  placeholder={controlItem.placeholder}
+                  className="pr-10"
+                />
+              )}
+            />
+            <Clock className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none" size={18} />
+          </div>
+        );
+
+      case 'datetime':
+      case 'datetime-local':
+        return (
+          <div className="relative">
+            <Controller
+              name={controlItem.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  id={controlItem.name}
+                  type="datetime-local"
+                  placeholder={controlItem.placeholder}
+                  className="pr-10"
+                />
+              )}
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+              <Calendar size={16} className="mr-1" />
+              <Clock size={16} />
+            </div>
           </div>
         );
 
