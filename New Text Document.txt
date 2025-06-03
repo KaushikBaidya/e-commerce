@@ -1,0 +1,449 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, Shield, Zap, CreditCard, Eye, Star, ArrowRight, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Play, Pause } from 'lucide-react';
+
+const GaleriaLanding = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isVisible, setIsVisible] = useState({});
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isPlaying, setIsPlaying] = useState(true);
+  const heroRef = useRef(null);
+
+  // Sample auction data with more modern presentation
+  const auctions = [
+    {
+      id: 1,
+      title: "Digital Renaissance",
+      artist: "KAWS x AI",
+      currentBid: "2.5 ETH",
+      usdValue: "$4,250",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop",
+      endTime: "47h 23m",
+      bidders: 127,
+      verified: true
+    },
+    {
+      id: 2,
+      title: "Quantum Abstraction",
+      artist: "Refik Anadol",
+      currentBid: "1.8 ETH",
+      usdValue: "$3,060",
+      image: "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&h=600&fit=crop",
+      endTime: "12h 05m",
+      bidders: 89,
+      verified: true
+    },
+    {
+      id: 3,
+      title: "Neural Network Dreams",
+      artist: "TeamLab Collective",
+      currentBid: "3.2 ETH",
+      usdValue: "$5,440",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop",
+      endTime: "72h 11m",
+      bidders: 203,
+      verified: true
+    }
+  ];
+
+  // Mouse tracking for parallax effects
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const elements = document.querySelectorAll('[data-animate]');
+    elements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % auctions.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [auctions.length, isPlaying]);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % auctions.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + auctions.length) % auctions.length);
+
+  return (
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Hero Section - Modern Dark Theme */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center">
+        {/* Dynamic Background */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-cyan-900/20 transition-all duration-1000"
+            style={{
+              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(6,182,212,0.1),transparent_50%)]"></div>
+        </div>
+
+        {/* Floating Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+        {/* Main Content */}
+        <div className="relative z-20 text-center px-4 max-w-6xl mx-auto">
+          <div className="mb-8 inline-block">
+            <div className="px-6 py-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-full border border-purple-500/30 backdrop-blur-sm">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 font-medium">
+                The Future of Art Collection
+              </span>
+            </div>
+          </div>
+          
+          <h1 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
+              Galería
+            </span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+            Discover, collect, and trade extraordinary digital art with cutting-edge blockchain technology. 
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400"> Where creativity meets innovation.</span>
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <button className="group relative px-10 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl font-bold text-lg transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/25 hover:scale-105">
+              <span className="relative z-10">Explore Collection</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
+              <ArrowRight className="inline ml-2 w-5 h-5 relative z-10" />
+            </button>
+            
+            <button className="group px-10 py-4 border border-gray-600 rounded-2xl font-bold text-lg transition-all duration-300 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-sm">
+              Watch Demo
+              <Play className="inline ml-2 w-5 h-5 group-hover:text-purple-400 transition-colors" />
+            </button>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gradient-to-b from-purple-500 to-cyan-500 rounded-full mt-2 animate-bounce"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section - Glassmorphism Cards */}
+      <section id="features" data-animate className={`py-32 px-4 transition-all duration-1000 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                Why Choose Us?
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Experience the next generation of art collection with advanced technology and unmatched security
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Shield,
+                title: "Blockchain Verified",
+                description: "Every piece is authenticated using blockchain technology with immutable provenance records.",
+                gradient: "from-green-400 to-emerald-600"
+              },
+              {
+                icon: Zap,
+                title: "Instant Trading",
+                description: "Lightning-fast transactions with real-time price discovery and automated market making.",
+                gradient: "from-yellow-400 to-orange-600"
+              },
+              {
+                icon: CreditCard,
+                title: "Multi-Chain Support",
+                description: "Trade across multiple blockchains with integrated DeFi protocols and yield farming.",
+                gradient: "from-blue-400 to-purple-600"
+              }
+            ].map((feature, index) => (
+              <div 
+                key={index}
+                className="group relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-105"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
+                
+                <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all duration-300">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NFT Collection Showcase - Modern Grid */}
+      <section id="collection" data-animate className={`py-32 px-4 transition-all duration-1000 ${isVisible.collection ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-16">
+            <div>
+              <h2 className="text-5xl md:text-7xl font-black mb-4 tracking-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+                  Hot Drops
+                </span>
+              </h2>
+              <p className="text-xl text-gray-400">Trending digital masterpieces</p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="p-3 bg-white/10 rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
+              >
+                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              </button>
+              <button 
+                onClick={prevSlide}
+                className="p-3 bg-white/10 rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={nextSlide}
+                className="p-3 bg-white/10 rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden">
+            <div 
+              className="flex transition-transform duration-700 ease-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {auctions.map((auction) => (
+                <div key={auction.id} className="w-full flex-shrink-0 px-4">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                      <img 
+                        src={auction.image} 
+                        alt={auction.title}
+                        className="relative w-full aspect-square object-cover rounded-3xl border border-white/10"
+                      />
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-green-500/20 backdrop-blur-sm rounded-full border border-green-500/30">
+                        <span className="text-green-400 text-sm font-medium flex items-center">
+                          <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                          Live
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full"></div>
+                        <span className="text-gray-400">by {auction.artist}</span>
+                        {auction.verified && (
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <h3 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                        {auction.title}
+                      </h3>
+                      
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                          <p className="text-gray-500 text-sm mb-1">Current Bid</p>
+                          <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+                            {auction.currentBid}
+                          </p>
+                          <p className="text-gray-400 text-sm">{auction.usdValue}</p>
+                        </div>
+                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                          <p className="text-gray-500 text-sm mb-1">Time Left</p>
+                          <p className="text-2xl font-bold text-white">{auction.endTime}</p>
+                          <p className="text-gray-400 text-sm">{auction.bidders} bidders</p>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105">
+                        Place Bid
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Interactive Steps */}
+      <section id="process" data-animate className={`py-32 px-4 transition-all duration-1000 ${isVisible.process ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-black text-center mb-20 tracking-tight">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+              Get Started
+            </span>
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "01",
+                title: "Connect Wallet",
+                description: "Link your Web3 wallet and verify your identity with our secure authentication system.",
+                icon: "🔗",
+                color: "from-blue-500 to-purple-500"
+              },
+              {
+                step: "02", 
+                title: "Discover Art",
+                description: "Browse curated collections using AI-powered recommendations and advanced filtering.",
+                icon: "🎨",
+                color: "from-purple-500 to-pink-500"
+              },
+              {
+                step: "03",
+                title: "Collect & Trade",
+                description: "Bid, buy, and trade with automated smart contracts and instant settlement.",
+                icon: "💎",
+                color: "from-pink-500 to-cyan-500"
+              }
+            ].map((item, index) => (
+              <div key={index} className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="relative p-8 text-center">
+                  <div className={`w-20 h-20 bg-gradient-to-r ${item.color} rounded-3xl flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform duration-300`}>
+                    {item.icon}
+                  </div>
+                  
+                  <div className="text-6xl font-black text-gray-800 mb-4">{item.step}</div>
+                  <h3 className="text-2xl font-bold mb-4 text-white">{item.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Bold and Modern */}
+      <section className="py-32 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-3xl blur-3xl"></div>
+            <div className="relative bg-black/50 backdrop-blur-xl border border-white/10 rounded-3xl p-16">
+              <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-cyan-400">
+                  Ready to Start?
+                </span>
+              </h2>
+              <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+                Join the revolution in digital art collection. Start building your portfolio today.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <button className="group relative px-12 py-5 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl font-bold text-xl transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/25 hover:scale-105">
+                  <span className="relative z-10">Launch App</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                </button>
+                <button className="px-12 py-5 border border-gray-600 rounded-2xl font-bold text-xl transition-all duration-300 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-sm">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - Minimal and Clean */}
+      <footer className="border-t border-white/10 py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div className="md:col-span-2">
+              <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-6">
+                Galería
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed max-w-md">
+                The future of art collection is here. Join thousands of collectors discovering extraordinary digital masterpieces.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-xl font-bold mb-6 text-white">Platform</h4>
+              <ul className="space-y-4">
+                {['Marketplace', 'Collections', 'Artists', 'Analytics'].map((link) => (
+                  <li key={link}>
+                    <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300 text-lg">
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-xl font-bold mb-6 text-white">Community</h4>
+              <div className="flex space-x-4">
+                {[
+                  { icon: Twitter, href: "#" },
+                  { icon: Instagram, href: "#" },
+                  { icon: Youtube, href: "#" }
+                ].map((social, index) => (
+                  <a 
+                    key={index}
+                    href={social.href}
+                    className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110"
+                  >
+                    <social.icon className="w-6 h-6" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 mb-4 md:mb-0">
+              © 2025 Galería. Built for the future.
+            </p>
+            <div className="flex space-x-8">
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">Privacy</a>
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">Terms</a>
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">Security</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default GaleriaLanding;
