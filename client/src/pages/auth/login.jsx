@@ -1,12 +1,14 @@
-import CommonForm from '@/components/common/form';
-import { Separator } from '@/components/ui/separator';
-import { loginFormControls } from '@/config';
-import { loginUser } from '@/store/auth-slice';
-import { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import * as Yup from 'yup';
+
+import CommonForm from '@/components/common/common-form-component';
+import { Separator } from '@/components/ui/separator';
+import { loginFormControls } from '@/config';
+import { loginUser } from '@/store/auth-slice';
 import GoogleLoginButton from './google-login-button';
 
 const loginValidationSchema = Yup.object({
@@ -16,51 +18,46 @@ const loginValidationSchema = Yup.object({
     .min(6, 'Password must be at least 6 characters'),
 });
 
-const initialState = {
-  email: '',
-  password: '',
-};
-
 const AuthLogin = () => {
-  const [formData, setFormData] = useState(initialState);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const methods = useForm({
+    resolver: yupResolver(loginValidationSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onSubmit',
+  });
 
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onError = (errors) => {
+    console.log('Validation errors:', errors);
+  };
+
+  const onSubmit = async (data) => {
     try {
-      await loginValidationSchema.validate(formData, { abortEarly: false });
-      setErrors({});
-
-      const result = await dispatch(loginUser(formData));
+      const result = await dispatch(loginUser(data));
 
       if (result?.payload?.success) {
-        toast.success(result.payload.message, {
-          action: {
-            label: 'close',
-          },
-        });
+        toast.success(result.payload.message, { action: { label: 'close' } });
+        // navigate('/');
       } else {
-        toast.error(result.payload.message || 'Login failed', {
-          action: {
-            label: 'close',
-          },
+        toast.error(result.payload?.message || 'Login failed', {
+          action: { label: 'close' },
         });
       }
-    } catch (validationError) {
-      if (validationError.inner) {
-        const formattedErrors = {};
-        validationError.inner.forEach((err) => {
-          formattedErrors[err.path] = err.message;
-        });
-        setErrors(formattedErrors);
-      }
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('An error occurred during login', {
+        action: { label: 'close' },
+      });
     }
   };
 
@@ -78,17 +75,16 @@ const AuthLogin = () => {
 
       <CommonForm
         formControls={loginFormControls}
-        buttonText={'Sign in'}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={onSubmit}
+        methods={methods}
+        onSubmit={handleSubmit(onSubmit, onError)}
         isBtnDisabled={isSubmitting}
-        errors={errors}
+        buttonText="Sign in"
       />
 
       <Link to="/forgot-password" className="text-sm hover:underline pt-4">
         Forgot Password
       </Link>
+
       <div className="flex items-center gap-4 my-6">
         <Separator className="flex-1" />
         <span className="text-gray-500 text-sm">Or</span>

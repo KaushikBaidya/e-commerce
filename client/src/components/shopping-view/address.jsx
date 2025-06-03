@@ -9,14 +9,15 @@ import { CircleSlash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import CommonForm from '../common/form';
+import CommonForm from '../common/common-form-component';
+import Loading from '../common/loading-component';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import AddressCard from './adress-card';
 
-import useYupValidation from '@/hooks/useYupValidation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import Loading from '../common/loading-component';
 
 const addressValidationSchema = Yup.object({
   address: Yup.string().required('Address is required'),
@@ -39,114 +40,150 @@ const initialState = {
 };
 
 const Address = ({ selectedId, setCurrentSelectedAddress }) => {
-  const [formData, setFormData] = useState(initialState);
-  // const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentEditId, setCurrentEditId] = useState(null);
-
-  const { validateForm, errors, setErrors } = useYupValidation(addressValidationSchema);
 
   const { user } = useSelector((state) => state.auth);
   const { addressList, isLoading } = useSelector((state) => state.shopAddress);
   const dispatch = useDispatch();
 
-  const onSubmit = async (event) => {
-    event.preventDefault();
+  // Initialize react-hook-form
+  const methods = useForm({
+    resolver: yupResolver(addressValidationSchema),
+    defaultValues: initialState,
+    mode: 'onSubmit',
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isValid, errors },
+  } = methods;
+
+  // Watch form values to check if form is filled
+  const watchedValues = watch();
+  const isFormFilled = Object.values(watchedValues).some((value) => value && value.trim() !== '');
+
+  const onSubmit = async (formData) => {
     setIsSubmitting(true);
 
-    const { isValid } = await validateForm(formData);
-    if (!isValid) {
-      setIsSubmitting(false);
-      // Optionally show toasts here for each error
-      Object.values(errors).forEach((msg) =>
-        toast.error(msg, {
+    try {
+      // Check address limit for new addresses
+      if (addressList.length >= 3 && currentEditId === null) {
+        toast.error('You can add only 3 addresses', {
           action: { label: 'close' },
-        })
-      );
-      return;
-    }
-
-    if (addressList.length >= 3 && currentEditId === null) {
-      toast.error('You can add only 3 addresses', {
-        action: {
-          label: 'close',
-        },
-      });
-      setFormData(initialState);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (currentEditId !== null) {
-      dispatch(
-        editAddress({
-          userId: user?.id,
-          addressId: currentEditId,
-          formData,
-        })
-      ).then((data) => {
+        });
         setIsSubmitting(false);
-        if (data?.payload?.success) {
+        return;
+      }
+
+      if (currentEditId !== null) {
+        // Edit existing address
+        const result = await dispatch(
+          editAddress({
+            userId: user?.id,
+            addressId: currentEditId,
+            formData,
+          })
+        );
+
+        if (result?.payload?.success) {
           dispatch(fetchAllAddresses(user?.id));
           setCurrentEditId(null);
-          setFormData(initialState);
+          reset(initialState);
           toast.success('Address updated successfully', {
             action: { label: 'close' },
           });
-        }
-      });
-    } else {
-      dispatch(addNewAddress({ ...formData, userId: user?.id })).then((data) => {
-        setIsSubmitting(false);
-        if (data?.payload?.success) {
-          dispatch(fetchAllAddresses(user?.id));
-          setFormData(initialState);
-          toast.success(data?.payload?.message, {
+        } else {
+          toast.error(result?.payload?.message || 'Failed to update address', {
             action: { label: 'close' },
           });
         }
-      });
-    }
-  };
+      } else {
+        // Add new address
+        const result = await dispatch(addNewAddress({ ...formData, userId: user?.id }));
 
-  const isFormValid = () => {
-    return Object.values(formData).every((val) => val !== '');
+        if (result?.payload?.success) {
+          dispatch(fetchAllAddresses(user?.id));
+          reset(initialState);
+          toast.success(result?.payload?.message || 'Address added successfully', {
+            action: { label: 'close' },
+          });
+        } else {
+          toast.error(result?.payload?.message || 'Failed to add address', {
+            action: { label: 'close' },
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Address operation error:', error);
+      toast.error('An error occurred while processing your request', {
+        action: { label: 'close' },
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEditAddress = (getCurrentAddress) => {
     setCurrentEditId(getCurrentAddress._id);
-    setFormData({
-      address: getCurrentAddress?.address,
-      city: getCurrentAddress?.city,
-      phone: getCurrentAddress?.phone,
-      pincode: getCurrentAddress?.pincode,
-      notes: getCurrentAddress?.notes,
+    // Reset form with current address data
+    reset({
+      address: getCurrentAddress?.address || '',
+      city: getCurrentAddress?.city || '',
+      phone: getCurrentAddress?.phone || '',
+      pincode: getCurrentAddress?.pincode || '',
+      notes: getCurrentAddress?.notes || '',
     });
-    setErrors({});
   };
 
-  const handleDeleteAddress = (getCurrentAddress) => {
-    dispatch(deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })).then((data) => {
-      if (data?.payload?.success) {
+  const handleDeleteAddress = async (getCurrentAddress) => {
+    try {
+      const result = await dispatch(
+        deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
+      );
+
+      if (result?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
-        toast.success(data?.payload?.message, {
-          action: {
-            label: 'close',
-          },
+        toast.success(result?.payload?.message || 'Address deleted successfully', {
+          action: { label: 'close' },
+        });
+      } else {
+        toast.error(result?.payload?.message || 'Failed to delete address', {
+          action: { label: 'close' },
+        });
+      }
+    } catch (error) {
+      console.error('Delete address error:', error);
+      toast.error('An error occurred while deleting the address', {
+        action: { label: 'close' },
+      });
+    }
+  };
+
+  const cancelEdit = () => {
+    setCurrentEditId(null);
+    reset(initialState);
+  };
+
+  // Debug form validation
+  const onError = (errors) => {
+    console.log('Form validation errors:', errors);
+    Object.values(errors).forEach((error) => {
+      if (error?.message) {
+        toast.error(error.message, {
+          action: { label: 'close' },
         });
       }
     });
   };
 
-  const cancelEdit = () => {
-    setCurrentEditId(null);
-    setFormData(initialState);
-    setErrors({});
-  };
-
   useEffect(() => {
-    dispatch(fetchAllAddresses(user?.id));
-  }, [dispatch]);
+    if (user?.id) {
+      dispatch(fetchAllAddresses(user.id));
+    }
+  }, [dispatch, user?.id]);
 
   return (
     <Card>
@@ -157,7 +194,7 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
           {addressList && addressList.length > 0 ? (
             addressList.map((address, index) => (
               <AddressCard
-                key={index}
+                key={address._id || index}
                 selectedId={selectedId}
                 setCurrentSelectedAddress={setCurrentSelectedAddress}
                 addressInfo={address}
@@ -166,16 +203,16 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
               />
             ))
           ) : (
-            <div>No addresses added yet.</div>
+            <div className="text-center text-gray-500 py-8">No addresses added yet.</div>
           )}
         </div>
       )}
 
-      <CardHeader className="flex items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{currentEditId ? 'Edit Address' : 'Add New Address'}</CardTitle>
         {currentEditId && (
-          <Button onClick={cancelEdit}>
-            <CircleSlash className="mr-1" /> Cancel
+          <Button onClick={cancelEdit} variant="outline">
+            <CircleSlash className="mr-1 h-4 w-4" /> Cancel
           </Button>
         )}
       </CardHeader>
@@ -183,12 +220,10 @@ const Address = ({ selectedId, setCurrentSelectedAddress }) => {
       <CardContent className="space-y-4">
         <CommonForm
           formControls={addressFormControls}
-          formData={formData}
-          setFormData={setFormData}
-          onSubmit={onSubmit}
-          buttonText={currentEditId ? 'Edit Address' : 'Add New Address'}
-          isBtnDisabled={!isFormValid() || isSubmitting}
-          errors={errors}
+          methods={methods}
+          onSubmit={handleSubmit(onSubmit, onError)}
+          buttonText={currentEditId ? 'Update Address' : 'Add New Address'}
+          isBtnDisabled={!isFormFilled || isSubmitting}
         />
       </CardContent>
     </Card>

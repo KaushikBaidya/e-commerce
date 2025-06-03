@@ -6,6 +6,9 @@ import { Card, CardContent, CardFooter } from '../ui/card';
 
 const AdminAuctionProductTile = ({
   auctionProduct,
+  onEdit, // New prop for edit callback
+  onDelete, // New prop for delete callback
+  // Legacy props (keeping for backward compatibility if needed)
   setFormData,
   setOpenCrtProdDialog,
   setCurrentEditedId,
@@ -18,6 +21,34 @@ const AdminAuctionProductTile = ({
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
       date.getDate()
     )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
+
+  const handleEdit = () => {
+    // Use new modular approach if onEdit prop is provided
+    if (onEdit) {
+      onEdit(auctionProduct);
+    } 
+    // Fallback to legacy approach for backward compatibility
+    else if (setFormData && setOpenCrtProdDialog && setCurrentEditedId) {
+      setOpenCrtProdDialog(true);
+      setCurrentEditedId(auctionProduct?._id);
+      setFormData({
+        ...auctionProduct,
+        startTime: formatDateTimeLocal(auctionProduct.startTime),
+        endTime: formatDateTimeLocal(auctionProduct.endTime),
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    // Use new modular approach if onDelete prop is provided
+    if (onDelete) {
+      onDelete(auctionProduct?._id);
+    }
+    // Fallback to legacy approach for backward compatibility
+    else if (openDeleteDialog) {
+      openDeleteDialog(auctionProduct?._id);
+    }
   };
 
   return (
@@ -90,21 +121,11 @@ const AdminAuctionProductTile = ({
         </CardContent>
 
         <CardFooter className="flex justify-between px-4 pb-4">
-          <Button
-            onClick={() => {
-              setOpenCrtProdDialog(true);
-              setCurrentEditedId(auctionProduct?._id);
-              setFormData({
-                ...auctionProduct,
-                startTime: formatDateTimeLocal(auctionProduct.startTime),
-                endTime: formatDateTimeLocal(auctionProduct.endTime),
-              });
-            }}
-          >
+          <Button onClick={handleEdit}>
             <Edit className="w-4 h-4" />
             Edit
           </Button>
-          <Button variant="destructive" onClick={() => openDeleteDialog(auctionProduct?._id)}>
+          <Button variant="destructive" onClick={handleDelete}>
             <Trash2 className="w-4 h-4" />
             Delete
           </Button>
