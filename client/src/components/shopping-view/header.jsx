@@ -99,7 +99,7 @@ const HeaderRightContent = ({ setOpen }) => {
         >
           <ShoppingCart className="h-6 w-6" />
           {cartItems?.items?.length > 0 && (
-            <span className="absolute top-[-15px] right-[-15px] font-bold text-sm bg-red-500 text-white rounded-full px-2">
+            <span className="absolute top-[-15px] right-[-15px] font-semibold text-sm bg-red-500 text-white rounded-full px-2">
               {cartItems?.items?.length}
             </span>
           )}
@@ -129,7 +129,7 @@ const HeaderRightContent = ({ setOpen }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>
-              Logged in as <span className="font-bold uppercase">{user?.userName}</span>
+              Logged in as <span className="font-semibold uppercase">{user?.userName}</span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -158,9 +158,11 @@ const ShoppingHeader = ({ open, setOpen }) => {
     <header className="fixed top-0 z-40 w-full bg-background border-b">
       <div className="w-full flex h-16 items-center justify-between px-4 md:px-6">
         <div className="w-full flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="logo" className="h-8 w-8" />
-            <span className="font-bold uppercase text-xl">Galería</span>
+          <Link to="/">
+            <div className="w-64 h-10 flex flex-row items-center justify-start gap-2">
+              <img src={logo} alt="logo" className="h-8 w-8" />
+              <span className="font-medium text-3xl font-newsreader italic pt-2">Galería</span>
+            </div>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger>

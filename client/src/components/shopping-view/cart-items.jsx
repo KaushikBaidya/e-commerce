@@ -69,7 +69,7 @@ const CartItems = ({ cartItem }) => {
     <div className="flex items-center space-x-4">
       <img src={cartItem?.image} alt={cartItem?.title} className="w-16 h-16 rounded-full" />
       <div className="flex-1">
-        <h3 className="font-semibold">{cartItem?.title}</h3>
+        <h3 className="font-medium">{cartItem?.title}</h3>
         <div className="flex items-center mt-2 gap-5">
           <Button
             variant={'outline'}
@@ -81,7 +81,7 @@ const CartItems = ({ cartItem }) => {
             <Minus className="w-4 h-4" />
             <span className="sr-only">Decrease</span>
           </Button>
-          <span className="font-semibold">{cartItem?.quantity}</span>
+          <span className="font-medium">{cartItem?.quantity}</span>
           <Button
             variant={'outline'}
             size={'icon'}
@@ -94,7 +94,7 @@ const CartItems = ({ cartItem }) => {
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="font-semibold">
+        <p className="font-medium">
           ৳
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) * cartItem?.quantity

@@ -55,7 +55,7 @@ const MyBids = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl font-semibold pt-4 px-2">My Bid History</CardTitle>
+        <CardTitle className="text-xl font-medium pt-4 px-2">My Bid History</CardTitle>
       </CardHeader>
       {isLoading ? (
         <Loading />
@@ -110,7 +110,7 @@ const MyBids = () => {
                               </Button>
                             );
                           } else if (isWinner && auctionEnded && hasPaid) {
-                            return <span className="text-green-600 font-semibold my-4">Paid</span>;
+                            return <span className="text-green-600 font-medium my-4">Paid</span>;
                           } else if (!isWinner && auctionEnded) {
                             return <span className="text-red-500 font-medium my-4">Sold Out</span>;
                           } else {

@@ -57,7 +57,7 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       <Card>
-        <CardTitle className="text-3xl font-bold mt-4 ml-4">Admin Dashboard</CardTitle>
+        <CardTitle className="text-3xl font-semibold mt-4 ml-4">Admin Dashboard</CardTitle>
       </Card>
 
       {/* when realtime data will be added */}
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
               <CardContent className="flex items-center justify-between">
                 <div>
                   <h4 className="text-muted-foreground text-sm">{stat.title}</h4>
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-2xl font-semibold">{stat.value}</p>
                 </div>
                 <div className="bg-muted p-2 rounded-full">{stat.icon}</div>
               </CardContent>
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">Monthly Revenue</CardTitle>
+              <CardTitle className="text-lg font-medium">Monthly Revenue</CardTitle>
             </CardHeader>
             <CardContent className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">Daily Active Users</CardTitle>
+              <CardTitle className="text-lg font-medium">Daily Active Users</CardTitle>
             </CardHeader>
             <CardContent className="h-72">
               <ResponsiveContainer width="100%" height="100%">

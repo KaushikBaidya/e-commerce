@@ -49,7 +49,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col overflow-hidden bg-white font-roboto">
       <Routes>
         <Route
           path="/auth"

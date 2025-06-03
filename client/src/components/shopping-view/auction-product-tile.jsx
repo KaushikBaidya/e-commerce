@@ -18,7 +18,7 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
       </div>
 
       <CardContent className="p-4 space-y-4">
-        <h2 className="text-xl sm:text-2xl font-bold leading-snug">{auctionProduct?.title}</h2>
+        <h2 className="text-xl sm:text-2xl font-medium leading-snug">{auctionProduct?.title}</h2>
 
         <div className="flex flex-wrap justify-between items-center text-muted-foreground gap-2">
           <span className="text-sm flex items-center gap-1">
@@ -48,14 +48,14 @@ const AuctionProductTile = ({ auctionProduct, handleGetProductDetails }) => {
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="flex flex-col">
             <span className="text-muted-foreground">Starting Bid</span>
-            <span className="font-semibold text-base sm:text-lg">
+            <span className="font-medium text-base sm:text-lg">
               ৳ {auctionProduct?.startingBid}
             </span>
           </div>
 
           <div className="flex flex-col">
             <span className="text-muted-foreground">Current Bid</span>
-            <span className="font-semibold text-base sm:text-lg">
+            <span className="font-medium text-base sm:text-lg">
               ৳ {auctionProduct?.currentBid || auctionProduct?.startingBid}
             </span>
           </div>

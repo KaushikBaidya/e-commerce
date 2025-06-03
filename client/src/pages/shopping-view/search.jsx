@@ -111,7 +111,7 @@ function SearchProducts() {
           {/* No Results */}
           {!searchResults.length && keyword.trim() ? (
             <div className="text-center mt-10">
-              <h2 className="text-2xl md:text-4xl font-semibold text-gray-600">
+              <h2 className="text-2xl md:text-4xl font-medium text-gray-600">
                 No results found for "<span className="italic">{keyword}</span>"
               </h2>
             </div>

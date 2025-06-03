@@ -95,7 +95,7 @@ const AdminSidebar = ({ open, setOpen }) => {
         <SheetContent side="left" className="w-80">
           <div className="h-full flex flex-col bg-white text-foreground">
             <SheetHeader className="border-b">
-              <SheetTitle className="flex items-center gap-2 text-2xl font-semibold">
+              <SheetTitle className="flex items-center gap-2 text-2xl font-medium">
                 <img src={logo} alt="logo" className="h-8 w-8" />
                 <span>Admin Pannel</span>
               </SheetTitle>
@@ -110,7 +110,7 @@ const AdminSidebar = ({ open, setOpen }) => {
           className="flex items-center gap-2 cursor-pointer"
         >
           <img src={logo} alt="logo" className="h-8 w-8" />
-          <h2 className="text-2xl font-semibold">Admin Pannel</h2>
+          <h2 className="text-2xl font-medium">Admin Pannel</h2>
         </div>
         <MenuItems />
       </aside>

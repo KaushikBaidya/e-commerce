@@ -105,7 +105,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        reset(); 
+        reset();
         dispatch(getReviews(productDetails?._id));
         toast.success('Review added successfully', {
           action: {
@@ -156,7 +156,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 
         <div className="flex flex-col space-y-4">
           <div>
-            <DialogTitle className="text-2xl sm:text-3xl font-bold uppercase">
+            <DialogTitle className="text-2xl sm:text-3xl font-semibold uppercase">
               {productDetails?.title}
             </DialogTitle>
             <p className="text-muted-foreground text-base sm:text-xl mt-2">
@@ -164,7 +164,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
             </p>
           </div>
 
-          <div className="flex items-center justify-between text-xl font-semibold">
+          <div className="flex items-center justify-between text-xl font-medium">
             <p className={`${productDetails?.salePrice > 0 ? 'line-through' : ''} text-primary`}>
               ৳ {productDetails?.price}
             </p>
@@ -196,18 +196,18 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 
           {/* Reviews */}
           <div className="flex-1 overflow-auto max-h-[300px]">
-            <h2 className="text-lg sm:text-xl font-bold mb-4">Reviews</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">Reviews</h2>
 
             {reviews && reviews.length > 0 ? (
               reviews.map((review) => (
                 <div key={review._id} className="grid gap-4 mb-4">
                   <div className="flex gap-3">
-                    <Avatar className="w-10 h-10 border-2 font-semibold">
+                    <Avatar className="w-10 h-10 border-2 font-medium">
                       <AvatarFallback>{review.userName[0].toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold">{review.userName}</h3>
+                        <h3 className="font-semibold">{review.userName}</h3>
                       </div>
                       <div className="flex items-center gap-2">
                         <StarRating rating={review.reviewValue} />

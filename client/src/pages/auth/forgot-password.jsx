@@ -43,7 +43,7 @@ const ForgotPassword = () => {
       </div>
       <div>
         <div className="flex flex-col items-start gap-2 mb-6">
-          <h2 className="text-2xl font-semibold">Forgot Password?</h2>
+          <h2 className="text-2xl font-medium">Forgot Password?</h2>
           <p>Enter your email address to receive a link to reset your password.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">

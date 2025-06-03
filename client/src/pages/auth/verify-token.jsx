@@ -44,9 +44,7 @@ const VerifyTokenPage = () => {
         {status === 'success' && (
           <>
             <FaCheckCircle className="text-green-500 text-5xl mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Email Verified Successfully!
-            </h2>
+            <h2 className="text-xl font-medium text-gray-800 mb-2">Email Verified Successfully!</h2>
             <p className="text-gray-600">{message}</p>
             <Button variant="link" href="/auth/login"></Button>
           </>
@@ -55,7 +53,7 @@ const VerifyTokenPage = () => {
         {status === 'error' && (
           <>
             <FaExclamationCircle className="text-red-500 text-5xl mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-red-600 mb-2">Verification Failed</h2>
+            <h2 className="text-xl font-medium text-red-600 mb-2">Verification Failed</h2>
             <p className="text-gray-600">{message}</p>
           </>
         )}

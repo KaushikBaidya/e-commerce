@@ -10,7 +10,7 @@ const NotFound = () => {
       <div className="flex items-center justify-center bg-white p-6 rounded-2xl shadow-lg">
         <div className="flex flex-col items-center space-y-4">
           <AlertTriangle className="text-red-500 w-12 h-12" />
-          <h1 className="text-3xl font-bold text-gray-800">404 - Page Not Found</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">404 - Page Not Found</h1>
           <p className="text-gray-600 max-w-md">
             Sorry, the page you're looking for doesn't exist or has been moved.
           </p>

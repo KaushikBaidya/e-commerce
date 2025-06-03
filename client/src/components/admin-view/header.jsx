@@ -58,7 +58,7 @@ const AdminHeader = ({ setOpen }) => {
               <Bell size={25} />
               <Label className="sr-only">Notifications</Label>
               {unreadCount > 0 && (
-                <span className="absolute top-[-5px] right-[-10px] font-bold text-sm bg-black text-white rounded-full px-2">
+                <span className="absolute top-[-5px] right-[-10px] font-semibold text-sm bg-black text-white rounded-full px-2">
                   {unreadCount}
                 </span>
               )}
@@ -85,7 +85,7 @@ const AdminHeader = ({ setOpen }) => {
                   <div className="w-full flex items-center justify-between">
                     <p
                       className={`flex-1 ${
-                        notification.isRead ? 'text-muted-foreground' : 'font-semibold'
+                        notification.isRead ? 'text-muted-foreground' : 'font-medium'
                       }`}
                     >
                       {notification.message}
@@ -128,7 +128,7 @@ const AdminHeader = ({ setOpen }) => {
           className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow"
         >
           <LogOut />
-          logout
+          Logout
         </Button>
       </div>
     </header>

@@ -11,7 +11,7 @@ const VerifyEmail = () => {
         <MdEmail className="text-blue-600 text-5xl" />
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-800 mb-3">Verify Your Email</h1>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-3">Verify Your Email</h1>
 
       <p className="text-gray-600 mb-6">
         We've sent a verification link to your email. Please check your inbox and click the link to

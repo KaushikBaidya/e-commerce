@@ -25,7 +25,7 @@ const AdminUsers = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl font-semibold pt-4 px-2">Users List</CardTitle>
+        <CardTitle className="text-xl font-medium pt-4 px-2">Users List</CardTitle>
       </CardHeader>
       {isLoading ? (
         <Loading />

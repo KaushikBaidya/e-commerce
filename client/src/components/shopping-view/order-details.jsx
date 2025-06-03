@@ -7,10 +7,10 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
     <div className="w-full capitalize space-y-6">
       <div className="grid grid-cols-12 gap-4 bg-white p-5 rounded-xl shadow-sm border">
         <div className="col-span-6 space-y-3">
-          <h2 className="text-lg font-semibold text-foreground">Order Summary</h2>
+          <h2 className="text-lg font-medium text-foreground">Order Summary</h2>
           <div className="flex justify-between text-sm text-muted-foreground">
             <p className="font-medium">Order ID</p>
-            <span className="text-foreground font-semibold"># {orderDetails?._id}</span>
+            <span className="text-foreground font-medium"># {orderDetails?._id}</span>
           </div>
           <div className="flex justify-between text-sm text-muted-foreground">
             <p className="font-medium">Order Date</p>
@@ -18,7 +18,7 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
           </div>
           <div className="flex justify-between text-sm text-muted-foreground">
             <p className="font-medium">Order Price</p>
-            <span className="text-primary font-semibold">৳ {orderDetails?.totalAmount}</span>
+            <span className="text-primary font-medium">৳ {orderDetails?.totalAmount}</span>
           </div>
         </div>
 
@@ -27,11 +27,11 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
         </div>
 
         <div className="col-span-5 space-y-3">
-          <h2 className="text-lg font-semibold text-foreground">Status</h2>
+          <h2 className="text-lg font-medium text-foreground">Status</h2>
           <div className="flex justify-between text-sm text-muted-foreground">
             <p className="font-medium">Order Status</p>
             <span
-              className={`rounded-full text-white text-xs font-semibold px-3 py-1 ${
+              className={`rounded-full text-white text-xs font-medium px-3 py-1 ${
                 orderDetails?.orderStatus === 'confirmed'
                   ? 'bg-blue-500'
                   : orderDetails?.orderStatus === 'pending'
@@ -54,14 +54,14 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
           </div>
           <div className="flex justify-between text-sm text-muted-foreground">
             <p className="font-medium">Payment Status</p>
-            <span className="text-foreground font-semibold">{orderDetails?.paymentStatus}</span>
+            <span className="text-foreground font-medium">{orderDetails?.paymentStatus}</span>
           </div>
         </div>
       </div>
 
       <div className="bg-white p-5 rounded-xl shadow-sm border">
-        <h2 className="text-lg font-semibold mb-4 text-foreground">Items</h2>
-        <div className="grid grid-cols-3 gap-3 font-semibold border-b pb-2 text-sm text-muted-foreground">
+        <h2 className="text-lg font-medium mb-4 text-foreground">Items</h2>
+        <div className="grid grid-cols-3 gap-3 font-medium border-b pb-2 text-sm text-muted-foreground">
           <span className="text-center">Product</span>
           <span className="text-center">Quantity</span>
           <span className="text-center">Price</span>
@@ -85,7 +85,7 @@ const ShoppingOrderDetails = ({ orderDetails }) => {
       </div>
 
       <div className="bg-white p-5 rounded-xl shadow-sm border space-y-2">
-        <h2 className="text-lg font-semibold text-foreground">Shipping Address</h2>
+        <h2 className="text-lg font-medium text-foreground">Shipping Address</h2>
         <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
           <span className="lowercase">{user?.email}</span>
           <span>{orderDetails?.addressInfo?.address}</span>

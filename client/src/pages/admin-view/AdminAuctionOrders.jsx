@@ -24,7 +24,7 @@ const AdminAuctionOrders = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl font-semibold pt-4 px-2">Auction Orders List</CardTitle>
+        <CardTitle className="text-xl font-medium pt-4 px-2">Auction Orders List</CardTitle>
       </CardHeader>
       {isLoading ? (
         <Loading />

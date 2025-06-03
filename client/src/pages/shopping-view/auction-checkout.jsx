@@ -81,7 +81,7 @@ const AuctionCheckout = () => {
   return (
     <div className="grid grid-cols-2 gap-6 p-5">
       <div>
-        <h3 className="text-lg font-semibold mb-2">Select Shipping Address</h3>
+        <h3 className="text-lg font-medium mb-2">Select Shipping Address</h3>
         <Address
           selectedId={currentSelectedAddress}
           setCurrentSelectedAddress={setCurrentSelectedAddress}
@@ -94,7 +94,7 @@ const AuctionCheckout = () => {
           className="w-full h-full object-cover rounded border"
         />
         <div>
-          <h2 className="text-2xl font-semibold">{auctionItem.title}</h2>
+          <h2 className="text-2xl font-medium">{auctionItem.title}</h2>
           <p className="text-xl text-green-600">
             Winning Bid: ৳ {auctionItem.currentBid.toLocaleString()}
           </p>

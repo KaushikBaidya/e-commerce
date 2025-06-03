@@ -23,14 +23,14 @@ const Hero = () => {
           <div className="hidden sm:mb-8 sm:flex sm:justify-center">
             <div className="relative rounded-full px-4 py-1 text-sm text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
               Our spring fine art auction is now live.{' '}
-              <Link to="/shop/auction" className="font-semibold text-indigo-600">
+              <Link to="/shop/auction" className="font-medium text-indigo-600">
                 <span aria-hidden="true" className="absolute inset-0" />
                 Explore now <span aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           </div>
 
-          <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
+          <h1 className="text-5xl font-medium tracking-tight text-balance text-gray-900 sm:text-7xl">
             Own Timeless Artworks Through Live Auctions
           </h1>
 
@@ -42,14 +42,11 @@ const Hero = () => {
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
               to="/shop/auction"
-              className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Start Bidding
             </Link>
-            <Link
-              to="/shop/auction"
-              className="text-sm font-semibold text-gray-900 hover:underline"
-            >
+            <Link to="/shop/auction" className="text-sm font-medium text-gray-900 hover:underline">
               Browse Collections <span aria-hidden="true">→</span>
             </Link>
           </div>

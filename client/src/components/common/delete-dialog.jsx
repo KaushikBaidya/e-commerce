@@ -5,7 +5,7 @@ const DeleteDialog = ({ openDialog, setOpenDialog, handleDelete }) => {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent className="sm:max-w-md p-6 rounded-xl shadow-xl">
-        <DialogTitle className="text-xl font-semibold text-red-600">Delete Product</DialogTitle>
+        <DialogTitle className="text-xl font-medium text-red-600">Delete Product</DialogTitle>
         <p className="text-sm text-gray-600 mt-2">
           Are you sure you want to delete this product? This action cannot be undone.
         </p>

@@ -27,7 +27,7 @@ const AdminAuctionProductTile = ({
     // Use new modular approach if onEdit prop is provided
     if (onEdit) {
       onEdit(auctionProduct);
-    } 
+    }
     // Fallback to legacy approach for backward compatibility
     else if (setFormData && setOpenCrtProdDialog && setCurrentEditedId) {
       setOpenCrtProdDialog(true);
@@ -63,7 +63,7 @@ const AdminAuctionProductTile = ({
         </div>
 
         <CardContent className="p-4 space-y-4">
-          <h2 className="text-2xl font-bold">{auctionProduct?.title}</h2>
+          <h2 className="text-2xl font-semibold">{auctionProduct?.title}</h2>
 
           <div className="flex items-center justify-between text-muted-foreground">
             <span className="text-sm flex items-center gap-1">
@@ -91,11 +91,11 @@ const AdminAuctionProductTile = ({
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="flex flex-col">
               <span className="text-muted-foreground">Starting Bid</span>
-              <span className="font-semibold text-lg">৳ {auctionProduct?.startingBid}</span>
+              <span className="font-medium text-lg">৳ {auctionProduct?.startingBid}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-muted-foreground">Current Bid</span>
-              <span className="font-semibold text-lg">
+              <span className="font-medium text-lg">
                 ৳ {auctionProduct?.currentBid || auctionProduct?.startingBid}
               </span>
             </div>

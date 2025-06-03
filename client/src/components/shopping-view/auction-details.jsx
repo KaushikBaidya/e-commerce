@@ -166,7 +166,7 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 
         <div className="p-4 space-y-5">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-            <DialogTitle className="text-2xl md:text-3xl font-bold">
+            <DialogTitle className="text-2xl md:text-3xl font-semibold">
               {liveAuction.title}
             </DialogTitle>
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -180,20 +180,24 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="flex flex-col">
               <span className="text-gray-500">Starting Bid</span>
-              <span className="font-bold text-lg text-primary">৳ {liveAuction.startingBid}</span>
+              <span className="font-semibold text-lg text-primary">
+                ৳ {liveAuction.startingBid}
+              </span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-500">Current Bid</span>
-              <span className="font-bold text-lg text-primary">৳ {liveAuction.currentBid}</span>
+              <span className="font-semibold text-lg text-primary">৳ {liveAuction.currentBid}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-500">Bid Increment</span>
-              <span className="font-bold text-lg text-primary">৳ {liveAuction.bidIncrement}</span>
+              <span className="font-semibold text-lg text-primary">
+                ৳ {liveAuction.bidIncrement}
+              </span>
             </div>
           </div>
 
           <div>
-            <h3 className="text-base md:text-lg font-semibold mb-2">Bid History</h3>
+            <h3 className="text-base md:text-lg font-medium mb-2">Bid History</h3>
             {liveAuction.bidHistory.length ? (
               <ul className="divide-y text-sm border rounded-md bg-gray-50 h-[300px] overflow-y-auto">
                 {liveAuction.bidHistory

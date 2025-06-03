@@ -44,17 +44,14 @@ const AuthRegister = () => {
   } = methods;
 
   const onSubmit = async (formData) => {
-    console.log('Register form data:', formData); // Debug log
-
     try {
       const result = await dispatch(registerUser(formData));
-      console.log('Register result:', result); // Debug log
 
       if (result?.payload?.success) {
         toast.success(result.payload.message, {
           action: { label: 'close' },
         });
-        reset(); // Clear form on success
+        reset();
         navigate('/verify-email');
       } else {
         toast.error(result.payload?.message || 'Registration failed', {
@@ -71,7 +68,7 @@ const AuthRegister = () => {
 
   const onError = (errors) => {
     console.log('Form validation errors:', errors);
-    // Show validation errors as toasts
+
     Object.values(errors).forEach((error) => {
       if (error?.message) {
         toast.error(error.message, {
@@ -83,7 +80,7 @@ const AuthRegister = () => {
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
+      <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Register</h1>
         <p className="mt-2">
           Already have an account?

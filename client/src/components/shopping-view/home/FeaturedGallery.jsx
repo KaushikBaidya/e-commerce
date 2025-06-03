@@ -123,8 +123,8 @@ export default function FeaturedGallery() {
               ))}
             </div>
 
-            <h2 className="text-base font-semibold text-indigo-600">{activeTab}</h2>
-            <p className="mt-2 text-4xl font-bold text-gray-900">{tab.heading}</p>
+            <h2 className="text-base font-medium text-indigo-600">{activeTab}</h2>
+            <p className="mt-2 text-4xl font-semibold text-gray-900">{tab.heading}</p>
             <p className="mt-4 text-lg text-gray-600">{tab.description}</p>
 
             <div className="mt-8 space-y-6">

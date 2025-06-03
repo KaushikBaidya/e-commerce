@@ -27,24 +27,23 @@ const ShopProductTile = ({ product, handleGetProductDetails, handleAddToCart }) 
         </div>
 
         <CardContent className="p-4 space-y-2">
-          <h2 className="text-lg md:text-xl font-bold">{product?.title}</h2>
+          <h2 className="text-lg md:text-xl font-medium">{product?.title}</h2>
 
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>{categoryOptionsMap[product?.category]}</span>
-            {/* <span>{brandOptionsMap[product?.brand]}</span> */}
           </div>
 
           <div className="flex justify-between items-center">
             <span
               className={`${
                 product?.salePrice > 0 ? 'line-through' : ''
-              } text-base font-semibold text-primary`}
+              } text-base font-medium text-primary`}
             >
               ৳ {product?.price}
             </span>
 
             {product?.salePrice > 0 && (
-              <span className="text-base font-semibold text-primary">৳ {product?.salePrice}</span>
+              <span className="text-base font-medium text-primary">৳ {product?.salePrice}</span>
             )}
           </div>
         </CardContent>

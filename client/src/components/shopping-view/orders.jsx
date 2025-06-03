@@ -32,7 +32,7 @@ const ShoppingOrdersList = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl font-semibold pt-4 px-2">Order History</CardTitle>
+        <CardTitle className="text-xl font-medium pt-4 px-2">Order History</CardTitle>
       </CardHeader>
       {isLoading ? (
         <Loading />

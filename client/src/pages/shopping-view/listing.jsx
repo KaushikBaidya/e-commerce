@@ -178,7 +178,7 @@ const ShoppingListing = () => {
       ) : (
         <div className="bg-background w-full rounded-lg shadow-sm">
           <div className="p-3 border-b flex items-center justify-between">
-            <h2 className="text-lg font-semibold">All Products</h2>
+            <h2 className="text-lg font-medium">All Products</h2>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground block">{productList?.length} Products</span>
               <DropdownMenu>

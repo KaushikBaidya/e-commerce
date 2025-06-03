@@ -22,7 +22,7 @@ const Footer = () => {
           <div className="md:col-span-1 lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-8">
             {/* Explore */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-600 mb-3">Explore</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-3">Explore</h3>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li>
                   <Link to="/" className="hover:text-gray-800 transition-colors">
@@ -30,13 +30,16 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/paintings" className="hover:text-gray-800 transition-colors">
-                    Paintings
+                  <Link
+                    to="/galeria/announcements"
+                    className="hover:text-gray-800 transition-colors"
+                  >
+                    Announcements
                   </Link>
                 </li>
                 <li>
-                  <Link to="/pictures" className="hover:text-gray-800 transition-colors">
-                    Pictures
+                  <Link to="/galeria/community" className="hover:text-gray-800 transition-colors">
+                    Galería Community
                   </Link>
                 </li>
               </ul>
@@ -44,7 +47,7 @@ const Footer = () => {
 
             {/* Company */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-600 mb-3">Company</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-3">Company</h3>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li>
                   <Link to="/about" className="hover:text-gray-800 transition-colors">
@@ -66,7 +69,7 @@ const Footer = () => {
 
             {/* Support */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-600 mb-3">Support</h3>
+              <h3 className="text-sm font-medium text-gray-600 mb-3">Support</h3>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li>
                   <Link to="/faq" className="hover:text-gray-800 transition-colors">
@@ -90,8 +93,8 @@ const Footer = () => {
 
         {/* Bottom Disclaimer */}
         <div className="mt-12 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} <span className="font-semibold">Galería</span>. All
-          rights reserved.
+          &copy; {new Date().getFullYear()} <span className="font-medium">Galería</span>. All rights
+          reserved.
         </div>
       </div>
     </footer>

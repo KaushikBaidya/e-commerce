@@ -53,7 +53,7 @@ const AdminProducts = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full mb-4 flex items-center justify-between gap-4 border-b rounded p-2">
-        <h1 className="text-2xl text-gray-800 font-semibold">Products</h1>
+        <h1 className="text-2xl text-gray-800 font-medium">Products</h1>
         <ProductSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <Button onClick={handleOpenCreateDialog}>Add new product</Button>
       </div>
