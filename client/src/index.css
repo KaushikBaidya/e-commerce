@@ -69,7 +69,7 @@
 }
 
 /* HTML: <div class="loader"></div> */
-.loader {
+/* .loader {
   width: 50px;
   aspect-ratio: 1;
   display: grid;
@@ -88,6 +88,43 @@
   -webkit-mask: repeating-conic-gradient(#0000 0 36deg, #000 0 72deg);
   mask: repeating-conic-gradient(#0000 0 36deg, #000 0 72deg);
   animation-direction: reverse;
+}
+@keyframes l19 {
+  100% {
+    transform: rotate(1turn);
+  }
+} */
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+}
+.loader::before,
+.loader::after {
+  content: '';
+  grid-area: 1/1;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    farthest-side,
+    #0000 0%,
+    #ff6b35 1% 10%,
+    /* Main orange tone */ #0000 11% 30%
+  );
+  -webkit-mask: repeating-conic-gradient(#000 0 36deg, #0000 0 72deg);
+  mask: repeating-conic-gradient(#000 0 36deg, #0000 0 72deg);
+  animation: l19 4s infinite linear;
+}
+.loader::after {
+  -webkit-mask: repeating-conic-gradient(#0000 0 36deg, #000 0 72deg);
+  mask: repeating-conic-gradient(#0000 0 36deg, #000 0 72deg);
+  animation-direction: reverse;
+  background: repeating-radial-gradient(
+    farthest-side,
+    #0000 0%,
+    #faae42 1% 10%,
+    /* Lighter orange-yellow */ #0000 11% 30%
+  );
 }
 @keyframes l19 {
   100% {
