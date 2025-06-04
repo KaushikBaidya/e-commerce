@@ -99,11 +99,9 @@ export default function FeaturedGallery() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Image */}
           <div>
-            <img
-              src={tab.image}
-              alt={activeTab}
-              className="w-full rounded-xl shadow-lg ring-1 ring-gray-300 object-cover"
-            />
+            <div className="w-full aspect-[4/5] overflow-hidden rounded-xl shadow-lg ring-1 ring-gray-300">
+              <img src={tab.image} alt={activeTab} className="w-full h-full object-cover" />
+            </div>
           </div>
 
           {/* Right Content */}

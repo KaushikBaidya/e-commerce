@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import BlurText from '../../common/BlurText';
 
 const Hero = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentStat, setCurrentStat] = useState(0);
 
   const stats = [
@@ -14,17 +13,6 @@ const Hero = () => {
   ];
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentStat((prev) => (prev + 1) % stats.length);
     }, 3000);
@@ -32,11 +20,26 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 overflow-hidden">
-      <div className="relative z-10 px-6 pt-32 pb-20 lg:px-8">
-        <div className="mx-auto max-w-7xl text-center">
+    <div className="relative isolate px-6 lg:px-8 bg-white">
+      {/* Top Blobby Background */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+      >
+        <div
+          style={{
+            clipPath:
+              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+          }}
+          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[100rem]"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="mx-auto max-w-7xl py-32 sm:py-32 lg:py-48">
+        <div className="text-center">
           {/* Badge */}
-          <div className="mb-10 inline-flex items-center gap-2 bg-white/70 backdrop-blur-md border border-indigo-200 px-4 py-2 rounded-full text-sm text-gray-700 shadow-md">
+          <div className="mb-8 inline-flex items-center gap-2 bg-white/70 backdrop-blur-md border border-indigo-200 px-4 py-2 rounded-full text-sm text-gray-700 shadow-md">
             <Sparkles className="w-4 h-4 text-indigo-600" />
             Spring Collection 2025 is live —
             <Link
@@ -47,7 +50,7 @@ const Hero = () => {
             </Link>
           </div>
 
-          {/* Main Headline */}
+          {/* Headline */}
           <BlurText
             text="Own Timeless Artworks"
             delay={100}
@@ -69,7 +72,7 @@ const Hero = () => {
             space and investment.
           </p>
 
-          {/* CTA */}
+          {/* CTAs */}
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/shop/auction"
@@ -83,7 +86,7 @@ const Hero = () => {
 
             <Link
               to="/shop/auction"
-              className="group flex items-center gap-3 px-6 py-3 border border-gray-300 bg-white/60 backdrop-blur-xl rounded-xl font-medium text-gray-800 hover:scale-105 transition-all"
+              className="group flex items-center gap-3 px-6 py-3 border border-purple-500 bg-white/60 backdrop-blur-xl rounded-xl font-medium text-gray-800 hover:scale-105 transition-all"
             >
               <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Play className="w-4 h-4 text-white" />
@@ -93,7 +96,7 @@ const Hero = () => {
           </div>
 
           {/* Stats */}
-          <div className="mt-12 flex flex-wrap justify-center gap-8">
+          <div className="mt-14 flex flex-wrap justify-center gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -121,6 +124,20 @@ const Hero = () => {
             })}
           </div>
         </div>
+      </div>
+
+      {/* Bottom Blobby Background */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-50rem)]"
+      >
+        <div
+          style={{
+            clipPath:
+              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+          }}
+          className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[100rem]"
+        />
       </div>
     </div>
   );

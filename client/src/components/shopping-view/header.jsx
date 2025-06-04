@@ -159,9 +159,8 @@ const ShoppingHeader = ({ open, setOpen }) => {
       <div className="w-full flex h-16 items-center justify-between px-4 md:px-6">
         <div className="w-full flex items-center justify-between">
           <Link to="/">
-            <div className="w-64 h-10 flex flex-row items-center justify-start gap-2">
-              <img src={logo} alt="logo" className="h-8 w-8" />
-              <span className="font-medium text-3xl font-newsreader italic pt-2">Galería</span>
+            <div className="flex flex-row items-center justify-start gap-2">
+              <img src={logo} alt="logo" className="h-10" />
             </div>
           </Link>
           <Sheet open={open} onOpenChange={setOpen}>
