@@ -114,13 +114,13 @@ const AnimatedList = ({
         ref={listRef}
         className={`max-h-[400px] overflow-y-auto p-4 ${
           displayScrollbar
-            ? '[&::-webkit-scrollbar]:w-[8px] [&::-webkit-scrollbar-track]:bg-[#060606] [&::-webkit-scrollbar-thumb]:bg-[#222] [&::-webkit-scrollbar-thumb]:rounded-[4px]'
+            ? '[&::-webkit-scrollbar]:w-[8px] [&::-webkit-scrollbar-track]:bg-[#f87373] [&::-webkit-scrollbar-thumb]:bg-[#fc7979] [&::-webkit-scrollbar-thumb]:rounded-[4px]'
             : 'scrollbar-hide'
         }`}
         onScroll={handleScroll}
         style={{
           scrollbarWidth: displayScrollbar ? 'thin' : 'none',
-          scrollbarColor: '#222 #060606',
+          scrollbarColor: '#6b6b6b #f8f8f8',
         }}
       >
         {items.map((item, index) => (
@@ -139,7 +139,10 @@ const AnimatedList = ({
             <div
               className={`p-4 bg-[#111] rounded-lg ${selectedIndex === index ? 'bg-[#222]' : ''} ${itemClassName}`}
             >
-              <p className="text-white m-0">{item}</p>
+              <div className="flex justify-between items-center text-sm text-black">
+                <span>Bidder: {item.bidder.slice(-6)}</span>
+                <span className="font-medium">৳ {item.amount}</span>
+              </div>
             </div>
           </AnimatedItem>
         ))}
@@ -147,11 +150,11 @@ const AnimatedList = ({
       {showGradients && (
         <>
           <div
-            className="absolute top-0 left-0 right-0 h-[50px] bg-gradient-to-b from-[#060606] to-transparent pointer-events-none transition-opacity duration-300 ease"
+            className="absolute top-0 left-0 right-0 h-[50px] rounded-lg bg-gradient-to-b from-[#e2e2e2] to-transparent pointer-events-none transition-opacity duration-300 ease"
             style={{ opacity: topGradientOpacity }}
           ></div>
           <div
-            className="absolute bottom-0 left-0 right-0 h-[100px] bg-gradient-to-t from-[#060606] to-transparent pointer-events-none transition-opacity duration-300 ease"
+            className="absolute bottom-0 left-0 right-0 h-[100px] rounded-lg bg-gradient-to-t from-[#e2e2e2] to-transparent pointer-events-none transition-opacity duration-300 ease"
             style={{ opacity: bottomGradientOpacity }}
           ></div>
         </>

@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
+import AnimatedList from '../common/AnimatedList';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
@@ -55,6 +56,13 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
       setSocket(null);
     };
   }, [open, auctionProductDetails]);
+
+  const bids = liveAuction.bidHistory?.slice().reverse() || [];
+
+  const handleBidSelect = (bid, index) => {
+    console.log('Selected bid:', bid, index);
+    // You can add behavior like showing more info
+  };
 
   const handleDialogClose = () => {
     setOpen(false);
@@ -198,6 +206,22 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
 
           <div>
             <h3 className="text-base md:text-lg font-medium mb-2">Bid History</h3>
+            {bids.length ? (
+              <AnimatedList
+                items={bids}
+                onItemSelect={handleBidSelect}
+                showGradients={true}
+                className="max-w-full"
+                itemClassName="!bg-gray-100 hover:!bg-gray-200"
+                displayScrollbar={true}
+                // Optional: initialSelectedIndex={0}
+              />
+            ) : (
+              <p className="text-gray-500 text-sm italic">No bids yet</p>
+            )}
+          </div>
+          {/* <div>
+            <h3 className="text-base md:text-lg font-medium mb-2">Bid History</h3>
             {liveAuction.bidHistory.length ? (
               <ul className="divide-y text-sm border rounded-md bg-gray-50 h-[300px] overflow-y-auto">
                 {liveAuction.bidHistory
@@ -213,7 +237,7 @@ const AuctionDetails = ({ open, setOpen, auctionProductDetails }) => {
             ) : (
               <p className="text-gray-500 text-sm italic">No bids yet</p>
             )}
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>
