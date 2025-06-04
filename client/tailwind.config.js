@@ -72,8 +72,8 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       fontFamily: {
-				roboto: ['Roboto', 'sans-serif'],
-				newsreader: ['Newsreader', 'serif'],
+        dmSans: ['DM Sans', 'sans-serif'],
+        cormorantGaramond: ['Cormorant Garamond', 'serif'],
       },
     },
   },

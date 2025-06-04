@@ -19,13 +19,31 @@ const features = [
       'Every artwork is verified and comes with provenance to ensure authenticity and peace of mind.',
     icon: ShieldCheck,
   },
+  {
+    title: 'Live Bidding Experience',
+    description:
+      'Engage in real-time auctions and experience the thrill of bidding on rare, collectible artworks.',
+    icon: Gavel,
+  },
+  {
+    title: 'Curated Collections',
+    description:
+      'Browse a carefully selected gallery of fine art, including paintings, photography, and sculptures from around the world.',
+    icon: Search,
+  },
+  {
+    title: 'Authenticity Guaranteed',
+    description:
+      'Every artwork is verified and comes with provenance to ensure authenticity and peace of mind.',
+    icon: ShieldCheck,
+  },
 ];
 
 const FeatureHighlights = () => {
   return (
     <section className="py-32 bg-gradient-to-br px-6">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
+        <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight font-cormorantGaramond">
           Discover Why Collectors Choose Us
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-16">

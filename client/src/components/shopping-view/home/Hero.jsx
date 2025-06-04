@@ -56,14 +56,14 @@ const Hero = () => {
             delay={100}
             animateBy="words"
             direction="top"
-            className="text-5xl sm:text-6xl md:text-7xl font-semibold text-gray-900 tracking-tight leading-tight"
+            className="text-5xl sm:text-6xl md:text-7xl font-bold font-cormorantGaramond text-gray-900 tracking-tight leading-tight"
           />
           <BlurText
             text="Through Live Auctions"
             delay={300}
             animateBy="words"
             direction="top"
-            className="text-5xl sm:text-6xl md:text-7xl font-semibold text-gray-900 tracking-tight leading-tight"
+            className="text-5xl sm:text-6xl md:text-7xl font-bold font-cormorantGaramond text-gray-900 tracking-tight leading-tight"
           />
 
           {/* Subtext */}
