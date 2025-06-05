@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Eye, EyeOff, Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, FormProvider, useFormContext } from 'react-hook-form';
 
@@ -73,7 +73,10 @@ const FormField = ({ controlItem }) => {
                 />
               )}
             />
-            <Calendar className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none" size={18} />
+            <Calendar
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none"
+              size={18}
+            />
           </div>
         );
 
@@ -93,7 +96,10 @@ const FormField = ({ controlItem }) => {
                 />
               )}
             />
-            <Clock className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none" size={18} />
+            <Clock
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none"
+              size={18}
+            />
           </div>
         );
 
@@ -145,7 +151,7 @@ const FormField = ({ controlItem }) => {
               >
                 <option value="">Select an option</option>
                 {controlItem.options?.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
+                  <option key={opt.id} value={opt.id}>
                     {opt.label}
                   </option>
                 ))}

@@ -124,7 +124,7 @@ export const useProductForm = () => {
       description: product?.description || '',
       category: product?.category || '',
       price: product?.price || '',
-      salePrice: product?.salePrice || '',
+      salePrice: product?.salePrice || 0,
       totalStock: product?.totalStock || '',
       image: product?.image || null,
       imagePublicId: product?.imagePublicId || null,
