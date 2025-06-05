@@ -166,7 +166,7 @@ const ProductDetails = ({ open, setOpen, productDetails }) => {
 
           <div className="flex items-center justify-between text-xl font-medium">
             <p className={`${productDetails?.salePrice > 0 ? 'line-through' : ''} text-primary`}>
-              ৳ {productDetails?.price}
+              ৳ {productDetails?.price.toLocaleString()}
             </p>
             {productDetails?.salePrice > 0 && (
               <p className="text-muted-foreground">৳ {productDetails?.salePrice}</p>
