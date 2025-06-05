@@ -22,6 +22,7 @@ createRoot(document.getElementById('root')).render(
           duration: 3000,
         }}
       />
+
       <App />
     </Provider>
   </BrowserRouter>

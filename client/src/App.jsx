@@ -26,9 +26,11 @@ import NotFound from './pages/not-found';
 import AuctionPage from './pages/shopping-view/AuctionPage';
 import AuctionStripeSuccess from './pages/shopping-view/AuctionStripeSuccess';
 import StripeSuccess from './pages/shopping-view/StripeSuccess';
+import AboutUsPage from './pages/shopping-view/about-us';
 import ShoppingAccount from './pages/shopping-view/account';
 import AuctionCheckout from './pages/shopping-view/auction-checkout';
 import ShoppingCheckout from './pages/shopping-view/checkout';
+import ContactFeedback from './pages/shopping-view/contact-feedback';
 import ShoppingHome from './pages/shopping-view/home';
 import ShoppingListing from './pages/shopping-view/listing';
 import SearchProducts from './pages/shopping-view/search';
@@ -85,6 +87,7 @@ function App() {
         <Route path="/" element={<ShoppingLayout />}>
           {/* Public routes */}
           <Route path="/" element={<ShoppingHome />} />
+          <Route path="about-us" element={<AboutUsPage />} />
           <Route path="shop/listing" element={<ShoppingListing />} />
           <Route path="shop/auction" element={<AuctionPage />} />
           <Route path="shop/search" element={<SearchProducts />} />
@@ -92,6 +95,7 @@ function App() {
           <Route path="reset-password/:token" element={<ResetPassword />} />
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="verify/:token" element={<VerifyTokenPage />} />
+          <Route path="contact" element={<ContactFeedback />} />
 
           {/* Protected routes */}
           <Route

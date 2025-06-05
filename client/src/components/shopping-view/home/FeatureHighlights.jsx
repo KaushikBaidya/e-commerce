@@ -47,16 +47,16 @@ const FeatureHighlights = () => {
 
         {/* Custom Layout */}
         <AnimatedContent
-          distance={150}
+          distance={200}
           direction="vertical"
           reverse={false}
-          duration={1.0}
+          duration={0.5}
           ease="power3.out"
           initialOpacity={0.2}
           animateOpacity
-          scale={1.1}
+          scale={1.2}
           threshold={0.2}
-          delay={0.3}
+          delay={0.1}
         >
           <div className="relative flex flex-col items-center space-y-12 md:space-y-0 md:grid md:grid-cols-3 md:grid-rows-3 md:gap-8 justify-items-center">
             <div className="md:col-span-1 md:row-span-1 md:col-start-1 md:row-start-1">
