@@ -29,22 +29,22 @@ const ProductDialog = ({
             {currentEditedId ? 'Edit Product' : 'Create New Product'}
           </SheetTitle>
         </SheetHeader>
-
-        <ImageUpload
-          file={imageFile}
-          setFile={setImageFile}
-          uploadedUrl={uploadedImageUrl}
-          setUploadedUrl={setUploadedImageUrl}
-          imageLoadingState={imageLoadingState}
-          setImageLoadingState={setImageLoadingState}
-          isEditMode={currentEditedId !== null}
-          setFormData={(data) => {
-            Object.keys(data).forEach((key) => {
-              setValue(key, data[key]);
-            });
-          }}
-        />
-
+        <div className="px-5">
+          <ImageUpload
+            file={imageFile}
+            setFile={setImageFile}
+            uploadedUrl={uploadedImageUrl}
+            setUploadedUrl={setUploadedImageUrl}
+            imageLoadingState={imageLoadingState}
+            setImageLoadingState={setImageLoadingState}
+            isEditMode={currentEditedId !== null}
+            setFormData={(data) => {
+              Object.keys(data).forEach((key) => {
+                setValue(key, data[key]);
+              });
+            }}
+          />
+        </div>
         <div className="px-5 py-6 text-foreground">
           <CommonForm
             formControls={addProductFormElements}

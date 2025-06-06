@@ -81,7 +81,7 @@ const ImageUpload = ({
   }, [file]);
 
   return (
-    <div className="w-full max-w-md mx-auto px-5">
+    <div className="w-full max-w-6xl mx-auto">
       <Label className="text-lg font-medium mb-2 text-foreground block">Upload Image</Label>
       <div
         onDragOver={handleDragOver}

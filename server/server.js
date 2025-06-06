@@ -24,6 +24,7 @@ const shopAddressRouter = require("./routes/shop/address-route");
 const shopOrderRouter = require("./routes/shop/order-route");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/product-review-routes");
+const shopFeedbackRouter = require("./routes/shop/feedback-route");
 
 const auctionCheckoutRouter = require("./routes/shop/auction-checkout-route");
 const { startAuctionMonitor } = require("./helper/auction-monitor");
@@ -70,7 +71,7 @@ app.use(passport.initialize());
 
 // Initialize Socket.IO (moved to separate file)
 initSocket(server);
-startAuctionMonitor()
+startAuctionMonitor();
 
 // API Routes
 app.use("/api/auth", authRouter);
@@ -86,6 +87,7 @@ app.use("/api/shop/address", shopAddressRouter);
 app.use("/api/shop/order", shopOrderRouter);
 app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
+app.use("/api/shop/feedback", shopFeedbackRouter);
 
 app.use("/api/auction/checkout", auctionCheckoutRouter);
 

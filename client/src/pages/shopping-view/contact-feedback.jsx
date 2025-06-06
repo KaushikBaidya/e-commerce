@@ -8,7 +8,6 @@ import {
   Send,
   Star,
   Upload,
-  X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -139,7 +138,7 @@ export default function ContactFeedback() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md w-full">
           <div className="bg-gradient-to-r from-purple-100 to-purple-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Send className="w-10 h-10 text-purple-600" />
@@ -156,7 +155,7 @@ export default function ContactFeedback() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white py-12 px-4">
+    <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -236,216 +235,6 @@ export default function ContactFeedback() {
           </div>
 
           {/* Feedback Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="space-y-6">
-                {/* Feedback Type Selection */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-4">
-                    What's your feedback about?
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {feedbackTypes.map((type) => {
-                      const Icon = type.icon;
-                      return (
-                        <button
-                          key={type.value}
-                          type="button"
-                          onClick={() => setFeedbackType(type.value)}
-                          className={`p-4 rounded-lg border-2 flex items-center space-x-3 transition-all duration-200 ${
-                            feedbackType === type.value
-                              ? 'border-purple-600 bg-purple-50 text-purple-700'
-                              : 'border-gray-200 hover:border-purple-300 text-gray-600'
-                          }`}
-                        >
-                          <Icon className="w-5 h-5" />
-                          <span className="font-medium">{type.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Personal Info */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      placeholder="Your full name"
-                    />
-                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      placeholder="your@email.com"
-                    />
-                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Phone Number (Optional)
-                  </label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-
-                {/* Rating */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    Overall Experience Rating
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onMouseLeave={() => setHoverRating(0)}
-                        className="transition-colors duration-200"
-                      >
-                        <Star
-                          className={`w-8 h-8 ${
-                            star <= (hoverRating || rating)
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      </button>
-                    ))}
-                    <span className="ml-3 text-gray-600">
-                      {rating > 0 && `${rating} out of 5 stars`}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Feedback Subject */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Subject *
-                  </label>
-                  <input
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="Brief summary of your feedback"
-                  />
-                  {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject}</p>}
-                </div>
-
-                {/* Detailed Feedback */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Detailed Feedback *
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                    placeholder="Please share your detailed thoughts, suggestions, or concerns..."
-                  />
-                  {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
-                </div>
-
-                {/* Image Upload */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    Attach Screenshots or Images (Optional)
-                  </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors duration-200">
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="image-upload"
-                    />
-                    <label htmlFor="image-upload" className="cursor-pointer">
-                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                      <p className="text-gray-600 mb-2">Click to upload images or drag and drop</p>
-                      <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB each</p>
-                    </label>
-                  </div>
-
-                  {/* Image Preview */}
-                  {uploadedImages.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                      {uploadedImages.map((image) => (
-                        <div key={image.id} className="relative group">
-                          <img
-                            src={image.url}
-                            alt={image.name}
-                            className="w-full h-24 object-cover rounded-lg"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(image.id)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                          <p className="text-xs text-gray-500 mt-1 truncate">{image.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Newsletter Subscription */}
-                <div className="flex items-start space-x-3 bg-purple-50 p-4 rounded-lg">
-                  <input
-                    name="newsletter"
-                    type="checkbox"
-                    checked={formData.newsletter}
-                    onChange={handleInputChange}
-                    id="newsletter"
-                    className="mt-1 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="newsletter" className="text-sm text-gray-700">
-                    <span className="font-medium">Stay updated!</span> Subscribe to our newsletter
-                    for auction alerts, artist spotlights, and exclusive art collecting tips.
-                  </label>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="button"
-                  onClick={onSubmit}
-                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center space-x-2"
-                >
-                  <Send className="w-5 h-5" />
-                  <span>Send Feedback</span>
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Additional Features */}

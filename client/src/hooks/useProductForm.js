@@ -104,7 +104,6 @@ export const useProductForm = () => {
         }
       }
     } catch (error) {
-      console.error('Submit error:', error);
       toast.error('Something went wrong. Please try again.');
     }
   };
