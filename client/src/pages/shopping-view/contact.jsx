@@ -34,7 +34,6 @@ export default function Contact() {
     const feedbackData = {
       ...data,
     };
-    console.log('Feedback data:', feedbackData);
 
     try {
       const response = await dispatch(addUserMessage(feedbackData));

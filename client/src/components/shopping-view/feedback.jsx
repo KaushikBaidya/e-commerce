@@ -16,7 +16,7 @@ const Feedback = () => {
 
   useEffect(() => {
     if (user !== null) dispatch(getUserFeedbacks(userId));
-  }, dispatch);
+  }, [dispatch, userId]);
 
   return (
     <div className="p-6">

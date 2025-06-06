@@ -58,7 +58,6 @@ export default function FeedbackDialog({ userId }) {
       feedbackType,
       image: uploadedImageUrl,
     };
-    console.log('Feedback data:', feedbackData);
 
     try {
       const response = await dispatch(addFeedback(feedbackData));
@@ -73,7 +72,6 @@ export default function FeedbackDialog({ userId }) {
       console.error('Feedback submission error:', error);
       toast.error('Something went wrong. Please try again.');
     } finally {
-      console.log('Feedback submitted:', feedbackData);
       setTimeout(() => {
         setIsSubmitted(false);
         reset();
