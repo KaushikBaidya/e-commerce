@@ -1,14 +1,7 @@
-import {
-  Gem,
-  LayoutDashboard,
-  LayoutList,
-  ShoppingBag,
-  ShoppingBasket,
-  Trophy,
-  User,
-} from 'lucide-react';
+import { Gem, LayoutDashboard, LayoutList, ShoppingBag, Trophy, User } from 'lucide-react';
 import { Fragment } from 'react';
-import { MdOutlineAdminPanelSettings } from 'react-icons/md';
+import { AiOutlineProduct } from 'react-icons/ai';
+import { MdOutlineAdminPanelSettings, MdOutlineFeedback } from 'react-icons/md';
 import { RiAuctionLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
@@ -42,7 +35,7 @@ const adminSidebarLinks = [
     id: 'products',
     name: 'Products',
     path: '/admin/products',
-    icons: <ShoppingBasket />,
+    icons: <AiOutlineProduct size={25} />,
   },
   {
     id: 'auction-orders',
@@ -61,6 +54,12 @@ const adminSidebarLinks = [
     name: 'Features',
     path: '/admin/features',
     icons: <ShoppingBag />,
+  },
+  {
+    id: 'feedback',
+    name: 'Feedback',
+    path: '/admin/feedbacks',
+    icons: <MdOutlineFeedback size={25} />,
   },
 ];
 

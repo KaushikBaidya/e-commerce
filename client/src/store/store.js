@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth-slice';
 
 import AdminAuctionProductsSlice from './admin/auction-products-slice';
+import AdminFeedbackSlice from './admin/feedback-slice';
 import adminNotificationSlice from './admin/notification-slice';
 import AdminOrderSlice from './admin/order-slice';
 import AdminProductsSlice from './admin/products-slice';
@@ -28,6 +29,7 @@ const store = configureStore({
     adminOrder: AdminOrderSlice,
     adminUser: AdminUserSlice,
     adminNotifications: adminNotificationSlice,
+    adminFeedback: AdminFeedbackSlice,
 
     shopProducts: ShoppingProductsSlice,
     shopAuctionProducts: ShoppingAuctionProductsSlice,

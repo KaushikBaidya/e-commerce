@@ -12,6 +12,7 @@ import AdminUsers from './pages/admin-view/AdminUsers';
 import AllNotifications from './pages/admin-view/AllNotifications';
 import AuctionProductsView from './pages/admin-view/AuctionProductsView';
 import AuctionWinners from './pages/admin-view/AuctionWinners';
+import Feedbacks from './pages/admin-view/Feedbacks';
 import AdminDashboard from './pages/admin-view/dashboard';
 import AdminFeatures from './pages/admin-view/features';
 import AdminOrders from './pages/admin-view/oders';
@@ -80,6 +81,7 @@ function App() {
           <Route path="features" element={<AdminFeatures />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="auction-winners" element={<AuctionWinners />} />
+          <Route path="feedbacks" element={<Feedbacks />} />
           <Route path="notifications" element={<AllNotifications />} />
         </Route>
 
