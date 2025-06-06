@@ -20,6 +20,23 @@ export const addFeedback = createAsyncThunk('/feedback/addFeedback', async (form
   }
 });
 
+export const addUserMessage = createAsyncThunk(
+  '/feedback/addUserMessage',
+  async (formdata, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/shop/feedback/user-message/add`,
+        formdata
+      );
+
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to add feedback. Try again later.';
+      return thunkAPI.rejectWithValue({ success: false, message });
+    }
+  }
+);
+
 export const getUserFeedbacks = createAsyncThunk('/feedback/getUserFeedbacks', async (userId) => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_BASE_URL}/shop/feedback/get/${userId}`

@@ -1,140 +1,56 @@
-import {
-  Camera,
-  FileText,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Send,
-  Star,
-  Upload,
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { addUserMessage } from '@/store/shop/feedback-slice';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Mail, MapPin, MessageCircle, Phone, Send, Star, Upload } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 
-export default function ContactFeedback() {
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [feedbackType, setFeedbackType] = useState('general');
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  email: yup.string().email('Invalid email address').required('Email is required'),
+  subject: yup.string().required('Subject is required'),
+  message: yup
+    .string()
+    .min(10, 'Feedback must be at least 10 characters')
+    .required('Please provide your feedback'),
+});
+
+export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    newsletter: false,
-  });
+  const dispatch = useDispatch();
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({ resolver: yupResolver(schema) });
 
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^\S+@\S+$/i.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Please provide your feedback';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Feedback must be at least 10 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-      newsletter: false,
-    });
-    setErrors({});
-    setRating(0);
-    setUploadedImages([]);
-    setFeedbackType('general');
-  };
-
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    files.forEach((file) => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setUploadedImages((prev) => [
-            ...prev,
-            {
-              id: Date.now() + Math.random(),
-              url: e.target.result,
-              name: file.name,
-            },
-          ]);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  };
-
-  const removeImage = (id) => {
-    setUploadedImages((prev) => prev.filter((img) => img.id !== id));
-  };
-
-  const onSubmit = () => {
-    if (!validateForm()) {
-      return;
-    }
-
+  const onSubmit = async (data) => {
     const feedbackData = {
-      ...formData,
-      rating,
-      feedbackType,
-      images: uploadedImages,
-      timestamp: new Date().toISOString(),
+      ...data,
     };
+    console.log('Feedback data:', feedbackData);
 
-    console.log('Feedback submitted:', feedbackData);
-    setIsSubmitted(true);
-
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      resetForm();
-    }, 3000);
+    try {
+      const response = await dispatch(addUserMessage(feedbackData));
+      if (response?.payload?.success) {
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Feedback submission error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setTimeout(() => {
+        setIsSubmitted(false);
+        reset();
+      }, 3000);
+    }
   };
-
-  const feedbackTypes = [
-    { value: 'general', label: 'General Feedback', icon: MessageCircle },
-    { value: 'auction', label: 'Auction Experience', icon: FileText },
-    { value: 'artist', label: 'Artist Support', icon: Camera },
-    { value: 'technical', label: 'Technical Issue', icon: Upload },
-  ];
 
   if (isSubmitted) {
     return (
@@ -233,7 +149,74 @@ export default function ContactFeedback() {
               </div>
             </div>
           </div>
-
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-2xl font-semibold pt-6">Contact Us</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
+                  <div className="w-full">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Full Name *
+                    </label>
+                    <input {...register('name')} className="input-design" placeholder="Your name" />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                    )}
+                  </div>
+                  <div className="w-full">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      {...register('email')}
+                      className="input-design"
+                      placeholder="your@email.com"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Subject *
+                    </label>
+                    <input
+                      {...register('subject')}
+                      className="input-design"
+                      placeholder="Subject of your message"
+                    />
+                    {errors.subject && (
+                      <p className="text-red-500 text-sm mt-1">{errors.subject.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      {...register('message')}
+                      rows={4.5}
+                      className="input-design resize-none"
+                      placeholder="Your message"
+                    />
+                    {errors.message && (
+                      <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Button type="submit" className="w-full">
+                      <div className="flex justify-center items-center space-x-2">
+                        <Send className="w-4 h-4" />
+                        <span>Send Feedback</span>
+                      </div>
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </CardContent>
+          </Card>
           {/* Feedback Form */}
         </div>
 

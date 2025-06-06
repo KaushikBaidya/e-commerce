@@ -7,12 +7,11 @@ import CheckAuth from './components/common/check-auth';
 import Loading from './components/common/loading-component';
 import ShoppingLayout from './components/shopping-view/layout';
 import AdminAuctionOrders from './pages/admin-view/AdminAuctionOrders';
+import AdminProducts from './pages/admin-view/AdminProducts';
 import AdminUsers from './pages/admin-view/AdminUsers';
 import AllNotifications from './pages/admin-view/AllNotifications';
-import AuctionWinners from './pages/admin-view/AuctionWinners';
-// import AuctionProductsView from './pages/admin-view/auction-products';
-import AdminProducts from './pages/admin-view/AdminProducts';
 import AuctionProductsView from './pages/admin-view/AuctionProductsView';
+import AuctionWinners from './pages/admin-view/AuctionWinners';
 import AdminDashboard from './pages/admin-view/dashboard';
 import AdminFeatures from './pages/admin-view/features';
 import AdminOrders from './pages/admin-view/oders';
@@ -30,7 +29,7 @@ import AboutUsPage from './pages/shopping-view/about-us';
 import ShoppingAccount from './pages/shopping-view/account';
 import AuctionCheckout from './pages/shopping-view/auction-checkout';
 import ShoppingCheckout from './pages/shopping-view/checkout';
-import ContactFeedback from './pages/shopping-view/contact-feedback';
+import Contact from './pages/shopping-view/contact';
 import ShoppingHome from './pages/shopping-view/home';
 import ShoppingListing from './pages/shopping-view/listing';
 import SearchProducts from './pages/shopping-view/search';
@@ -95,7 +94,7 @@ function App() {
           <Route path="reset-password/:token" element={<ResetPassword />} />
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="verify/:token" element={<VerifyTokenPage />} />
-          <Route path="contact" element={<ContactFeedback />} />
+          <Route path="contact" element={<Contact />} />
 
           {/* Protected routes */}
           <Route

@@ -11,7 +11,6 @@ import { Button } from '../ui/button';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
-  // userId: yup.string().required('User ID is required'),
   email: yup.string().email('Invalid email address').required('Email is required'),
   phone: yup.string(),
   subject: yup.string().required('Subject is required'),
