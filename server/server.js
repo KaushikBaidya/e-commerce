@@ -60,8 +60,10 @@ app.use(
 				: ["http://localhost:5173"];
 
 			if (!origin || allowedOrigins.includes(origin)) {
+				// Allow undefined/null origins (common in redirects or curl)
 				callback(null, true);
 			} else {
+				console.warn(`Blocked by CORS: ${origin}`);
 				callback(new Error("Not allowed by CORS"));
 			}
 		},
@@ -76,6 +78,7 @@ app.use(
 		credentials: true,
 	})
 );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
