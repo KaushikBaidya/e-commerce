@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Footer from './footer.jsx';
-import ShoppingHeader from './header.jsx';
+
+import ShoppingHeader from './header';
+import Footer from './Footer';
 
 const ShoppingLayout = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
