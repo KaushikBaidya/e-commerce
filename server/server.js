@@ -54,7 +54,17 @@ const server = http.createServer(app);
 // Middlewares
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: (origin, callback) => {
+			const allowedOrigins = process.env.CORS_ORIGIN
+				? process.env.CORS_ORIGIN.split(",")
+				: ["http://localhost:5173"];
+
+			if (!origin || allowedOrigins.includes(origin)) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
 		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 		allowedHeaders: [
 			"Content-Type",
