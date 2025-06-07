@@ -62,6 +62,7 @@ passport.use(
 
 				user.tokens = { accessToken, refreshToken };
 
+				console.log("✅ Google login success:", user.email);
 				return done(null, user);
 			} catch (error) {
 				return done(error, null);
