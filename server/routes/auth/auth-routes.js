@@ -67,7 +67,7 @@ router.get(
 				secure: process.env.NODE_ENV === "production",
 				sameSite: "strict",
 			})
-			.redirect("http://localhost:5173");
+			.redirect(process.env.CLIENT_URL || "http://localhost:5173");
 	}
 );
 
