@@ -13,7 +13,7 @@ const VerifyTokenPage = () => {
     const verifyEmail = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/verify-email?token=${token}`
+          `${import.meta.env.VITE_API_BASE_URL}/auth/verify-email/${token}`
         );
         if (res.data.success) {
           setStatus('success');

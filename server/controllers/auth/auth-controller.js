@@ -31,10 +31,36 @@ const refreshAccessToken = (req, res) => {
 
 	try {
 		const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
-		const accessToken = jwt.sign({ id: decoded.id }, process.env.JWT_SECRET, {
-			expiresIn: "15m",
-		});
-		res.json({ success: true, accessToken });
+		// Fix: Need to get user details for new access token
+		User.findById(decoded.id)
+			.then((user) => {
+				if (!user) {
+					return res
+						.status(403)
+						.json({ success: false, message: "User not found" });
+				}
+
+				const accessToken = jwt.sign(
+					{ id: user._id, email: user.email, role: user.role },
+					process.env.JWT_SECRET,
+					{ expiresIn: "50m" }
+				);
+
+				// Set the new access token as cookie
+				res.cookie("accessToken", accessToken, {
+					httpOnly: true,
+					sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+					secure: process.env.NODE_ENV === "production",
+					maxAge: 50 * 60 * 1000, // 50 minutes
+				});
+
+				res.json({ success: true, accessToken });
+			})
+			.catch((err) => {
+				return res
+					.status(403)
+					.json({ success: false, message: "Invalid refresh token" });
+			});
 	} catch (err) {
 		return res
 			.status(403)
@@ -133,7 +159,8 @@ const registerUser = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-	const { token } = req.query;
+	// Fix: Get token from params instead of query
+	const { token } = req.params;
 	if (!token)
 		return res.status(400).json({ success: false, message: "Token missing" });
 
@@ -185,17 +212,22 @@ const loginUser = async (req, res) => {
 
 		const { accessToken, refreshToken } = generateTokens(user);
 
+		// Fix: Cookie settings for production
+		const cookieOptions = {
+			httpOnly: true,
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+			secure: process.env.NODE_ENV === "production",
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for refresh token
+		};
+
+		const accessCookieOptions = {
+			...cookieOptions,
+			maxAge: 50 * 60 * 1000, // 50 minutes for access token
+		};
+
 		res
-			.cookie("accessToken", accessToken, {
-				httpOnly: true,
-				sameSite: "strict",
-				secure: process.env.NODE_ENV === "production",
-			})
-			.cookie("refreshToken", refreshToken, {
-				httpOnly: true,
-				sameSite: "strict",
-				secure: process.env.NODE_ENV === "production",
-			})
+			.cookie("accessToken", accessToken, accessCookieOptions)
+			.cookie("refreshToken", refreshToken, cookieOptions)
 			.json({
 				success: true,
 				message: "Logged in successfully",
@@ -213,10 +245,16 @@ const loginUser = async (req, res) => {
 };
 
 const logout = (req, res) => {
-	res.clearCookie("token");
-	res.clearCookie("accessToken");
+	const cookieOptions = {
+		httpOnly: true,
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+		secure: process.env.NODE_ENV === "production",
+	};
+
 	res
-		.clearCookie("refreshToken")
+		.clearCookie("token", cookieOptions)
+		.clearCookie("accessToken", cookieOptions)
+		.clearCookie("refreshToken", cookieOptions)
 		.json({ success: true, message: "Logged out" });
 };
 

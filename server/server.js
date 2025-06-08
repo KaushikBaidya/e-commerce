@@ -60,15 +60,21 @@ app.use(
 				? process.env.CORS_ORIGIN.split(",")
 				: ["http://localhost:5173"];
 
+			console.log("🔍 CORS Debug Info:");
+			console.log("Request Origin:", origin);
+			console.log("CORS_ORIGIN env var:", process.env.CORS_ORIGIN);
+			console.log("Allowed Origins:", allowedOrigins);
+
 			if (!origin || allowedOrigins.includes(origin)) {
-				// Allow undefined/null origins (common in redirects or curl)
+				console.log("✅ CORS: Origin allowed");
 				callback(null, true);
 			} else {
+				console.log("❌ CORS: Origin blocked");
 				console.warn(`Blocked by CORS: ${origin}`);
 				callback(new Error("Not allowed by CORS"));
 			}
 		},
-		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+		methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 		allowedHeaders: [
 			"Content-Type",
 			"Authorization",
