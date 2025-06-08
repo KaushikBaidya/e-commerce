@@ -61,8 +61,8 @@ const createOrder = async (req, res) => {
 				},
 				quantity: item.quantity,
 			})),
-			success_url: `http://localhost:5173/shop/stripe-success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `http://localhost:5173/shop/stripe-cancel`,
+			success_url: `${process.env.CLIENT_URL}/shop/stripe-success?session_id={CHECKOUT_SESSION_ID}`,
+			cancel_url: `${process.env.CLIENT_URL}/shop/stripe-cancel`,
 			metadata: {
 				userId: sanitizedUserId.toString(),
 				cartId: sanitizedCartId.toString(),

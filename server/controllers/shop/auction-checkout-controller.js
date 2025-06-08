@@ -62,8 +62,8 @@ const createAuctionCheckoutSession = async (req, res) => {
 					quantity: 1,
 				},
 			],
-			success_url: `http://localhost:5173/auction/stripe-success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `http://localhost:5173/auction/stripe-cancel`,
+			success_url: `${process.env.CLIENT_URL}/auction/stripe-success?session_id={CHECKOUT_SESSION_ID}`,
+			cancel_url: `${process.env.CLIENT_URL}/auction/stripe-cancel`,
 			metadata: {
 				userId: sanitizedUserId.toString(),
 				auctionProductId: sanitizedAuctionProductId.toString(),
