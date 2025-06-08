@@ -30,7 +30,7 @@ const sendResetLink = async (req, res) => {
 
 		await user.save();
 
-		const transporter = nodemailer.createTransporter({
+		const transporter = nodemailer.createTransport({
 			service: "Gmail",
 			auth: {
 				user: process.env.EMAIL_USER,
