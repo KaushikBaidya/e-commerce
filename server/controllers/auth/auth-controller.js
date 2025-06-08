@@ -89,7 +89,7 @@ const registerUser = async (req, res) => {
 		const token = crypto.randomBytes(32).toString("hex");
 		const expiry = Date.now() + 1000 * 60 * 60 * 24;
 
-		const transporter = nodemailer.createTransporter({
+		const transporter = nodemailer.createTransport({
 			service: "Gmail",
 			auth: {
 				user: process.env.EMAIL_USER,
