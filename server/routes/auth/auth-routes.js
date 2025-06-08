@@ -58,17 +58,15 @@ router.get(
 	(req, res) => {
 		const { accessToken, refreshToken } = req.user.tokens;
 
+		const cookieOptions = {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "none", // <-- allow cross-site cookies
+		};
+
 		res
-			.cookie("accessToken", accessToken, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-			})
-			.cookie("refreshToken", refreshToken, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-			})
+			.cookie("accessToken", accessToken, cookieOptions)
+			.cookie("refreshToken", refreshToken, cookieOptions)
 			.redirect(process.env.CLIENT_URL || "http://localhost:5173");
 	}
 );
