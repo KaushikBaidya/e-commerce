@@ -28,7 +28,9 @@ const validateRequest = require("../../validator/validateRequest");
 const router = express.Router();
 
 router.post("/register", registerValidator, validateRequest, registerUser);
-router.get("/verify-email", verifyEmail);
+
+// Fix: Change to use params instead of query
+router.get("/verify-email/:token", verifyEmail);
 
 const loginLimiter = rateLimit({
 	windowMs: 15 * 60 * 1000,
@@ -58,17 +60,22 @@ router.get(
 	(req, res) => {
 		const { accessToken, refreshToken } = req.user.tokens;
 
+		// Fix: Proper cookie settings for production
+		const cookieOptions = {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for refresh token
+		};
+
+		const accessCookieOptions = {
+			...cookieOptions,
+			maxAge: 50 * 60 * 1000, // 50 minutes for access token
+		};
+
 		res
-			.cookie("accessToken", accessToken, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-			})
-			.cookie("refreshToken", refreshToken, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-			})
+			.cookie("accessToken", accessToken, accessCookieOptions)
+			.cookie("refreshToken", refreshToken, cookieOptions)
 			.redirect(process.env.CLIENT_URL || "http://localhost:5173");
 	}
 );
@@ -81,6 +88,8 @@ router.post(
 	validateRequest,
 	sendResetLink
 );
+
+// Fix: Change to use params instead of query
 router.post(
 	"/reset-password/:token",
 	resetPasswordValidator,

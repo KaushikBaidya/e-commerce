@@ -22,14 +22,15 @@ const sendResetLink = async (req, res) => {
 		}
 
 		const token = crypto.randomBytes(32).toString("hex");
-		const expiry = Date.now() + 10000 * 60 * 60;
+		// Fix: Correct expiry time (1 hour = 1000 * 60 * 60)
+		const expiry = Date.now() + 1000 * 60 * 60;
 
 		user.resetPasswordToken = token;
 		user.resetPasswordExpires = expiry;
 
 		await user.save();
 
-		const transporter = nodemailer.createTransport({
+		const transporter = nodemailer.createTransporter({
 			service: "Gmail",
 			auth: {
 				user: process.env.EMAIL_USER,
@@ -37,14 +38,16 @@ const sendResetLink = async (req, res) => {
 			},
 		});
 
+		// Fix: Use token in params instead of query
 		const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
 		await transporter.sendMail({
 			from: `"Galería Support" <${process.env.EMAIL_USER}>`,
 			to: user.email,
-			subject: "Password Reset",
+			subject: "Password Reset Request - Galería",
 			html: `	<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
   					 	<h2>Password Reset Request</h2>
-  						<p>Hello,</p>
+  						<p>Hello ${user.userName || "there"},</p>
 							<p>
 								We received a request to reset your password for your Galería account. If you made this request, please click the button below to reset your password:
 							</p>
@@ -63,6 +66,9 @@ const sendResetLink = async (req, res) => {
 								<br />
 								<a href="${resetUrl}" style="color: #4CAF50;">${resetUrl}</a>
 							</p>
+							<p style="font-size: 12px; color: #aaa; text-align: center;">
+								&copy; ${new Date().getFullYear()} Galería. All rights reserved.
+							</p>
 						</div>`,
 		});
 
@@ -76,6 +82,15 @@ const sendResetLink = async (req, res) => {
 const resetPassword = async (req, res) => {
 	const token = sanitize(req.params.token);
 	const password = String(req.body.password || "").trim();
+
+	if (!password || password.length < 6) {
+		return res
+			.status(400)
+			.json({
+				success: false,
+				message: "Password must be at least 6 characters long",
+			});
+	}
 
 	try {
 		const user = await User.findOne({

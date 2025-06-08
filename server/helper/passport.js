@@ -17,7 +17,7 @@ const generateTokens = (user) => {
 			userName: user.userName,
 		},
 		process.env.JWT_SECRET,
-		{ expiresIn: "15m" }
+		{ expiresIn: "50m" } // Fixed: Match with auth controller
 	);
 
 	const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, {
@@ -49,21 +49,27 @@ passport.use(
 						role: "user",
 						isVerified: true,
 					});
-				}
 
-				await createNotificationService({
-					title: "New User Registered",
-					message: `A new user has been registered: ${user.email}`,
-					type: "user",
-				});
+					// Only create notification for new users
+					await createNotificationService({
+						title: "New User Registered",
+						message: `A new user has been registered via Google: ${user.email}`,
+						type: "user",
+					});
+				}
 
 				const { accessToken, refreshToken } = generateTokens(user);
 
-				user.tokens = { accessToken, refreshToken };
+				// Fix: Return user with tokens properly structured
+				const userWithTokens = {
+					...user.toObject(),
+					tokens: { accessToken, refreshToken },
+				};
 
 				console.log("✅ Google login success:", user.email);
-				return done(null, user);
+				return done(null, userWithTokens);
 			} catch (error) {
+				console.error("❌ Google OAuth error:", error);
 				return done(error, null);
 			}
 		}
