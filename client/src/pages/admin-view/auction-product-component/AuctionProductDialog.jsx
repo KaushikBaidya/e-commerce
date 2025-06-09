@@ -10,7 +10,6 @@ const AuctionProductDialog = ({
   methods,
   handleSubmit,
   onSubmit,
-  isFormValid,
   imageFile,
   setImageFile,
   uploadedImageUrl,
@@ -26,24 +25,24 @@ const AuctionProductDialog = ({
             {currentEditedId ? 'Edit Product' : 'Add New Product'}
           </SheetTitle>
         </SheetHeader>
-
-        <ImageUpload
-          file={imageFile}
-          setFile={setImageFile}
-          uploadedUrl={uploadedImageUrl}
-          setUploadedUrl={setUploadedImageUrl}
-          imageLoadingState={imageLoadingState}
-          setImageLoadingState={setImageLoadingState}
-          isEditMode={currentEditedId !== null}
-          setFormData={() => {}} // This might need adjustment based on your ImageUpload component
-        />
+        <div className="px-5">
+          <ImageUpload
+            file={imageFile}
+            setFile={setImageFile}
+            uploadedUrl={uploadedImageUrl}
+            setUploadedUrl={setUploadedImageUrl}
+            imageLoadingState={imageLoadingState}
+            setImageLoadingState={setImageLoadingState}
+            isEditMode={currentEditedId !== null}
+            setFormData={() => {}}
+          />
+        </div>
 
         <div className="px-5 py-6 text-foreground">
           <CommonForm
             formControls={addAuctionProductElements}
             methods={methods}
             onSubmit={handleSubmit(onSubmit)}
-            isBtnDisabled={!isFormValid}
             buttonText={currentEditedId ? 'Update Product' : 'Create Product'}
           />
         </div>

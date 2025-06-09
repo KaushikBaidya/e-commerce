@@ -32,24 +32,20 @@ export const useAuctionProductForm = () => {
   const methods = useForm({
     defaultValues: initialFormData,
     mode: 'onChange',
+    resolver: undefined, 
+    criteriaMode: 'all',
   });
 
   const {
     handleSubmit,
     reset,
-    watch,
-    formState: { isValid, isSubmitting },
+    formState: { isSubmitting },
   } = methods;
-
-  const watchedValues = watch();
-
-  const isFormValid = isValid && uploadedImageUrl && !imageLoadingState;
 
   const onSubmit = async (data) => {
     const payloadData = {
       ...data,
       image: uploadedImageUrl,
-      // Convert datetime-local format back to ISO string for API
       startTime: data.startTime ? new Date(data.startTime).toISOString() : '',
       endTime: data.endTime ? new Date(data.endTime).toISOString() : '',
     };
@@ -73,7 +69,6 @@ export const useAuctionProductForm = () => {
     }
   };
 
-  // Helper function to convert ISO string to datetime-local format
   const formatDateTimeLocal = (isoString) => {
     if (!isoString) return '';
     const date = new Date(isoString);
@@ -110,7 +105,6 @@ export const useAuctionProductForm = () => {
     methods,
     handleSubmit,
     onSubmit,
-    isFormValid,
     isSubmitting,
     currentEditedId,
     imageFile,
