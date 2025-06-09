@@ -22,7 +22,6 @@ const AuctionProductsView = () => {
   const productForm = useAuctionProductForm();
   const productActions = useAuctionProductActions();
 
-  // Memoized filtered products for better performance
   const filteredAuctionProducts = useMemo(() => {
     if (!auctionProductList) return [];
 
@@ -76,7 +75,6 @@ const AuctionProductsView = () => {
         methods={productForm.methods}
         handleSubmit={productForm.handleSubmit}
         onSubmit={productForm.onSubmit}
-        isFormValid={productForm.isFormValid}
         imageFile={productForm.imageFile}
         setImageFile={productForm.setImageFile}
         uploadedImageUrl={productForm.uploadedImageUrl}

@@ -10,7 +10,6 @@ const ProductDialog = ({
   methods,
   handleSubmit,
   onSubmit,
-  isFormValid,
   isSubmitting,
   imageFile,
   setImageFile,
@@ -50,7 +49,7 @@ const ProductDialog = ({
             formControls={addProductFormElements}
             methods={methods}
             onSubmit={handleSubmit(onSubmit)}
-            isBtnDisabled={!isFormValid() || imageLoadingState || isSubmitting}
+            isBtnDisabled={isSubmitting}
             buttonText={
               isSubmitting
                 ? currentEditedId
