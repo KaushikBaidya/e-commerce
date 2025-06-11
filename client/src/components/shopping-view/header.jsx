@@ -1,10 +1,13 @@
-import { shoppingViewHeaderMenuItems } from '@/config';
-import { logoutUser } from '@/store/auth-slice';
-import { fetchCartItems } from '@/store/shop/cart-slice';
 import { LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+
+import logo from '@/assets/logo.png';
+import { shoppingViewHeaderMenuItems } from '@/config';
+import { logoutUser } from '@/store/auth-slice';
+import { fetchCartItems } from '@/store/shop/cart-slice';
+
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import {
@@ -18,8 +21,6 @@ import {
 import { Label } from '../ui/label';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import CartWrapper from './cart-wrapper';
-
-import logo from '@/assets/logo.png';
 
 const MenuItems = ({ setOpen }) => {
   const navigate = useNavigate();

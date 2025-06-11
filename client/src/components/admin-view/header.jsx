@@ -1,11 +1,3 @@
-import {
-  deleteAdminNotification,
-  fetchAdminNotifications,
-  markAllNotificationsAsRead,
-  markNotificationAsRead,
-} from '@/store/admin/notification-slice';
-import { logoutUser } from '@/store/auth-slice';
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { AlignJustify, Bell, LogOut } from 'lucide-react';
 import { useEffect } from 'react';
 import { BsExclamationDiamond } from 'react-icons/bs';
@@ -14,8 +6,18 @@ import { IoTrashBinOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Label } from 'recharts';
+
+import {
+  deleteAdminNotification,
+  fetchAdminNotifications,
+  markAllNotificationsAsRead,
+  markNotificationAsRead,
+} from '@/store/admin/notification-slice';
+import { logoutUser } from '@/store/auth-slice';
+
 import { Button } from '../ui/button';
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
