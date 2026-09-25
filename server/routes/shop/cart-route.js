@@ -8,12 +8,14 @@ const {
 } = require("../../controllers/shop/cart-controller");
 
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware } = require("../../controllers/auth/auth-controller");
 
 const { body, validationResult } = require("express-validator");
 const router = express.Router();
 
+router.use(authMiddleware);
+
 const validateAddToCart = [
-	body("userId").isMongoId().withMessage("Invalid userId"),
 	body("productId").isMongoId().withMessage("Invalid productId"),
 	body("quantity")
 		.isInt({ min: 1 })
@@ -28,7 +30,6 @@ const validateAddToCart = [
 ];
 
 const validateUpdateCart = [
-	body("userId").isMongoId().withMessage("Invalid userId"),
 	body("productId").isMongoId().withMessage("Invalid productId"),
 	body("quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
 	(req, res, next) => {

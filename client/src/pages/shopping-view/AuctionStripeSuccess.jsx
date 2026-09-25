@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 // import { useDispatch } from "react-redux";
-import axios from 'axios';
+import axiosInstance from '../../lib/axiosInstance';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -12,7 +12,7 @@ function AuctionStripeSuccess() {
     if (sessionId) {
       const finalizeOrder = async () => {
         try {
-          const res = await axios.post('http://localhost:5000/api/auction/checkout/finalize', {
+          const res = await axiosInstance.post('http://localhost:5000/api/auction/checkout/finalize', {
             sessionId,
           });
           if (res.data.success) {

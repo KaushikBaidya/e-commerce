@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axiosInstance.get('/auth/refresh');
+        await axiosInstance.post('/auth/refresh');
 
         isRefreshing = false;
 

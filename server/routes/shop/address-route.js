@@ -7,8 +7,11 @@ const {
 	deleteAddress,
 } = require("../../controllers/shop/address-controller");
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 const { body, param, validationResult } = require("express-validator");
 

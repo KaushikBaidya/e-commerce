@@ -15,8 +15,11 @@ const {
 } = require("../../validator/adminNotificationValidators");
 
 const validateRequest = require("../../validator/validateRequest");
+const { authMiddleware, isAdmin } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+
+router.use(authMiddleware, isAdmin);
 
 router.post(
 	"/",

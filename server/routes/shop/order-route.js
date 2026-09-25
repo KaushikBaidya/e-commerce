@@ -8,13 +8,15 @@ const {
 	finalizeOrderFromSession,
 } = require("../../controllers/shop/order-controller");
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 const { body, validationResult } = require("express-validator");
 
 const validateCreateOrder = [
-	body("userId").isMongoId().withMessage("Invalid userId"),
 	body("cartItems").isArray({ min: 1 }).withMessage("Cart must not be empty"),
 	body("cartItems.*.productId").isMongoId().withMessage("Invalid productId"),
 	body("cartItems.*.quantity")

@@ -6,7 +6,6 @@ const sanitize = require("mongo-sanitize");
 const createAuctionCheckoutSession = async (req, res) => {
 	try {
 		const {
-			userId,
 			addressInfo,
 			auctionProductId,
 			orderStatus = "pending",
@@ -15,7 +14,7 @@ const createAuctionCheckoutSession = async (req, res) => {
 			orderDate = new Date(),
 		} = req.body;
 
-		const sanitizedUserId = sanitize(userId);
+		const sanitizedUserId = req.user.id;
 		const sanitizedAuctionProductId = sanitize(auctionProductId);
 		const sanitizedOrderStatus = sanitize(orderStatus);
 		const sanitizedPaymentMethod = sanitize(paymentMethod);
@@ -123,6 +122,13 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 			orderDate: sanitize(metadata.orderDate),
 		};
 
+		if (sanitizedMetadata.userId !== req.user.id) {
+			return res.status(403).json({
+				success: false,
+				message: "This checkout session does not belong to you",
+			});
+		}
+
 		const newOrder = new AuctionOrder({
 			userId: sanitizedMetadata.userId,
 			addressInfo: JSON.parse(metadata.addressInfo),
@@ -159,7 +165,7 @@ const finalizeAuctionOrderFromSession = async (req, res) => {
 
 const getAllAuctionOrdersByUser = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 
 		const orders = await AuctionOrder.find({ userId });
 

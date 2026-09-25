@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   isLoading: false,
@@ -8,13 +8,13 @@ const initialState = {
 };
 
 export const getAllUsers = createAsyncThunk('users/getAllUsers', async () => {
-  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users/get`);
+  const response = await axiosInstance.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users/get`);
 
   return response.data;
 });
 
 export const getUsersDetails = createAsyncThunk('users/getUsersDetails', async (id) => {
-  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users/get/${id}`);
+  const response = await axiosInstance.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users/get/${id}`);
 
   return response.data;
 });

@@ -265,11 +265,25 @@ const authMiddleware = (req, res, next) => {
 
 	try {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		req.user = decoded;
+		// Normalize to req.user.id so every controller can rely on the same shape
+		req.user = { ...decoded, id: decoded.id };
 		next();
 	} catch (err) {
 		res.status(401).json({ success: false, message: "Unauthorized" });
 	}
+};
+
+// Use AFTER authMiddleware on any route that only admins should reach.
+const isAdmin = (req, res, next) => {
+	if (!req.user) {
+		return res.status(401).json({ success: false, message: "Unauthorized" });
+	}
+	if (req.user.role !== "admin") {
+		return res
+			.status(403)
+			.json({ success: false, message: "Admin access required" });
+	}
+	next();
 };
 
 module.exports = {
@@ -280,4 +294,5 @@ module.exports = {
 	refreshAccessToken,
 	generateTokens,
 	authMiddleware,
+	isAdmin,
 };

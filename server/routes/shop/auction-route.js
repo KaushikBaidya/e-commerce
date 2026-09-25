@@ -5,15 +5,15 @@ const {
 	fetchBidItems,
 } = require("../../controllers/shop/bid-controller");
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware } = require("../../controllers/auth/auth-controller");
 const { body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 
 const router = express.Router();
 
+router.use(authMiddleware);
+
 const validateBid = [
-	body("userId")
-		.custom((value) => mongoose.Types.ObjectId.isValid(value))
-		.withMessage("Invalid userId"),
 	body("auctionId")
 		.custom((value) => mongoose.Types.ObjectId.isValid(value))
 		.withMessage("Invalid auctionId"),

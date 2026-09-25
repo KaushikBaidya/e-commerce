@@ -3,7 +3,7 @@ const sanitize = require("mongo-sanitize");
 
 const addAddress = async (req, res) => {
 	try {
-		const userId = sanitize(req.body.userId);
+		const userId = req.user.id;
 		const address = sanitize(req.body.address);
 		const city = sanitize(req.body.city);
 		const pincode = sanitize(req.body.pincode);
@@ -38,12 +38,7 @@ const addAddress = async (req, res) => {
 
 const fetchAllAddress = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
-		if (!userId) {
-			return res
-				.status(400)
-				.json({ success: false, message: "User id is required" });
-		}
+		const userId = req.user.id;
 
 		const addressesList = await Address.find({ userId });
 
@@ -56,8 +51,7 @@ const fetchAllAddress = async (req, res) => {
 
 const editAddress = async (req, res) => {
 	try {
-		// const { userId, addressId } = req.params;
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 		const addressId = sanitize(req.params.addressId);
 
 		const sanitizedFormData = {};
@@ -65,7 +59,7 @@ const editAddress = async (req, res) => {
 			sanitizedFormData[key] = sanitize(value);
 		}
 
-		if (!userId || !addressId) {
+		if (!addressId) {
 			return res.status(400).json({
 				success: false,
 				message: "All fields are required",
@@ -98,11 +92,10 @@ const editAddress = async (req, res) => {
 
 const deleteAddress = async (req, res) => {
 	try {
-		// const { userId, addressId } = req.params;
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 		const addressId = sanitize(req.params.addressId);
 
-		if (!userId || !addressId) {
+		if (!addressId) {
 			return res.status(400).json({
 				success: false,
 				message: "All fields are required",

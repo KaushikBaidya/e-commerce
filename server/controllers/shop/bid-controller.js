@@ -7,12 +7,11 @@ const { getIO } = require("../../helper/socket");
 
 const placeBid = async (req, res) => {
 	try {
-		const userId = sanitize(req.body.userId);
+		const userId = req.user.id;
 		const auctionId = sanitize(req.body.auctionId);
 		const bidAmount = sanitize(req.body.bidAmount);
 
 		if (
-			!userId ||
 			!auctionId ||
 			typeof bidAmount !== "number" ||
 			bidAmount <= 0
@@ -134,13 +133,7 @@ const placeBid = async (req, res) => {
 
 const fetchBidItems = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
-
-		if (!userId) {
-			return res
-				.status(400)
-				.json({ success: false, message: "User ID is required" });
-		}
+		const userId = req.user.id;
 
 		const auctions = await Auction.find({ "bidHistory.bidder": userId });
 

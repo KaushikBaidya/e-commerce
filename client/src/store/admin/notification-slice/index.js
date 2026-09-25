@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   notifications: [],
@@ -12,7 +12,7 @@ export const fetchAdminNotifications = createAsyncThunk(
   'adminNotifications/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications`);
+      const response = await axiosInstance.get(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications`);
       const notifications = response?.data?.data;
       if (!Array.isArray(notifications)) {
         throw new Error('Invalid response format');
@@ -28,7 +28,7 @@ export const markNotificationAsRead = createAsyncThunk(
   'adminNotifications/markAsRead',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(
+      const response = await axiosInstance.patch(
         `${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}/read`
       );
       console.log('===>', response?.data);
@@ -44,7 +44,7 @@ export const markAllNotificationsAsRead = createAsyncThunk(
   'adminNotifications/markAllAsRead',
   async (_, { rejectWithValue }) => {
     try {
-      await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/read-all`);
+      await axiosInstance.patch(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/read-all`);
       return true; // simple success flag
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -56,7 +56,7 @@ export const deleteAdminNotification = createAsyncThunk(
   'adminNotifications/delete',
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}`);
+      await axiosInstance.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -68,7 +68,7 @@ export const deleteAllAdminNotifications = createAsyncThunk(
   'adminNotifications/deleteAll',
   async (_, { rejectWithValue }) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/delete-all`);
+      await axiosInstance.delete(`${import.meta.env.VITE_API_BASE_URL}/admin/notifications/delete-all`);
       return true;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

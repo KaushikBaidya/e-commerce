@@ -7,13 +7,14 @@ const {
 	getAllAuctionOrdersByUser,
 } = require("../../controllers/shop/auction-checkout-controller");
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+router.use(authMiddleware);
+
 const { body, validationResult } = require("express-validator");
 
 const validateAuctionCheckoutSession = [
-	body("userId").isMongoId().withMessage("Invalid userId"),
-
 	body("auctionProductId").isMongoId().withMessage("Invalid auctionProductId"),
 
 	body("addressInfo.address").notEmpty().withMessage("Address is required"),

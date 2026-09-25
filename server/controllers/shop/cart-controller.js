@@ -4,7 +4,7 @@ const sanitize = require("mongo-sanitize");
 
 const addToCart = async (req, res) => {
 	try {
-		const userId = sanitize(req.body.userId);
+		const userId = req.user.id;
 		const productId = sanitize(req.body.productId);
 		const quantity = sanitize(req.body.quantity);
 
@@ -48,13 +48,8 @@ const addToCart = async (req, res) => {
 
 const fetchCartItems = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 
-		if (!userId) {
-			return res
-				.status(400)
-				.json({ success: false, message: "User id is required" });
-		}
 		const cart = await Cart.findOne({ userId }).populate({
 			path: "items.productId",
 			select: "image title price salePrice",
@@ -95,7 +90,7 @@ const fetchCartItems = async (req, res) => {
 
 const updateCartItemQty = async (req, res) => {
 	try {
-		const userId = sanitize(req.body.userId);
+		const userId = req.user.id;
 		const productId = sanitize(req.body.productId);
 		const quantity = sanitize(req.body.quantity);
 
@@ -153,10 +148,10 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 		const productId = sanitize(req.params.productId);
 
-		if (!userId || !productId) {
+		if (!productId) {
 			return res.status(400).json({
 				success: false,
 				message: "Invalid data provided!",

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../../lib/axiosInstance';
 import { FileIcon, UploadCloud, XIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
@@ -49,7 +49,7 @@ const ImageUpload = ({
     data.append('image', file);
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_API_BASE_URL}/admin/products/upload-image`,
         data,
         {

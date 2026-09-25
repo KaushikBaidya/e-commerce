@@ -8,8 +8,11 @@ const {
 } = require("../../controllers/admin/order-controller");
 
 const { validateObjectId } = require("../../validator/validators");
+const { authMiddleware, isAdmin } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+
+router.use(authMiddleware, isAdmin);
 
 router.get("/get", getAllOrdersOfAllUsers);
 router.get("/auction-order/get", getAllAuctionOrdersOfAllUsers);

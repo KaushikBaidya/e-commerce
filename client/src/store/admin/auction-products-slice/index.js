@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   isLoading: true,
@@ -9,7 +9,7 @@ const initialState = {
 export const addNewAuctionProduct = createAsyncThunk(
   '/auction-products/addNewAuctionProduct',
   async (formdata) => {
-    const result = await axios.post(
+    const result = await axiosInstance.post(
       `${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/add`,
       formdata,
       {
@@ -25,7 +25,7 @@ export const addNewAuctionProduct = createAsyncThunk(
 export const fetchAllAuctionProducts = createAsyncThunk(
   '/auction-products/fetchAllAuctionProducts',
   async () => {
-    const result = await axios.get(
+    const result = await axiosInstance.get(
       `${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/get`
     );
     return result?.data;
@@ -35,7 +35,7 @@ export const fetchAllAuctionProducts = createAsyncThunk(
 export const editAuctionProduct = createAsyncThunk(
   '/products/editAuctionProduct',
   async ({ id, formData }) => {
-    const result = await axios.put(
+    const result = await axiosInstance.put(
       `${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/edit/${id}`,
       formData,
       {
@@ -51,7 +51,7 @@ export const editAuctionProduct = createAsyncThunk(
 export const deleteAuctionProduct = createAsyncThunk(
   '/auction-products/deleteAuctionProduct',
   async (id) => {
-    const result = await axios.delete(
+    const result = await axiosInstance.delete(
       `${import.meta.env.VITE_API_BASE_URL}/admin/products/auction-product/delete/${id}`
     );
     return result?.data;

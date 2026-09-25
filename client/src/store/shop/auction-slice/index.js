@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   isLoading: false,
@@ -9,7 +9,7 @@ const initialState = {
 export const placeAuctionBid = createAsyncThunk(
   'cart/placeAuctionBid',
   async ({ userId, auctionId, bidAmount }) => {
-    const response = await axios.put(
+    const response = await axiosInstance.put(
       `${import.meta.env.VITE_API_BASE_URL}/shop/auction/place-bid`,
       { userId, auctionId, bidAmount }
     );
@@ -18,7 +18,7 @@ export const placeAuctionBid = createAsyncThunk(
 );
 
 export const fetchAuctionItems = createAsyncThunk('cart/fetchAuctionItems', async (userId) => {
-  const response = await axios.get(
+  const response = await axiosInstance.get(
     `${import.meta.env.VITE_API_BASE_URL}/shop/auction/get/${userId}`
   );
   return response.data;

@@ -27,7 +27,19 @@ const validateRequest = require("../../validator/validateRequest");
 
 const router = express.Router();
 
-router.post("/register", registerValidator, validateRequest, registerUser);
+const authLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 10,
+	message: "Too many attempts, please try again later",
+});
+
+router.post(
+	"/register",
+	authLimiter,
+	registerValidator,
+	validateRequest,
+	registerUser
+);
 
 // Fix: Change to use params instead of query
 router.get("/verify-email/:token", verifyEmail);
@@ -84,6 +96,7 @@ router.post("/refresh", refreshAccessToken);
 
 router.post(
 	"/forgot-password",
+	authLimiter,
 	forgotPasswordValidator,
 	validateRequest,
 	sendResetLink

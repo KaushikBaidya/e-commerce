@@ -1,5 +1,5 @@
 import { fetchCartItems } from '@/store/shop/cart-slice';
-import axios from 'axios';
+import axiosInstance from '../../lib/axiosInstance';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -15,7 +15,7 @@ function StripeSuccess() {
     if (sessionId) {
       const finalizeOrder = async () => {
         try {
-          const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/shop/order/finalize`, {
+          const res = await axiosInstance.post(`${import.meta.env.VITE_API_BASE_URL}/shop/order/finalize`, {
             sessionId,
           });
           if (res.data.success) {

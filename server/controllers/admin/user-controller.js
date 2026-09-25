@@ -1,9 +1,12 @@
 const User = require("../../models/User");
 const sanitize = require("mongo-sanitize");
 
+const SENSITIVE_FIELDS =
+	"-password -verificationToken -verificationExpires -resetPasswordToken -resetPasswordExpires";
+
 const getAllUsers = async (req, res) => {
 	try {
-		const users = await User.find({});
+		const users = await User.find({}).select(SENSITIVE_FIELDS);
 		if (!users.length) {
 			return res.status(404).json({
 				success: false,
@@ -27,7 +30,7 @@ const getUserDetails = async (req, res) => {
 	try {
 		const id = sanitize(req.params.id);
 
-		const user = await User.findById(id);
+		const user = await User.findById(id).select(SENSITIVE_FIELDS);
 		if (!user) {
 			return res.status(404).json({
 				success: false,

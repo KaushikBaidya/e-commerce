@@ -28,8 +28,12 @@ const {
 	editAuctionProductValidator,
 } = require("../../validator/auctionProductValidators");
 const validateRequest = require("../../validator/validateRequest");
+const { authMiddleware, isAdmin } = require("../../controllers/auth/auth-controller");
 
 const router = express.Router();
+
+// Every route below is admin-only.
+router.use(authMiddleware, isAdmin);
 
 router.post("/upload-image", upload.single("image"), handleImageUpload);
 

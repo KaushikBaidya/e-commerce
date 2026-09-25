@@ -1,15 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   isLoading: false,
   cartItems: [],
 };
 
+// Note: userId is still accepted here so existing call sites don't need to change,
+// but the backend now ignores it and always uses the logged-in user from the auth
+// cookie (sent automatically by axiosInstance) — this is what actually secures it.
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
   async ({ userId, productId, quantity }) => {
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/shop/cart/add`, {
+    const response = await axiosInstance.post('/shop/cart/add', {
       userId,
       productId,
       quantity,
@@ -19,16 +22,15 @@ export const addToCart = createAsyncThunk(
 );
 
 export const fetchCartItems = createAsyncThunk('cart/fetchCartItems', async (userId) => {
-  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/shop/cart/get/${userId}`);
+  const response = await axiosInstance.get(`/shop/cart/get/${userId}`);
   return response.data;
 });
 
 export const deleteCartItem = createAsyncThunk(
   'cart/deleteCartItem',
   async ({ userId, productId }) => {
-    const response = await axios.delete(
-      `${import.meta.env.VITE_API_BASE_URL}/shop/cart/delete/${userId}/${productId}`,
-      { userId, productId }
+    const response = await axiosInstance.delete(
+      `/shop/cart/delete/${userId}/${productId}`
     );
     return response.data;
   }
@@ -37,7 +39,7 @@ export const deleteCartItem = createAsyncThunk(
 export const updateCartQuantity = createAsyncThunk(
   'cart/updateCartQuantity',
   async ({ userId, productId, quantity }) => {
-    const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/shop/cart/update-cart`, {
+    const response = await axiosInstance.put('/shop/cart/update-cart', {
       userId,
       productId,
       quantity,

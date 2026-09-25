@@ -60,16 +60,9 @@ app.use(
 				? process.env.CORS_ORIGIN.split(",")
 				: ["http://localhost:5173"];
 
-			console.log("🔍 CORS Debug Info:");
-			console.log("Request Origin:", origin);
-			console.log("CORS_ORIGIN env var:", process.env.CORS_ORIGIN);
-			console.log("Allowed Origins:", allowedOrigins);
-
 			if (!origin || allowedOrigins.includes(origin)) {
-				console.log("✅ CORS: Origin allowed");
 				callback(null, true);
 			} else {
-				console.log("❌ CORS: Origin blocked");
 				console.warn(`Blocked by CORS: ${origin}`);
 				callback(new Error("Not allowed by CORS"));
 			}

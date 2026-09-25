@@ -9,36 +9,19 @@ const {
 
 const createOrder = async (req, res) => {
 	try {
-		const {
-			userId,
-			cartItems,
-			addressInfo,
-			orderStatus,
-			paymentMethod,
-			paymentStatus,
-			totalAmount,
-			orderDate,
-			orderUpdateDate,
-			cartId,
-		} = req.body;
+		// Trust the session, never the request body, for who this order belongs to.
+		const sanitizedUserId = req.user.id;
 
-		// Sanitize basic fields
-		const sanitizedUserId = sanitize(userId);
+		const { cartItems, addressInfo, paymentMethod, cartId } = req.body;
+
 		const sanitizedCartId = sanitize(cartId);
-		const sanitizedOrderStatus = sanitize(orderStatus);
-		const sanitizedPaymentMethod = sanitize(paymentMethod);
-		const sanitizedPaymentStatus = sanitize(paymentStatus);
-		const sanitizedTotalAmount = sanitize(totalAmount);
-		const sanitizedOrderDate = sanitize(orderDate);
-		const sanitizedOrderUpdateDate = sanitize(orderUpdateDate);
+		const sanitizedPaymentMethod = sanitize(paymentMethod) || "stripe";
 
-		// Sanitize cartItems array
-		const sanitizedCartItems = cartItems.map((item) => ({
-			productId: sanitize(item.productId),
-			title: sanitize(item.title),
-			quantity: sanitize(item.quantity),
-			price: sanitize(item.price),
-		}));
+		if (!Array.isArray(cartItems) || cartItems.length === 0) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Cart is empty" });
+		}
 
 		// Sanitize addressInfo object
 		const sanitizedAddressInfo = {};
@@ -47,6 +30,53 @@ const createOrder = async (req, res) => {
 				sanitizedAddressInfo[key] = sanitize(value);
 			}
 		}
+
+		// SECURITY: never trust price/title from the client. Look every item up
+		// from the database so a tampered request can't checkout for a fake amount.
+		const sanitizedCartItems = [];
+		for (const rawItem of cartItems) {
+			const productId = sanitize(rawItem.productId);
+			const quantity = Number(sanitize(rawItem.quantity));
+
+			if (!productId || !Number.isInteger(quantity) || quantity <= 0) {
+				return res.status(400).json({
+					success: false,
+					message: "Invalid cart item",
+				});
+			}
+
+			const product = await Product.findById(productId);
+			if (!product) {
+				return res.status(404).json({
+					success: false,
+					message: `Product not found: ${productId}`,
+				});
+			}
+
+			if (product.totalStock < quantity) {
+				return res.status(400).json({
+					success: false,
+					message: `Not enough stock for product: ${product.title}`,
+				});
+			}
+
+			const price =
+				product.salePrice && product.salePrice > 0
+					? product.salePrice
+					: product.price;
+
+			sanitizedCartItems.push({
+				productId: product._id.toString(),
+				title: product.title,
+				quantity,
+				price,
+			});
+		}
+
+		const totalAmount = sanitizedCartItems.reduce(
+			(sum, item) => sum + item.price * item.quantity,
+			0
+		);
 
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
@@ -65,13 +95,10 @@ const createOrder = async (req, res) => {
 			cancel_url: `${process.env.CLIENT_URL}/shop/stripe-cancel`,
 			metadata: {
 				userId: sanitizedUserId.toString(),
-				cartId: sanitizedCartId.toString(),
-				orderStatus: sanitizedOrderStatus.toString(),
+				cartId: sanitizedCartId ? sanitizedCartId.toString() : "",
 				paymentMethod: sanitizedPaymentMethod.toString(),
-				paymentStatus: sanitizedPaymentStatus.toString(),
-				totalAmount: sanitizedTotalAmount.toString(),
-				orderDate: sanitizedOrderDate.toString(),
-				orderUpdateDate: sanitizedOrderUpdateDate.toString(),
+				totalAmount: totalAmount.toString(),
+				orderDate: new Date().toISOString(),
 				cartItems: JSON.stringify(sanitizedCartItems),
 				addressInfo: JSON.stringify(sanitizedAddressInfo),
 			},
@@ -133,8 +160,14 @@ const finalizeOrderFromSession = async (req, res) => {
 			orderUpdateDate: sanitize(metadata.orderUpdateDate),
 		};
 
-		// Log parsed values for debugging
-		console.log("Finalizing order with metadata:", metadata);
+		// SECURITY: make sure whoever is calling /finalize is the same person the
+		// checkout session was created for. Prevents one user finalizing another's order.
+		if (sanitizedMetadata.userId !== req.user.id) {
+			return res.status(403).json({
+				success: false,
+				message: "This checkout session does not belong to you",
+			});
+		}
 
 		const newOrder = new Order({
 			userId: sanitizedMetadata.userId,
@@ -180,7 +213,9 @@ const finalizeOrderFromSession = async (req, res) => {
 			type: "order",
 		});
 
-		await Cart.findByIdAndDelete(sanitizedMetadata.cartId);
+		if (sanitizedMetadata.cartId) {
+			await Cart.findByIdAndDelete(sanitizedMetadata.cartId).catch(() => null);
+		}
 
 		res.status(200).json({
 			success: true,
@@ -197,7 +232,7 @@ const finalizeOrderFromSession = async (req, res) => {
 
 const getAllOrdersByUser = async (req, res) => {
 	try {
-		const userId = sanitize(req.params.userId);
+		const userId = req.user.id;
 
 		const orders = await Order.find({ userId }).sort({ createdAt: -1 });
 
@@ -231,6 +266,14 @@ const getOrderDetails = async (req, res) => {
 			return res.status(404).json({
 				success: false,
 				message: "Order not found!",
+			});
+		}
+
+		// SECURITY: only the order's owner or an admin may view it.
+		if (order.userId.toString() !== req.user.id && req.user.role !== "admin") {
+			return res.status(403).json({
+				success: false,
+				message: "You are not allowed to view this order",
 			});
 		}
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../../lib/axiosInstance';
 
 const initialState = {
   checkoutUrl: null,
@@ -10,19 +10,14 @@ const initialState = {
 };
 
 export const createNewOrder = createAsyncThunk('/order/createNewOrder', async (orderData) => {
-  const response = await axios.post(
-    `${import.meta.env.VITE_API_BASE_URL}/auction/checkout/create`,
-    orderData
-  );
+  const response = await axiosInstance.post('/auction/checkout/create', orderData);
   return response.data;
 });
 
 export const getAllOrdersByUserId = createAsyncThunk(
   '/order/getAllOrdersByUserId',
   async (userId) => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/auction/checkout/list/${userId}`
-    );
+    const response = await axiosInstance.get(`/auction/checkout/list/${userId}`);
     return response.data;
   }
 );
